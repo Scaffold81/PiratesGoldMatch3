@@ -1,4 +1,5 @@
 using Game.Core.Generators;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -20,9 +21,9 @@ public class MachTreeView : MonoBehaviour
 
     private NodesGenerator _nodesGenerator;
     [SerializeField]
-    private NodeBase _selectodNode01; 
+    private NodeBase _selectedNode01; 
     [SerializeField]
-    private NodeBase _selectodNode02;
+    private NodeBase _selectedNode02;
 
     private void Awake()
     {
@@ -45,25 +46,43 @@ public class MachTreeView : MonoBehaviour
 
     public void SetSelectedNode(NodeBase nodeBase)
     {
-        if(_selectodNode01 == null)
+        if(_selectedNode01 == null)
         {
-            _selectodNode01 = nodeBase;
+            _selectedNode01 = nodeBase;
         }
         else
         {
-            var areNeighbor = AreNodesNeighbors(_selectodNode01, nodeBase);
+            var areNeighbor = AreNodesNeighbors(_selectedNode01, nodeBase);
             
             if (areNeighbor) 
             {
-
+               
             }
             else
             {
-                _selectodNode01 = nodeBase;
+                _selectedNode02 = nodeBase; 
+                SwitchNodes(_selectedNode01, _selectedNode02);
             }
 
         }
     }
+    
+    private void SwitchNodes(NodeBase selectedNode01, NodeBase selectedNode02)
+    {
+        // Сохраняем позиции первой и второй нод во временных переменных
+        Vector2 tempPosition = selectedNode01.Position;
+        selectedNode01.Position = selectedNode02.Position;
+        selectedNode02.Position = tempPosition;
+
+        // Обновляем позиции нод в массиве _nodes
+        Nodes[(int)selectedNode01.Position.x, (int)selectedNode01.Position.y] = selectedNode01;
+        Nodes[(int)selectedNode02.Position.x, (int)selectedNode02.Position.y] = selectedNode02;
+
+        // Визуализация перемещения нод на сцене с использованием DOTween
+        selectedNode01.transform.DOMove(new Vector3(selectedNode01.Position.x, selectedNode01.Position.y, 0), 0.5f);
+        selectedNode02.transform.DOMove(new Vector3(selectedNode02.Position.x, selectedNode02.Position.y, 0), 0.5f);
+    }
+
     public bool AreNodesNeighbors(NodeBase node1, NodeBase node2)
     {
         // Проверяем, являются ли заданные ноды соседними в игровом поле
