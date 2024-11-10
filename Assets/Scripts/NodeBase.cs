@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.EventSystems;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UI;
 
-public class NodeBase:MonoBehaviour
+public class NodeBase:MonoBehaviour, IPointerDownHandler
 {
     [SerializeField]
     private NodeType _nodeType;
@@ -35,6 +37,11 @@ public class NodeBase:MonoBehaviour
         }
     }
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        _machTreeView.SetSelectedNode(this);
+    }
+    
     private void Hide()
     {
         _image.enabled = false;

@@ -13,7 +13,7 @@ public class FieldGenerator : MonoBehaviour
     [SerializeField]
     private NodeBase _nodesPrefabs;
     [SerializeField]
-    private bool _generate=false;
+    private bool _generate = false;
 
     [SerializeField]
     private GridLayoutGroup _gridLayoutGroup;
@@ -28,18 +28,18 @@ public class FieldGenerator : MonoBehaviour
     {
         if (_generate)
         {
-            GenerateField(); 
+            GenerateField();
         }
     }
 
-   // [MenuItem("CustomMenu/Generate Field")]
     public void GenerateField()
     {
         var panel = GetComponent<RectTransform>();
-        var cellSyze = panel.rect.width*1.5f / _columns;
-        _gridLayoutGroup.constraintCount=_columns;
-        _gridLayoutGroup.cellSize=new Vector2 (cellSyze, cellSyze);
-        _gridLayoutGroup.spacing =-Vector2.one* cellSyze / 3f;
+        var cellSyze = panel.rect.width * 1.5f / _columns;
+        _gridLayoutGroup.constraintCount = _columns;
+        _gridLayoutGroup.constraintCount = _columns;
+        _gridLayoutGroup.cellSize = new Vector2(cellSyze, cellSyze);
+        _gridLayoutGroup.spacing = -Vector2.one * cellSyze / 3f;
 
         for (int y = 0; y < _rows; y++)
         {
@@ -47,13 +47,13 @@ public class FieldGenerator : MonoBehaviour
             {
                 var newElement = Instantiate(_nodesPrefabs);
                 newElement.transform.SetParent(transform); // Для организации поля в иерархии
-                newElement.name= x.ToString()+"/"+y.ToString();
+                newElement.name = x.ToString() + "/" + y.ToString();
                 newElement.Position = new Vector2(x, y);
-                newElement.GetComponent<RectTransform>().localScale=Vector3.one*0.8f;
+                newElement.GetComponent<RectTransform>().localScale = Vector3.one * 0.8f;
 
             }
         }
-        _generate=false;
+        _generate = false;
     }
 }
 

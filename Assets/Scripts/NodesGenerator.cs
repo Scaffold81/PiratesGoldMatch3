@@ -29,7 +29,7 @@ namespace Game.Core.Generators
 
             // Проверка, что случайно выбранная нода не входит в список исключенных и не создает группы из трех или более одинаковых нод рядом
             int attempts = 0;
-            while (attempts < 100) // Limit the number of attempts to avoid infinite loop
+            while (attempts < 10000) // Limit the number of attempts to avoid infinite loop
             {
                 if (!CheckCloseNodesForMatches(randomNode) && !excludedNodeTypes.Contains(randomNode))
                 {
@@ -40,7 +40,7 @@ namespace Game.Core.Generators
                 attempts++;
             }
 
-            if (attempts >= 100)
+            if (attempts >= 10000)
             {
                 Debug.Log("Exceeded attempts limit. Could not find a unique node.");
                 // Handle the case where a unique node cannot be found after a certain number of attempts
