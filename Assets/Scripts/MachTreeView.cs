@@ -1,7 +1,9 @@
+using DG.Tweening;
 using Game.Core.Generators;
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MachTreeView : MonoBehaviour
 {
@@ -28,7 +30,10 @@ public class MachTreeView : MonoBehaviour
     private void Awake()
     {
         AddNodes();
+        Invoke(nameof(GridLayoutGroupOff), 1);
     }
+
+    private void GridLayoutGroupOff() => GetComponent<GridLayoutGroup>().enabled = false;
 
     private void AddNodes()
     {
@@ -56,12 +61,13 @@ public class MachTreeView : MonoBehaviour
             
             if (areNeighbor) 
             {
-               
+                _selectedNode02 = nodeBase;
+                SwitchNodes(_selectedNode01, _selectedNode02);
             }
             else
             {
-                _selectedNode02 = nodeBase; 
-                SwitchNodes(_selectedNode01, _selectedNode02);
+                _selectedNode01 = null;
+                _selectedNode02 = null;
             }
 
         }
@@ -69,18 +75,32 @@ public class MachTreeView : MonoBehaviour
     
     private void SwitchNodes(NodeBase selectedNode01, NodeBase selectedNode02)
     {
+        var pos01 = selectedNode01.Position;
+        var pos02 = selectedNode02.Position;
+       
         // —охран€ем позиции первой и второй нод во временных переменных
         Vector2 tempPosition = selectedNode01.Position;
         selectedNode01.Position = selectedNode02.Position;
         selectedNode02.Position = tempPosition;
 
-        // ќбновл€ем позиции нод в массиве _nodes
-        Nodes[(int)selectedNode01.Position.x, (int)selectedNode01.Position.y] = selectedNode01;
-        Nodes[(int)selectedNode02.Position.x, (int)selectedNode02.Position.y] = selectedNode02;
-
         // ¬изуализаци€ перемещени€ нод на сцене с использованием DOTween
-        selectedNode01.transform.DOMove(new Vector3(selectedNode01.Position.x, selectedNode01.Position.y, 0), 0.5f);
-        selectedNode02.transform.DOMove(new Vector3(selectedNode02.Position.x, selectedNode02.Position.y, 0), 0.5f);
+        selectedNode01.transform.DOMove(new Vector3(selectedNode02.transform.position.x, selectedNode02.transform.position.y, 0), 0.5f)
+            .OnComplete(() =>
+            {
+                // ѕосле завершени€ анимации первой ноды обновл€ем позицию в массиве
+                Nodes[(int)selectedNode01.Position.x, (int)selectedNode01.Position.y] = selectedNode01;
+                selectedNode01.Position = pos02;
+                _selectedNode01 = null;
+            });
+
+        selectedNode02.transform.DOMove(new Vector3(selectedNode01.transform.position.x, selectedNode01.transform.position.y, 0), 0.5f)
+            .OnComplete(() =>
+            {
+                // ѕосле завершени€ анимации второй ноды обновл€ем позицию в массиве
+                Nodes[(int)selectedNode01.Position.x, (int)selectedNode01.Position.y] = selectedNode02;
+                selectedNode02.Position = pos01;
+                _selectedNode02 =null;
+            });
     }
 
     public bool AreNodesNeighbors(NodeBase node1, NodeBase node2)

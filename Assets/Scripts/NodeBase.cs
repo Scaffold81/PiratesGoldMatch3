@@ -41,7 +41,12 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
     {
         _machTreeView.SetSelectedNode(this);
     }
-    
+
+    internal void Rename()
+    {
+        name= Position.x+"/"+Position.y;
+    }
+
     private void Hide()
     {
         _image.enabled = false;
