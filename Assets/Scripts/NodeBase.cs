@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
@@ -15,7 +16,9 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
     private Image _image;
     [SerializeField]
     private Vector2 _position;
-   
+    [SerializeField]
+    private TMP_Text _positionText;
+
     [SerializeField]
     private MachTreeView _machTreeView;
 
@@ -39,6 +42,7 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if(NodeType == NodeType.Ready|| NodeType == NodeType.Hidden)return;
         _machTreeView.SetSelectedNode(this);
     }
 
@@ -47,9 +51,15 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
         name= Position.x+"/"+Position.y;
     }
 
-    private void Hide()
+    public void Hide()
     {
         _image.enabled = false;
+    }
+
+    public void Show(Vector2 position)
+    {
+        _positionText.text = ""+ position.x + "/" + position.y;
+        _image.enabled = true;
     }
 
     private IEnumerator LoadSprite()
@@ -69,5 +79,11 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
         }
 
         Addressables.Release(handle);
+    }
+
+    public void DestroyNode()
+    {
+        NodeType = NodeType.Ready;
+        _image.enabled = false;
     }
 }
