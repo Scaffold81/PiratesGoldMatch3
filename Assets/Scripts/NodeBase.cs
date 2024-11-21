@@ -15,6 +15,8 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
     [SerializeField]
     private Image _image;
     [SerializeField]
+    private Image _imageBackground;
+    [SerializeField]
     private Vector2 _position;
     [SerializeField]
     private TMP_Text _positionText;
@@ -24,11 +26,15 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
 
     public NodeType NodeType { get => _nodeType; set => _nodeType = value; }
     public Vector2 Position { get => _position; set => _position = value; }
-    
+    public Image Image { get => _image; set => _image = value; }
+    public Image ImageBackground { get => _imageBackground; set => _imageBackground = value; }
+    public TMP_Text PositionText { get => _positionText; set => _positionText = value; }
+
     public void Init(NodeType type, MachTreeView machTreeView)
     {
         _machTreeView= machTreeView;
-
+        PositionText.gameObject.SetActive(false);
+       
         if (_nodeType != NodeType.Hidden)
         {
             _nodeType = type;
@@ -46,20 +52,21 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
         _machTreeView.SetSelectedNode(this);
     }
 
-    internal void Rename()
+    public void Rename()
     {
-        name= Position.x+"/"+Position.y;
+        name = Position.x+"/"+Position.y;
     }
 
     public void Hide()
     {
-        _image.enabled = false;
+        Image.enabled = false;
+        ImageBackground.enabled = false;
     }
 
     public void Show(Vector2 position)
     {
-        _positionText.text = ""+ position.x + "/" + position.y;
-        _image.enabled = true;
+        PositionText.text = ""+ position.x + "/" + position.y;
+        Image.enabled = true;
     }
 
     private IEnumerator LoadSprite()
@@ -70,8 +77,8 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
             var sprite = handle.Result;
-            _image.sprite = sprite;
-            _image.enabled = true;
+            Image.sprite = sprite;
+            Image.enabled = true;
         }
         else
         {
@@ -84,6 +91,6 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
     public void DestroyNode()
     {
         NodeType = NodeType.Ready;
-        _image.enabled = false;
+        Image.enabled = false;
     }
 }

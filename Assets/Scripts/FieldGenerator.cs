@@ -13,10 +13,14 @@ public class FieldGenerator : MonoBehaviour
     [SerializeField]
     private NodeBase _nodesPrefabs;
     [SerializeField]
+    private Image _nodesBackgroundPrefabs;
+    [SerializeField]
     private bool _generate = false;
 
     [SerializeField]
     private GridLayoutGroup _gridLayoutGroup;
+    [SerializeField]
+    private GridLayoutGroup _gridLayoutGroupBackground;
     private void Awake()
     {
         if (Application.isPlaying)
@@ -24,6 +28,7 @@ public class FieldGenerator : MonoBehaviour
             Destroy(this);
         }
     }
+
     private void Update()
     {
         if (_generate)
@@ -35,11 +40,14 @@ public class FieldGenerator : MonoBehaviour
     public void GenerateField()
     {
         var panel = GetComponent<RectTransform>();
-        var cellSyze = panel.rect.width * 1.5f / _columns;
-        _gridLayoutGroup.constraintCount = _columns;
+        var cellSyze = panel.rect.width * 1.25f / _columns;
         _gridLayoutGroup.constraintCount = _columns;
         _gridLayoutGroup.cellSize = new Vector2(cellSyze, cellSyze);
-        _gridLayoutGroup.spacing = -Vector2.one * cellSyze / 3f;
+        _gridLayoutGroup.spacing = -Vector2.one * cellSyze / 3.7f;
+
+        _gridLayoutGroupBackground.constraintCount = _gridLayoutGroup.constraintCount;
+        _gridLayoutGroupBackground.cellSize = _gridLayoutGroup.cellSize;
+        _gridLayoutGroupBackground.spacing = _gridLayoutGroup.spacing;
 
         for (int y = 0; y < _rows; y++)
         {
@@ -51,6 +59,10 @@ public class FieldGenerator : MonoBehaviour
                 newElement.Position = new Vector2(x, y);
                 newElement.GetComponent<RectTransform>().localScale = Vector3.one * 0.8f;
 
+                var background = Instantiate(_nodesBackgroundPrefabs);
+                newElement.ImageBackground = background;
+                background.transform.SetParent(_gridLayoutGroupBackground.transform);
+                background.transform.localScale = Vector3.one * 0.8f;
             }
         }
         _generate = false;

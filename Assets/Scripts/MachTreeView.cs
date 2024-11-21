@@ -1,7 +1,9 @@
 using DG.Tweening;
 using Game.Core.Generators;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,7 +28,8 @@ public class MachTreeView : MonoBehaviour
     private NodeBase _selectedNode01;
     [SerializeField]
     private NodeBase _selectedNode02;
-    private bool _isBlock=false;
+    private bool _isBlock = false;
+    public List<NodeBase> matchesY;
 
     private void Awake()
     {
@@ -53,8 +56,8 @@ public class MachTreeView : MonoBehaviour
 
     public void SetSelectedNode(NodeBase nodeBase)
     {
-        if(_isBlock)return;
-        
+        if (_isBlock) return;
+
         if (_selectedNode01 == null)
         {
             _selectedNode01 = nodeBase;
@@ -85,7 +88,7 @@ public class MachTreeView : MonoBehaviour
         var matchNode02 = false;
         var pos01 = selectedNode01.Position;
         var pos02 = selectedNode02.Position;
-        
+
         // Визуализация перемещения нод на сцене с использованием DOTween
         selectedNode01.transform.DOMove(selectedNode02.transform.position, 0.5f)
             .OnComplete(() =>
@@ -93,25 +96,31 @@ public class MachTreeView : MonoBehaviour
                 // После завершения анимации первой ноды обновляем позиции в массиве
                 Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
                 selectedNode01.Position = pos02;
-                selectedNode01.Show(Nodes[(int)pos02.x, (int)pos02.y].Position);
-                matchNode01 = isReverse ? false : CheckCloseNodesForMatches(selectedNode01);
-                
-                _isBlock=false;
+                selectedNode01.Show(selectedNode01.Position);
+                selectedNode01.Rename();
+                _isBlock = false;
             });
 
         selectedNode02.transform.DOMove(selectedNode01.transform.position, 0.5f)
-            .OnComplete(() =>
-            {
-                // После завершения анимации второй ноды обновляем позиции в массиве
-                Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
-                selectedNode02.Position = pos01;
-                selectedNode02.Show(Nodes[(int)pos01.x, (int)pos01.y].Position);
-                matchNode02 = isReverse ? false : CheckCloseNodesForMatches(selectedNode02);
+        .OnComplete(() =>
+        {
+            // После завершения анимации второй ноды обновляем позиции в массиве
+            Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
+            selectedNode02.Position = pos01;
+            selectedNode02.Show(Nodes[(int)pos01.x, (int)pos01.y].Position);
+            selectedNode02.Rename();
 
-                if (!matchNode01 && !matchNode02 && !isReverse)
-                    Reverse(selectedNode01, selectedNode02);
-                _isBlock=false;
-            });
+            matchNode01 = !isReverse && CheckCloseNodesForMatches(selectedNode01);
+            matchNode02 = !isReverse && CheckCloseNodesForMatches(selectedNode02);
+
+            if (!matchNode01 && !matchNode02 && !isReverse)
+            {
+                // Reverse(selectedNode01, selectedNode02);
+            }
+            _selectedNode01 = null;
+            _selectedNode02 = null;
+            _isBlock = false;
+        });
     }
 
 
@@ -159,100 +168,98 @@ public class MachTreeView : MonoBehaviour
 
     public bool CheckCloseNodesForMatches(NodeBase movedNode)
     {
-       var matches = new List<NodeBase>
-       {
-           movedNode // Добавление перемещенной ноды в список
-       };
+        var matchesX = new List<NodeBase>();
+        var matchesY = new List<NodeBase>();
 
-        int newX = (int)movedNode.Position.x;
-        int newY = (int)movedNode.Position.y;
+        var newX = (int)movedNode.Position.x;
+        var newY = (int)movedNode.Position.y;
 
         NodeType newNode = movedNode.NodeType;
 
-        // Проверка на три одинаковые ноды подряд по горизонтали и вертикали
-        if (newX > 1 && Nodes[newX - 1, newY].NodeType == newNode && Nodes[newX - 2, newY].NodeType == newNode)
+        for (int x = 0; x < Nodes.GetLength(0); x++)
         {
-            matches.Add(Nodes[newX - 1, newY]); // Добавление первой совпавшей ноды
-            matches.Add(Nodes[newX - 2, newY]); // Добавление второй совпавшей ноды
-
-            int nextX = newX - 3;
-            while (nextX >= 1 && Nodes[nextX, newY].NodeType == newNode)
+            if (Nodes[x, newY].NodeType == newNode)
             {
-                matches.Add(Nodes[nextX, newY]);
-                nextX--;
+                matchesX.Add(Nodes[x, newY]);
             }
-            DestroyNodes(matches);
-            _selectedNode01 = null;
-            _selectedNode02 = null;
-            print("Matches count " + matches.Count);
-            return true; // Три ноды по горизонтали слева
-        }
-
-        if (newX < Nodes.GetLength(0) - 2 && Nodes[newX + 1, newY].NodeType == newNode && Nodes[newX + 2, newY].NodeType == newNode)
-        {
-            matches.Add(Nodes[newX + 1, newY]); // Добавление первой совпавшей ноды
-            matches.Add(Nodes[newX + 2, newY]); // Добавление второй совпавшей ноды
-
-            int nextX = newX + 3;
-            while (nextX < Nodes.GetLength(0) - 2 && Nodes[nextX, newY].NodeType == newNode)
+            else
             {
-                matches.Add(Nodes[nextX, newY]);
-                nextX++;
+                if (matchesX.Count < 3)
+                {
+                    matchesX.Clear();
+                }
+                else
+                {
+                    foreach (NodeBase node in matchesX)
+                    {
+                        node.DestroyNode();
+                    }
+                    return true;
+                }
             }
-            DestroyNodes(matches);
-            _selectedNode01 = null;
-            _selectedNode02= null;
-            print("Matches count " + matches.Count);
-            return true; // Три ноды по горизонтали справа
         }
-
-        if (newY > 1 && Nodes[newX, newY - 1].NodeType == newNode && Nodes[newX, newY - 2].NodeType == newNode)
+       
+        if (matchesX.Count < 3)
         {
-            matches.Add(Nodes[newX, newY - 1]); // Добавление первой совпавшей ноды
-            matches.Add(Nodes[newX, newY - 2]); // Добавление второй совпавшей ноды
-
-            int nextY = newY - 3;
-            while (nextY >= 1 && Nodes[newX, nextY].NodeType == newNode)
-            {
-                matches.Add(Nodes[newX, nextY]);
-                nextY--;
-            }
-            DestroyNodes(matches);
-            _selectedNode01 = null;
-            _selectedNode02 = null;
-            print("Matches count " + matches.Count);
-            return true; // Три ноды по вертикали вниз
+            matchesX.Clear();
         }
-
-        if (newY < Nodes.GetLength(1) - 2 && Nodes[newX, newY + 1].NodeType == newNode && Nodes[newX, newY + 2].NodeType == newNode)
+        else
         {
-            matches.Add(Nodes[newX, newY + 1]); // Добавление первой совпавшей ноды
-            matches.Add(Nodes[newX, newY + 2]); // Добавление второй совпавшей ноды
-
-            int nextY = newY + 3;
-            while (nextY < Nodes.GetLength(1) - 2 && Nodes[newX, nextY].NodeType == newNode)
-            {
-                matches.Add(Nodes[newX, nextY]);
-                nextY++;
-            }
-            print("Matches count " + matches.Count);
-            DestroyNodes(matches);
-            _selectedNode01 = null;
-            _selectedNode02 = null;
-            return true; // Три ноды по вертикали вверх
-        }
-
-
-        return false; // Не найдено комбинаций из трех одинаковых нод
-    }
-
-    private void DestroyNodes(List<NodeBase> matches)
-    {
-        if (matches.Count >= 3)
-        {
-            foreach (NodeBase node in matches)
+            foreach (NodeBase node in matchesX)
             {
                 node.DestroyNode();
+            }
+            return true;
+        }
+
+        for (int y = 0; y < Nodes.GetLength(1); y++)
+        {
+            if (Nodes[newX, y].NodeType == newNode)
+            {
+                matchesY.Add(Nodes[newX, y]);
+            }
+            else
+            {
+                if (matchesY.Count < 3)
+                {
+                    matchesY.Clear();
+                }
+                else
+                {
+                    foreach (NodeBase node in matchesY)
+                    {
+                        node.DestroyNode();
+                    }
+                    return true;
+                }
+            }
+
+        }
+
+        if (matchesY.Count >= 3)
+        {
+            foreach (NodeBase node in matchesY)
+            {
+                node.DestroyNode();
+            }
+            return true;
+        }
+
+            return false; // No combinations of three identical nodes found
+    }
+
+    private void DownNode(NodeBase node)
+    {
+        int x = (int)node.Position.x;
+
+        for (int y = 0; y < Nodes.GetLength(1); y++)
+        {
+            if (Nodes[x, y].NodeType == NodeType.Ready)
+            {
+                print(Nodes[x, y].Position);
+                Nodes[x, y + 1].PositionText.gameObject.SetActive(true);
+
+                break;
             }
         }
     }
