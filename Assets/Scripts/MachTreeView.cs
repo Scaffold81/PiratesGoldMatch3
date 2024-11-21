@@ -115,7 +115,7 @@ public class MachTreeView : MonoBehaviour
 
             if (!matchNode01 && !matchNode02 && !isReverse)
             {
-                // Reverse(selectedNode01, selectedNode02);
+                Reverse(selectedNode01, selectedNode02);
             }
             _selectedNode01 = null;
             _selectedNode02 = null;
