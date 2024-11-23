@@ -1,9 +1,7 @@
 using DG.Tweening;
 using Game.Core.Generators;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +27,6 @@ public class MachTreeView : MonoBehaviour
     [SerializeField]
     private NodeBase _selectedNode02;
     private bool _isBlock = false;
-    public List<NodeBase> matchesY;
 
     private void Awake()
     {
@@ -117,6 +114,11 @@ public class MachTreeView : MonoBehaviour
             {
                 Reverse(selectedNode01, selectedNode02);
             }
+            else
+            {
+                FindEmptyNodes();
+            }
+
             _selectedNode01 = null;
             _selectedNode02 = null;
             _isBlock = false;
@@ -198,7 +200,7 @@ public class MachTreeView : MonoBehaviour
                 }
             }
         }
-       
+
         if (matchesX.Count < 3)
         {
             matchesX.Clear();
@@ -230,10 +232,10 @@ public class MachTreeView : MonoBehaviour
                     {
                         node.DestroyNode();
                     }
+
                     return true;
                 }
             }
-
         }
 
         if (matchesY.Count >= 3)
@@ -244,24 +246,54 @@ public class MachTreeView : MonoBehaviour
             }
             return true;
         }
-
-            return false; // No combinations of three identical nodes found
+           
+        return false; // No combinations of three identical nodes found
     }
 
-    private void DownNode(NodeBase node)
+    private void FindEmptyNodes()
     {
-        int x = (int)node.Position.x;
-
-        for (int y = 0; y < Nodes.GetLength(1); y++)
+        for (int y = 0; y < Nodes.GetLength(1)-1; y++)
         {
-            if (Nodes[x, y].NodeType == NodeType.Ready)
+            for (int x = 0; x < Nodes.GetLength(0); x++)
             {
-                print(Nodes[x, y].Position);
-                Nodes[x, y + 1].PositionText.gameObject.SetActive(true);
-
-                break;
+                if (Nodes[x, y].NodeType != NodeType.Ready&&Nodes[x, y + 1].NodeType == NodeType.Ready)
+                {
+                    DownNode(Nodes[x, y], Nodes[x, y + 1]);
+                }
             }
         }
+    }
+
+    private void DownNode(NodeBase selectedNode01, NodeBase selectedNode02)
+    {
+        _isBlock = true;
+        var pos01 = selectedNode01.Position;
+        var pos02 = selectedNode02.Position;
+
+        // ¬изуализаци€ перемещени€ нод на сцене с использованием DOTween
+        selectedNode01.transform.DOMove(selectedNode02.transform.position, 0.3f)
+              .OnComplete(() =>
+              {
+                  // ѕосле завершени€ анимации первой ноды обновл€ем позиции в массиве
+                  Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
+                  selectedNode01.Position = pos02;
+                  selectedNode01.Show(selectedNode01.Position);
+                  selectedNode01.Rename();
+                  _isBlock = false;
+              });
+
+           selectedNode02.transform.DOMove(selectedNode01.transform.position, 0.3f)
+          .OnComplete(() =>
+          {
+              // ѕосле завершени€ анимации второй ноды обновл€ем позиции в массиве
+              Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
+              selectedNode02.Position = pos01;
+              selectedNode02.Show(Nodes[(int)pos01.x, (int)pos01.y].Position);
+              selectedNode02.Rename();
+              
+             Invoke("FindEmptyNodes", 0.2f);
+              _isBlock = false;
+          });
     }
 }
 

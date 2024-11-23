@@ -65,8 +65,10 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
 
     public void Show(Vector2 position)
     {
-        PositionText.text = ""+ position.x + "/" + position.y;
-        Image.enabled = true;
+        if(_nodeType == NodeType.Ready)
+            Image.enabled = false;
+        else 
+            Image.enabled = true;
     }
 
     private IEnumerator LoadSprite()
