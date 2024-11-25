@@ -27,13 +27,16 @@ public class MachTreeView : MonoBehaviour
     [SerializeField]
     private NodeBase _selectedNode02;
     private bool _isBlock = false;
-    private List<NodeBase> emptyNodes;
-    private int index;
+    private List<NodeBase> _emptyNodes;
+    private List<NodeBase> _newNodes;
 
     private void Awake()
     {
         AddNodes();
         Invoke(nameof(GridLayoutGroupOff), 1);
+
+        _emptyNodes = new List<NodeBase>();
+        _newNodes = new List<NodeBase>();
     }
 
     private void GridLayoutGroupOff() => GetComponent<GridLayoutGroup>().enabled = false;
@@ -126,7 +129,7 @@ public class MachTreeView : MonoBehaviour
             _isBlock = false;
         });
     }
-    
+
     private void Reverse(NodeBase selectedNode01, NodeBase selectedNode02)
     {
         var pos01 = selectedNode01.Position;
@@ -253,40 +256,40 @@ public class MachTreeView : MonoBehaviour
 
     private void FindEmptyNodes()
     {
-        _isBlock = true;
-        emptyNodes = new List<NodeBase>();
-
+        _isBlock = true; 
         for (int y = 0; y < Nodes.GetLength(1) - 1; y++)
         {
             for (int x = 0; x < Nodes.GetLength(0); x++)
             {
-               /* if (Nodes[x, 0].NodeType == NodeType.Ready && Nodes[x, y + 1].NodeType != NodeType.Ready)
+                if (Nodes[x, 0].NodeType == NodeType.Ready)
                 {
-                    emptyNodes.Add(Nodes[x, y]);
-                    NewNode(Nodes[x, 0]);
-                }*/
-               
-                    if (Nodes[x, y].NodeType != NodeType.Ready && Nodes[x, y + 1].NodeType == NodeType.Ready)
+                    if (!_newNodes.Contains(Nodes[x, 0]))
                     {
-                        emptyNodes.Add(Nodes[x, y]);
+                        _newNodes.Add(Nodes[x, 0]);
                     }
+
+                }
+
+                if (Nodes[x, y].NodeType != NodeType.Ready && Nodes[x, y + 1].NodeType == NodeType.Ready)
+                {
+                    _emptyNodes.Add(Nodes[x, y]);
+                }
             }
         }
-
-        index = 0;
+        NewNode();
         MoveNode();
     }
 
     private void MoveNode()
     {
-        if (emptyNodes.Count > 0)
+        if (_emptyNodes.Count > 0)
         {
-            // ¬ыбираем случайную ноду из списка
-            int randomIndex = UnityEngine.Random.Range(0, emptyNodes.Count);
-            NodeBase selectedNode = emptyNodes[randomIndex];
-            NodeBase belowNode = Nodes[(int)selectedNode.Position.x, (int)selectedNode.Position.y + 1];
-
             _isBlock = true;
+
+            // ¬ыбираем случайную ноду из списка
+            int randomIndex = UnityEngine.Random.Range(0, _emptyNodes.Count);
+            var selectedNode = _emptyNodes[randomIndex];
+            var belowNode = Nodes[(int)selectedNode.Position.x, (int)selectedNode.Position.y + 1];
             var pos = selectedNode.Position;
 
             selectedNode.transform.DOMove(belowNode.transform.position, 0.1f)
@@ -297,15 +300,6 @@ public class MachTreeView : MonoBehaviour
                     selectedNode.Show(selectedNode.Position);
                     selectedNode.Rename();
                     _isBlock = false;
-
-                    // ѕосле завершени€ текущего перемещени€ удал€ем ноду из списка
-                    emptyNodes.RemoveAt(randomIndex);
-
-                    // ¬ызываем MoveNode() снова, если еще остались пустые ноды
-                    if (emptyNodes.Count > 0)
-                        Invoke(nameof(MoveNode), 0.1f);
-                    else
-                        Invoke(nameof(FindEmptyNodes), 0.1f);
                 });
 
             belowNode.transform.DOMove(selectedNode.transform.position, 0.1f)
@@ -315,32 +309,57 @@ public class MachTreeView : MonoBehaviour
                     belowNode.Position = pos;
                     belowNode.Show(belowNode.Position);
                     belowNode.Rename();
+                       
+                    if((int)selectedNode.Position.y>Nodes.GetLength(1))
+                        if (Nodes[(int)selectedNode.Position.x, (int)selectedNode.Position.y+1].NodeType!=NodeType.Ready)
+                            _emptyNodes.Remove(selectedNode);
+
+                    if (_emptyNodes.Count > 0)
+                        Invoke(nameof(MoveNode), 0.1f);
+                    else 
+                        Invoke(nameof(FindEmptyNodes), 0.2f);
                 });
         }
         else
         {
+            
             _isBlock = false;
         }
     }
 
-    private void NewNode(NodeBase node)
+    private void NewNode()
     {
-        //_isBlock = true;
-       /* var nodeStartPosition = node.transform.position + Vector3.up * 100;
-        node.transform.position = nodeStartPosition;
+        if (_newNodes.Count > 0)
+        {
+            _isBlock = true;
 
-        startingNodeAnim += 1;
+            int randomIndex = UnityEngine.Random.Range(0, _newNodes.Count);
 
-        node.NodeType = _nodesGenerator.GetNewNode(_nodeTypes,_excludedNodeTypes);
-        node.LoadNewSprite();*/
-       
-       /* node.transform.DOMove(node.transform.position + -Vector3.up * 10, 100f)
-             .OnComplete(() =>
-             {
-                 // ѕосле завершени€ анимации первой ноды обновл€ем позиции в массиве
-                 
-                 _isBlock = false;
-             });*/
+            NodeBase selectedNode = _newNodes[randomIndex];
+
+            // —охран€ем выбранный индекс дл€ последующего удалени€
+            int indexToRemove = randomIndex;
+
+            selectedNode.NodeType = _nodesGenerator.GetNewNode(_nodeTypes, _excludedNodeTypes);
+            selectedNode.LoadNewSprite();
+            selectedNode.transform.position = selectedNode.transform.position + Vector3.up * 100;
+            
+            selectedNode.transform.DOMove(selectedNode.transform.position - Vector3.up * 100, 0.1f)
+                .OnComplete(() =>
+                {
+                    // ѕровер€ем, что индекс на момент удалени€ все еще действителен
+                    if (indexToRemove >= 0 && indexToRemove < _newNodes.Count)
+                    {
+                        _newNodes.RemoveAt(indexToRemove);
+
+                        // ѕровер€ем, что еще остались ноды в списке дл€ продолжени€
+                        if (_newNodes.Count > 0)
+                            Invoke(nameof(NewNode), 0.1f);
+                        else
+                            Invoke(nameof(FindEmptyNodes), 0.1f);
+                    }
+                });
+        }
 
     }
 }
