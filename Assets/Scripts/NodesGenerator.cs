@@ -26,11 +26,28 @@ namespace Game.Core.Generators
                 }
             }
         }
+        public NodeType GetNewNode(NodeType[] nodeTypes, NodeType[] excludedNodeTypes)
+        {
+            int attempts = 0;
+            var randomNode = nodeTypes[Random.Range(0, nodeTypes.Length)];
+           
+            while (attempts < 100)
+            {
+                if (!CheckCloseNodesForMatches(randomNode) && !excludedNodeTypes.Contains(randomNode))
+                {
+                    break;
+                }
+                randomNode = nodeTypes[Random.Range(0, nodeTypes.Length)];
+                attempts++;
+            }
+            return randomNode;
+        }
 
         private NodeType GetUniqueNode(NodeType[] nodeTypes, NodeType[] excludedNodeTypes)
         {
-            var randomNode = nodeTypes[Random.Range(0, nodeTypes.Length)];
             int attempts = 0;
+            var randomNode = nodeTypes[Random.Range(0, nodeTypes.Length)];
+           
             while (attempts < 10000)
             {
                 if (!CheckCloseNodesForMatches(randomNode) && !excludedNodeTypes.Contains(randomNode))

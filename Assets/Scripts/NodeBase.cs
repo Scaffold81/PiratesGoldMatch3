@@ -71,6 +71,11 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
             Image.enabled = true;
     }
 
+    public void LoadNewSprite()
+    {
+        StartCoroutine(LoadSprite());
+    }
+
     private IEnumerator LoadSprite()
     {
         var handle = Addressables.LoadAssetAsync<Sprite>("cut/" + _nodeType.ToString()+".png");

@@ -27,6 +27,8 @@ public class MachTreeView : MonoBehaviour
     [SerializeField]
     private NodeBase _selectedNode02;
     private bool _isBlock = false;
+    private List<NodeBase> emptyNodes;
+    private int index;
 
     private void Awake()
     {
@@ -124,8 +126,7 @@ public class MachTreeView : MonoBehaviour
             _isBlock = false;
         });
     }
-
-
+    
     private void Reverse(NodeBase selectedNode01, NodeBase selectedNode02)
     {
         var pos01 = selectedNode01.Position;
@@ -246,54 +247,101 @@ public class MachTreeView : MonoBehaviour
             }
             return true;
         }
-           
+
         return false; // No combinations of three identical nodes found
     }
 
     private void FindEmptyNodes()
     {
-        for (int y = 0; y < Nodes.GetLength(1)-1; y++)
+        _isBlock = true;
+        emptyNodes = new List<NodeBase>();
+
+        for (int y = 0; y < Nodes.GetLength(1) - 1; y++)
         {
             for (int x = 0; x < Nodes.GetLength(0); x++)
             {
-                if (Nodes[x, y].NodeType != NodeType.Ready&&Nodes[x, y + 1].NodeType == NodeType.Ready)
+               /* if (Nodes[x, 0].NodeType == NodeType.Ready && Nodes[x, y + 1].NodeType != NodeType.Ready)
                 {
-                    DownNode(Nodes[x, y], Nodes[x, y + 1]);
-                }
+                    emptyNodes.Add(Nodes[x, y]);
+                    NewNode(Nodes[x, 0]);
+                }*/
+               
+                    if (Nodes[x, y].NodeType != NodeType.Ready && Nodes[x, y + 1].NodeType == NodeType.Ready)
+                    {
+                        emptyNodes.Add(Nodes[x, y]);
+                    }
             }
+        }
+
+        index = 0;
+        MoveNode();
+    }
+
+    private void MoveNode()
+    {
+        if (emptyNodes.Count > 0)
+        {
+            // ¬ыбираем случайную ноду из списка
+            int randomIndex = UnityEngine.Random.Range(0, emptyNodes.Count);
+            NodeBase selectedNode = emptyNodes[randomIndex];
+            NodeBase belowNode = Nodes[(int)selectedNode.Position.x, (int)selectedNode.Position.y + 1];
+
+            _isBlock = true;
+            var pos = selectedNode.Position;
+
+            selectedNode.transform.DOMove(belowNode.transform.position, 0.1f)
+                .OnComplete(() =>
+                {
+                    Nodes[(int)belowNode.Position.x, (int)belowNode.Position.y] = selectedNode;
+                    selectedNode.Position = belowNode.Position;
+                    selectedNode.Show(selectedNode.Position);
+                    selectedNode.Rename();
+                    _isBlock = false;
+
+                    // ѕосле завершени€ текущего перемещени€ удал€ем ноду из списка
+                    emptyNodes.RemoveAt(randomIndex);
+
+                    // ¬ызываем MoveNode() снова, если еще остались пустые ноды
+                    if (emptyNodes.Count > 0)
+                        Invoke(nameof(MoveNode), 0.1f);
+                    else
+                        Invoke(nameof(FindEmptyNodes), 0.1f);
+                });
+
+            belowNode.transform.DOMove(selectedNode.transform.position, 0.1f)
+                .OnComplete(() =>
+                {
+                    Nodes[(int)pos.x, (int)pos.y] = belowNode;
+                    belowNode.Position = pos;
+                    belowNode.Show(belowNode.Position);
+                    belowNode.Rename();
+                });
+        }
+        else
+        {
+            _isBlock = false;
         }
     }
 
-    private void DownNode(NodeBase selectedNode01, NodeBase selectedNode02)
+    private void NewNode(NodeBase node)
     {
-        _isBlock = true;
-        var pos01 = selectedNode01.Position;
-        var pos02 = selectedNode02.Position;
+        //_isBlock = true;
+       /* var nodeStartPosition = node.transform.position + Vector3.up * 100;
+        node.transform.position = nodeStartPosition;
 
-        // ¬изуализаци€ перемещени€ нод на сцене с использованием DOTween
-        selectedNode01.transform.DOMove(selectedNode02.transform.position, 0.3f)
-              .OnComplete(() =>
-              {
-                  // ѕосле завершени€ анимации первой ноды обновл€ем позиции в массиве
-                  Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
-                  selectedNode01.Position = pos02;
-                  selectedNode01.Show(selectedNode01.Position);
-                  selectedNode01.Rename();
-                  _isBlock = false;
-              });
+        startingNodeAnim += 1;
 
-           selectedNode02.transform.DOMove(selectedNode01.transform.position, 0.3f)
-          .OnComplete(() =>
-          {
-              // ѕосле завершени€ анимации второй ноды обновл€ем позиции в массиве
-              Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
-              selectedNode02.Position = pos01;
-              selectedNode02.Show(Nodes[(int)pos01.x, (int)pos01.y].Position);
-              selectedNode02.Rename();
-              
-             Invoke("FindEmptyNodes", 0.2f);
-              _isBlock = false;
-          });
+        node.NodeType = _nodesGenerator.GetNewNode(_nodeTypes,_excludedNodeTypes);
+        node.LoadNewSprite();*/
+       
+       /* node.transform.DOMove(node.transform.position + -Vector3.up * 10, 100f)
+             .OnComplete(() =>
+             {
+                 // ѕосле завершени€ анимации первой ноды обновл€ем позиции в массиве
+                 
+                 _isBlock = false;
+             });*/
+
     }
 }
 
