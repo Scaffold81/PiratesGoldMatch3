@@ -254,9 +254,113 @@ public class MachTreeView : MonoBehaviour
         return false; // No combinations of three identical nodes found
     }
 
+    private bool CheckAllNodesForMatches()
+    {
+        List<NodeBase> matchedNodes = new List<NodeBase>();
+        bool foundMatch = false;
+
+        // Проверка строк на матчи
+        for (int y = 0; y < Nodes.GetLength(1); y++)
+        {
+            int consecutiveCountX = 1;
+
+            for (int x = 1; x < Nodes.GetLength(0); x++)
+            {
+                if (Nodes[x, y] != null && Nodes[x - 1, y] != null && Nodes[x, y].NodeType == Nodes[x - 1, y].NodeType)
+                {
+                    consecutiveCountX++;
+                }
+                else
+                {
+                    if (consecutiveCountX >= 3)
+                    {
+                        for (int i = 0; i < consecutiveCountX; i++)
+                        {
+                            matchedNodes.Add(Nodes[x - i - 1, y]);
+                        }
+                    }
+
+                    consecutiveCountX = 1; // Reset the consecutive count
+                }
+            }
+
+            if (consecutiveCountX >= 3)
+            {
+                for (int i = 0; i < consecutiveCountX; i++)
+                {
+                    matchedNodes.Add(Nodes[Nodes.GetLength(0) - i - 1, y]);
+                }
+            }
+        }
+
+        // Проверка столбцов на матчи
+        for (int x = 0; x < Nodes.GetLength(0); x++)
+        {
+            int consecutiveCountY = 1;
+
+            for (int y = 1; y < Nodes.GetLength(1); y++)
+            {
+                if (Nodes[x, y] != null && Nodes[x, y - 1] != null && Nodes[x, y].NodeType == Nodes[x, y - 1].NodeType)
+                {
+                    consecutiveCountY++;
+                }
+                else
+                {
+                    if (consecutiveCountY >= 3)
+                    {
+                        for (int i = 0; i < consecutiveCountY; i++)
+                        {
+                            if (!matchedNodes.Contains(Nodes[x, y - i - 1]))
+                            {
+                                matchedNodes.Add(Nodes[x, y - i - 1]);
+                            }
+                        }
+                    }
+
+                    consecutiveCountY = 1; // Reset the consecutive count
+                }
+            }
+
+            if (consecutiveCountY >= 3)
+            {
+                for (int i = 0; i < consecutiveCountY; i++)
+                {
+                    if (!matchedNodes.Contains(Nodes[x, Nodes.GetLength(1) - i - 1]))
+                    {
+                        matchedNodes.Add(Nodes[x, Nodes.GetLength(1) - i - 1]);
+                    }
+                }
+            }
+        }
+
+        if (matchedNodes.Count > 0)
+        {
+            foundMatch = true;
+            foreach (var node in matchedNodes)
+            {
+                node.DestroyNode();
+            }
+            FindEmptyNodes();
+        }
+
+        return foundMatch;
+    }
+
+    private bool CheckIfBoardIsFull()
+    {
+        foreach (NodeBase node in Nodes)
+        {
+            if (node.NodeType == NodeType.Ready)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private void FindEmptyNodes()
     {
-        _isBlock = true; 
         for (int y = 0; y < Nodes.GetLength(1) - 1; y++)
         {
             for (int x = 0; x < Nodes.GetLength(0); x++)
@@ -267,12 +371,14 @@ public class MachTreeView : MonoBehaviour
                     {
                         _newNodes.Add(Nodes[x, 0]);
                     }
-
                 }
 
-                if (Nodes[x, y].NodeType != NodeType.Ready && Nodes[x, y + 1].NodeType == NodeType.Ready)
+                if (y < Nodes.GetLength(1) - 1) // Check if y is not the last line
                 {
-                    _emptyNodes.Add(Nodes[x, y]);
+                    if (Nodes[x, y].NodeType != NodeType.Ready && Nodes[x, y + 1].NodeType == NodeType.Ready)
+                    {
+                        _emptyNodes.Add(Nodes[x, y]);
+                    }
                 }
             }
         }
@@ -286,44 +392,65 @@ public class MachTreeView : MonoBehaviour
         {
             _isBlock = true;
 
-            // Выбираем случайную ноду из списка
             int randomIndex = UnityEngine.Random.Range(0, _emptyNodes.Count);
+            int indexToRemove = randomIndex;
             var selectedNode = _emptyNodes[randomIndex];
-            var belowNode = Nodes[(int)selectedNode.Position.x, (int)selectedNode.Position.y + 1];
-            var pos = selectedNode.Position;
 
-            selectedNode.transform.DOMove(belowNode.transform.position, 0.1f)
-                .OnComplete(() =>
+            if ((int)selectedNode.Position.y + 1 < Nodes.GetLength(1))
+            {
+                var belowNode = Nodes[(int)selectedNode.Position.x, (int)selectedNode.Position.y + 1];
+                var pos = selectedNode.Position;
+
+                selectedNode.transform.DOMove(belowNode.transform.position, 0.1f)
+                    .OnComplete(() =>
+                    {
+                        Nodes[(int)belowNode.Position.x, (int)belowNode.Position.y] = selectedNode;
+                        selectedNode.Position = belowNode.Position;
+                        selectedNode.Show(selectedNode.Position);
+                        selectedNode.Rename();
+                        _isBlock = false;
+                    });
+
+                belowNode.transform.DOMove(selectedNode.transform.position, 0.1f)
+                    .OnComplete(() =>
+                    {
+                        // Check the array bounds before accessing elements
+                        if ((int)pos.x < Nodes.GetLength(0) && (int)pos.y < Nodes.GetLength(1) &&
+                            (int)belowNode.Position.x < Nodes.GetLength(0) && (int)belowNode.Position.y < Nodes.GetLength(1))
+                        {
+                            Nodes[(int)pos.x, (int)pos.y] = belowNode;
+                            belowNode.Position = pos;
+                            belowNode.Show(belowNode.Position);
+                            belowNode.Rename();
+
+                            if ((int)selectedNode.Position.y + 1 < Nodes.GetLength(1) &&
+                                Nodes[(int)selectedNode.Position.x, (int)selectedNode.Position.y + 1].NodeType != NodeType.Ready)
+                            {
+                                _emptyNodes.Remove(selectedNode);
+                            }
+
+                            belowNode.PositionText.gameObject.SetActive(true);
+
+                            if (_emptyNodes.Count > 0)
+                                Invoke(nameof(MoveNode), 0.1f);
+                            else
+                                Invoke(nameof(FindEmptyNodes), 0.2f);
+                            _isBlock = false;
+                        }
+                    });
+            }
+            else
+            {
+                if (_emptyNodes.Count > 0)
                 {
-                    Nodes[(int)belowNode.Position.x, (int)belowNode.Position.y] = selectedNode;
-                    selectedNode.Position = belowNode.Position;
-                    selectedNode.Show(selectedNode.Position);
-                    selectedNode.Rename();
-                    _isBlock = false;
-                });
-
-            belowNode.transform.DOMove(selectedNode.transform.position, 0.1f)
-                .OnComplete(() =>
-                {
-                    Nodes[(int)pos.x, (int)pos.y] = belowNode;
-                    belowNode.Position = pos;
-                    belowNode.Show(belowNode.Position);
-                    belowNode.Rename();
-                       
-                    if((int)selectedNode.Position.y>Nodes.GetLength(1))
-                        if (Nodes[(int)selectedNode.Position.x, (int)selectedNode.Position.y+1].NodeType!=NodeType.Ready)
-                            _emptyNodes.Remove(selectedNode);
-
-                    if (_emptyNodes.Count > 0)
-                        Invoke(nameof(MoveNode), 0.1f);
-                    else 
-                        Invoke(nameof(FindEmptyNodes), 0.2f);
-                });
-        }
-        else
-        {
-            
-            _isBlock = false;
+                    _emptyNodes.Clear();
+                    Invoke(nameof(FindEmptyNodes), 0.2f);
+                }
+                   
+                //else
+                  //  
+                _isBlock = false;
+            }
         }
     }
 
@@ -343,7 +470,7 @@ public class MachTreeView : MonoBehaviour
             selectedNode.NodeType = _nodesGenerator.GetNewNode(_nodeTypes, _excludedNodeTypes);
             selectedNode.LoadNewSprite();
             selectedNode.transform.position = selectedNode.transform.position + Vector3.up * 100;
-            
+
             selectedNode.transform.DOMove(selectedNode.transform.position - Vector3.up * 100, 0.1f)
                 .OnComplete(() =>
                 {
@@ -358,6 +485,7 @@ public class MachTreeView : MonoBehaviour
                         else
                             Invoke(nameof(FindEmptyNodes), 0.1f);
                     }
+                    _isBlock = false;
                 });
         }
 

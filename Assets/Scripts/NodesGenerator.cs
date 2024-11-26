@@ -5,6 +5,7 @@ namespace Game.Core.Generators
     public class NodesGenerator
     {
         private NodeBase[,] nodes;
+        private NodeType _previosNode;
 
         public NodesGenerator(NodeType[] nodeTypes, NodeType[] excludedNodeTypes, NodeBase[,] nodes, MachTreeView machTreeView)
         {
@@ -30,12 +31,14 @@ namespace Game.Core.Generators
         {
             int attempts = 0;
             var randomNode = nodeTypes[Random.Range(0, nodeTypes.Length)];
-           
+            
+
             while (attempts < 100)
             {
-                if (!CheckCloseNodesForMatches(randomNode) && !excludedNodeTypes.Contains(randomNode))
-                {
-                    break;
+                if (!CheckCloseNodesForMatches(randomNode) && !excludedNodeTypes.Contains(randomNode)&&_previosNode== randomNode) {
+                    
+                    _previosNode = randomNode;
+                    break; 
                 }
                 randomNode = nodeTypes[Random.Range(0, nodeTypes.Length)];
                 attempts++;
