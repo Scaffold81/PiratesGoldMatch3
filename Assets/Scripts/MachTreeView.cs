@@ -340,7 +340,6 @@ public class MachTreeView : MonoBehaviour
             {
                 node.DestroyNode();
             }
-            FindEmptyNodes();
         }
 
         return foundMatch;
@@ -446,9 +445,6 @@ public class MachTreeView : MonoBehaviour
                     _emptyNodes.Clear();
                     Invoke(nameof(FindEmptyNodes), 0.2f);
                 }
-                   
-                //else
-                  //  
                 _isBlock = false;
             }
         }
@@ -485,6 +481,14 @@ public class MachTreeView : MonoBehaviour
                         else
                             Invoke(nameof(FindEmptyNodes), 0.1f);
                     }
+
+                    var fully = CheckIfBoardIsFull();
+                    print("fully = " + fully);
+                    if (fully)
+                    {
+                        CheckAllNodesForMatches();
+                    }
+
                     _isBlock = false;
                 });
         }
