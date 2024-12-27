@@ -63,9 +63,15 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
         ImageBackground.enabled = false;
     }
 
+    public void TestShowText()
+    {
+        PositionText.gameObject.SetActive(true);
+    }
+
     public void Show(Vector2 position)
     {
-        if(_nodeType == NodeType.Ready)
+        PositionText.gameObject.SetActive(false);
+        if (_nodeType == NodeType.Ready)
             Image.enabled = false;
         else 
             Image.enabled = true;

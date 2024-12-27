@@ -54,6 +54,7 @@ public class MachTreeView : MonoBehaviour
         }
 
         _nodesGenerator = new NodesGenerator(_nodeTypes, _excludedNodeTypes, Nodes, this);
+        FindAvailableMatchesHorizontal(Nodes);
     }
 
     public void SetSelectedNode(NodeBase nodeBase)
@@ -341,6 +342,10 @@ public class MachTreeView : MonoBehaviour
                 node.DestroyNode();
             }
         }
+        else
+        {
+
+        }
 
         return foundMatch;
     }
@@ -356,6 +361,70 @@ public class MachTreeView : MonoBehaviour
         }
 
         return true;
+    }
+
+    public bool FindAvailableMatchesHorizontal(NodeBase[,] nodes)
+    {
+        var match=false;
+
+        for (int y = 0; y < nodes.GetLength(1); y++)
+        {
+            for (int x = 0; x < nodes.GetLength(0); x++)
+            {
+                if (x < nodes.GetLength(0) - 2)
+                {
+                    // Проверка горизонтальных сочетаний снизу вверх
+                    if (y < nodes.GetLength(1) - 1)
+                    {
+                        match= CheckHorizontalMatch(nodes, x, y, 0, 1, 2, 1);
+                        match = CheckHorizontalMatch(nodes, x, y, 0, 2, 1, 1);
+                        match = CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 1);
+                    }
+
+                    // Проверка горизонтальных сочетаний сверху вниз
+                    if (y > 0)
+                    {
+                        match = CheckHorizontalMatch(nodes, x, y, 0, 1, 2, -1);
+                        match = CheckHorizontalMatch(nodes, x, y, 0, 2, 1, -1);
+                        match = CheckHorizontalMatch(nodes, x, y, 1, 2, 0, -1);
+                    }
+                }
+
+                if (x < nodes.GetLength(0) - 3)
+                {
+                    // Проверка горизонтальных сочетаний в одной строке
+                    match = CheckHorizontalMatch(nodes, x, y, 0, 1, 3, 0);
+                    match = CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 0);
+                }
+            }
+        }
+        /// Мы будем заполнять список и если он не пустой то возвращать true
+        print(match);
+        return match;
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nodes"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="offsetX1"></param> 
+    /// <param name="offsetX2"></param>
+    /// <param name="targetOffsetX"></param>
+    /// <param name="offsetY1"></param>
+    private bool CheckHorizontalMatch(NodeBase[,] nodes, int x, int y, int offsetX1, int offsetX2, int targetOffsetX, int offsetY1)
+    {
+        var match = false;
+
+        if (nodes[x + offsetX1, y].NodeType == nodes[x + offsetX2, y].NodeType && nodes[x + offsetX1, y].NodeType == nodes[x + targetOffsetX, y + offsetY1].NodeType)
+        {
+            nodes[x + targetOffsetX, y].TestShowText();
+            nodes[x + targetOffsetX, y + offsetY1].TestShowText();
+            match=true;
+            
+        }
+        print("CheckHorizontalMatch "+match);
+        return match;
     }
 
     private void FindEmptyNodes()
@@ -428,8 +497,6 @@ public class MachTreeView : MonoBehaviour
                                 _emptyNodes.Remove(selectedNode);
                             }
 
-                            belowNode.PositionText.gameObject.SetActive(true);
-
                             if (_emptyNodes.Count > 0)
                                 Invoke(nameof(MoveNode), 0.1f);
                             else
@@ -483,10 +550,12 @@ public class MachTreeView : MonoBehaviour
                     }
 
                     var fully = CheckIfBoardIsFull();
-                    print("fully = " + fully);
+
                     if (fully)
                     {
-                        CheckAllNodesForMatches();
+                        var matches = CheckAllNodesForMatches();
+                        if (!matches)
+                            print("Available Matches Horizontal " + FindAvailableMatchesHorizontal(Nodes));
                     }
 
                     _isBlock = false;

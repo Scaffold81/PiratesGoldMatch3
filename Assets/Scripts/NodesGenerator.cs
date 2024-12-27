@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using UnityEngine;
+
 namespace Game.Core.Generators
 {
     public class NodesGenerator
@@ -11,10 +12,10 @@ namespace Game.Core.Generators
         {
             this.nodes = nodes;
 
-            SetNodes(nodeTypes, excludedNodeTypes, machTreeView);
+            GenerateNodes(nodeTypes, excludedNodeTypes, machTreeView);
         }
 
-        private void SetNodes(NodeType[] nodeTypes, NodeType[] excludedNodeTypes, MachTreeView machTreeView)
+        private void GenerateNodes(NodeType[] nodeTypes, NodeType[] excludedNodeTypes, MachTreeView machTreeView)
         {
             for (int x = 0; x < nodes.GetLength(0); x++)
             {
@@ -26,7 +27,10 @@ namespace Game.Core.Generators
                     node.Init(nodeType, machTreeView);
                 }
             }
+
+            CheckAndReplaceNodesForMatches(machTreeView);
         }
+
         public NodeType GetNewNode(NodeType[] nodeTypes, NodeType[] excludedNodeTypes)
         {
             int attempts = 0;
@@ -95,6 +99,34 @@ namespace Game.Core.Generators
                 }
             }
             return false;
+        }
+
+        public void CheckAndReplaceNodesForMatches(MachTreeView machTreeView)
+        {
+            for (int x = 0; x < nodes.GetLength(0); x++)
+            {
+                for (int y = 0; y < nodes.GetLength(1); y++)
+                {
+                    // Horizontal check
+                    if (x < nodes.GetLength(0) - 2 && nodes[x, y].NodeType == nodes[x + 1, y].NodeType && nodes[x + 1, y].NodeType == nodes[x + 2, y].NodeType)
+                    {
+                        int centerX = x + 1;
+                        ReplaceNode(centerX, y, nodes[x + 1, y].NodeType, machTreeView);
+                    }
+
+                    // Vertical check
+                    if (y < nodes.GetLength(1) - 2 && nodes[x, y].NodeType == nodes[x, y + 1].NodeType && nodes[x, y + 1].NodeType == nodes[x, y + 2].NodeType)
+                    {
+                        int centerY = y + 1;
+                        ReplaceNode(x, centerY, nodes[x, y + 1].NodeType, machTreeView);
+                    }
+                }
+            }
+        }
+
+        private void ReplaceNode(int x, int y, NodeType newNode, MachTreeView machTreeView)
+        {
+            nodes[x, y].Init(newNode, machTreeView); // Replace the node at position (x, y) with the new node
         }
     }
 }
