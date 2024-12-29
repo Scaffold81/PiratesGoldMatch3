@@ -29,6 +29,8 @@ public class MachTreeView : MonoBehaviour
     private bool _isBlock = false;
     private List<NodeBase> _emptyNodes;
     private List<NodeBase> _newNodes;
+[SerializeField]
+    private List<AvalableNodeForMatch> _avalableNodeForMatches;
 
     private void Awake()
     {
@@ -37,6 +39,7 @@ public class MachTreeView : MonoBehaviour
 
         _emptyNodes = new List<NodeBase>();
         _newNodes = new List<NodeBase>();
+        _avalableNodeForMatches= new List<AvalableNodeForMatch>();
     }
 
     private void GridLayoutGroupOff() => GetComponent<GridLayoutGroup>().enabled = false;
@@ -54,7 +57,8 @@ public class MachTreeView : MonoBehaviour
         }
 
         _nodesGenerator = new NodesGenerator(_nodeTypes, _excludedNodeTypes, Nodes, this);
-        FindAvailableMatchesHorizontal(Nodes);
+        Invoke(nameof(FindAvailableMatchesHorizontal),0.1f);
+        FindAvailableMatchesHorizontal();
     }
 
     public void SetSelectedNode(NodeBase nodeBase)
@@ -92,11 +96,11 @@ public class MachTreeView : MonoBehaviour
         var pos01 = selectedNode01.Position;
         var pos02 = selectedNode02.Position;
 
-        // Визуализация перемещения нод на сцене с использованием DOTween
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ DOTween
         selectedNode01.transform.DOMove(selectedNode02.transform.position, 0.5f)
             .OnComplete(() =>
             {
-                // После завершения анимации первой ноды обновляем позиции в массиве
+                // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
                 selectedNode01.Position = pos02;
                 selectedNode01.Show(selectedNode01.Position);
@@ -107,7 +111,7 @@ public class MachTreeView : MonoBehaviour
         selectedNode02.transform.DOMove(selectedNode01.transform.position, 0.5f)
         .OnComplete(() =>
         {
-            // После завершения анимации второй ноды обновляем позиции в массиве
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
             selectedNode02.Position = pos01;
             selectedNode02.Show(Nodes[(int)pos01.x, (int)pos01.y].Position);
@@ -136,11 +140,11 @@ public class MachTreeView : MonoBehaviour
         var pos01 = selectedNode01.Position;
         var pos02 = selectedNode02.Position;
 
-        // Визуализация перемещения нод на сцене с использованием DOTween
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ DOTween
         selectedNode01.transform.DOMove(selectedNode02.transform.position, 0.5f)
             .OnComplete(() =>
             {
-                // После завершения анимации первой ноды обновляем позиции в массиве
+                // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
                 selectedNode01.Position = pos02;
                 selectedNode01.Show(Nodes[(int)pos02.x, (int)pos02.y].Position);
@@ -151,7 +155,7 @@ public class MachTreeView : MonoBehaviour
         selectedNode02.transform.DOMove(selectedNode01.transform.position, 0.5f)
             .OnComplete(() =>
             {
-                // После завершения анимации второй ноды обновляем позиции в массиве
+                // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
                 selectedNode02.Position = pos01;
                 selectedNode02.Show(Nodes[(int)pos01.x, (int)pos01.y].Position);
@@ -162,14 +166,14 @@ public class MachTreeView : MonoBehaviour
 
     public bool AreNodesNeighbors(NodeBase node1, NodeBase node2)
     {
-        // Проверяем, являются ли заданные ноды соседними в игровом поле
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
         int x1 = (int)node1.Position.x;
         int y1 = (int)node1.Position.y;
 
         int x2 = (int)node2.Position.x;
         int y2 = (int)node2.Position.y;
 
-        // Ноды соседние, если их позиции отличаются всего на 1 по одной из осей (вертикали или горизонтали)
+        // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 1 пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)
         return Mathf.Abs(x1 - x2) + Mathf.Abs(y1 - y2) == 1;
     }
 
@@ -260,7 +264,7 @@ public class MachTreeView : MonoBehaviour
         List<NodeBase> matchedNodes = new List<NodeBase>();
         bool foundMatch = false;
 
-        // Проверка строк на матчи
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         for (int y = 0; y < Nodes.GetLength(1); y++)
         {
             int consecutiveCountX = 1;
@@ -294,7 +298,7 @@ public class MachTreeView : MonoBehaviour
             }
         }
 
-        // Проверка столбцов на матчи
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         for (int x = 0; x < Nodes.GetLength(0); x++)
         {
             int consecutiveCountY = 1;
@@ -363,9 +367,10 @@ public class MachTreeView : MonoBehaviour
         return true;
     }
 
-    public bool FindAvailableMatchesHorizontal(NodeBase[,] nodes)
+    public void FindAvailableMatchesHorizontal()
     {
-        var match=false;
+        var nodes=Nodes;
+        _avalableNodeForMatches.Clear();
 
         for (int y = 0; y < nodes.GetLength(1); y++)
         {
@@ -373,59 +378,107 @@ public class MachTreeView : MonoBehaviour
             {
                 if (x < nodes.GetLength(0) - 2)
                 {
-                    // Проверка горизонтальных сочетаний снизу вверх
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
                     if (y < nodes.GetLength(1) - 1)
                     {
-                        match= CheckHorizontalMatch(nodes, x, y, 0, 1, 2, 1);
-                        match = CheckHorizontalMatch(nodes, x, y, 0, 2, 1, 1);
-                        match = CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 1);
+                        CheckHorizontalMatch(nodes, x, y, 0, 1, 2, 1);
+                        CheckHorizontalMatch(nodes, x, y, 0, 2, 1, 1);
+                        CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 1);
                     }
 
-                    // Проверка горизонтальных сочетаний сверху вниз
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
                     if (y > 0)
                     {
-                        match = CheckHorizontalMatch(nodes, x, y, 0, 1, 2, -1);
-                        match = CheckHorizontalMatch(nodes, x, y, 0, 2, 1, -1);
-                        match = CheckHorizontalMatch(nodes, x, y, 1, 2, 0, -1);
+                        CheckHorizontalMatch(nodes, x, y, 0, 1, 2, -1);
+                        CheckHorizontalMatch(nodes, x, y, 0, 2, 1, -1);
+                        CheckHorizontalMatch(nodes, x, y, 1, 2, 0, -1);
                     }
                 }
 
                 if (x < nodes.GetLength(0) - 3)
                 {
-                    // Проверка горизонтальных сочетаний в одной строке
-                    match = CheckHorizontalMatch(nodes, x, y, 0, 1, 3, 0);
-                    match = CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 0);
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+                    CheckHorizontalMatch(nodes, x, y, 0, 1, 3, 0);
+                   CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 0);
                 }
             }
         }
-        /// Мы будем заполнять список и если он не пустой то возвращать true
-        print(match);
-        return match;
+        
+        FindAvailableMatchesVertical();
     }
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="nodes"></param>
-    /// <param name="x"></param>
-    /// <param name="y"></param>
-    /// <param name="offsetX1"></param> 
-    /// <param name="offsetX2"></param>
-    /// <param name="targetOffsetX"></param>
-    /// <param name="offsetY1"></param>
-    private bool CheckHorizontalMatch(NodeBase[,] nodes, int x, int y, int offsetX1, int offsetX2, int targetOffsetX, int offsetY1)
-    {
-        var match = false;
 
+    public void FindAvailableMatchesVertical()
+    { 
+        var nodes=Nodes;
+        for (int x = 0; x < nodes.GetLength(0); x++)
+        {
+            for (int y = 0; y < nodes.GetLength(1); y++)
+            {
+                if (y < nodes.GetLength(1) - 2)
+                {
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
+                    if (x< nodes.GetLength(0) - 1)
+                    {
+                        CheckVerticalMatch(nodes, x, y, 0, 1, 2, 1);
+                       CheckVerticalMatch(nodes, x, y, 0, 2, 1, 1);
+                       CheckVerticalMatch(nodes, x, y, 1, 2, 0, 1);
+                    }
+
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+                    if (x > 0)
+                    {
+                       CheckVerticalMatch(nodes, x, y, 0, 1, 2, -1);
+                        CheckVerticalMatch(nodes, x, y, 0, 2, 1, -1);
+                        CheckVerticalMatch(nodes, x, y, 1, 2, 0, -1);
+                    }
+                }
+                
+                if (y < nodes.GetLength(1) - 3)
+                {
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+                    CheckVerticalMatch(nodes, x, y, 0, 1, 3, 0);
+                    CheckVerticalMatch(nodes, x, y, 1, 2, 0, 0);
+                }
+            }
+        }
+        if(_avalableNodeForMatches.Count()<=0){
+        print("Avalable matches not found");
+       }
+    }
+    
+    private void CheckHorizontalMatch(NodeBase[,] nodes, int x, int y, int offsetX1, int offsetX2, int targetOffsetX, int offsetY1)
+    {
         if (nodes[x + offsetX1, y].NodeType == nodes[x + offsetX2, y].NodeType && nodes[x + offsetX1, y].NodeType == nodes[x + targetOffsetX, y + offsetY1].NodeType)
         {
-            nodes[x + targetOffsetX, y].TestShowText();
-            nodes[x + targetOffsetX, y + offsetY1].TestShowText();
-            match=true;
-            
-        }
-        print("CheckHorizontalMatch "+match);
-        return match;
+           // nodes[x + targetOffsetX, y].TestShowText();
+           // nodes[x + targetOffsetX, y + offsetY1].TestShowText();
+        
+        AvalableNodeForMatch  avlableNodes =new AvalableNodeForMatch
+        {
+            NodePosition01=new Vector2(x + targetOffsetX, y),
+            Node0Position02=new Vector2(x + targetOffsetX, y + offsetY1)
+        };
+        _avalableNodeForMatches.Add(avlableNodes);
+         }
     }
+    
+    private void CheckVerticalMatch(NodeBase[,] nodes, int x, int y, int offset1, int offset2, int targetOffset, int offsetX1)
+    {
+        if (nodes[x , y+offset1].NodeType == nodes[x , y+ offset2].NodeType && nodes[x , y+ offset1].NodeType == nodes[x + offsetX1, y +targetOffset ].NodeType)
+        {
+           // nodes[x , y+ targetOffset].TestShowText();
+           // nodes[x  + offsetX1, y+ targetOffset].TestShowText();
+        
+        AvalableNodeForMatch  avlableNodes =new AvalableNodeForMatch
+        {
+            NodePosition01=new Vector2( x, y+ targetOffset),
+            Node0Position02=new Vector2(x  + offsetX1, y+ targetOffset)
+        };
+        _avalableNodeForMatches.Add(avlableNodes);
+       }
+       
+    }
+
 
     private void FindEmptyNodes()
     {
@@ -527,7 +580,7 @@ public class MachTreeView : MonoBehaviour
 
             NodeBase selectedNode = _newNodes[randomIndex];
 
-            // Сохраняем выбранный индекс для последующего удаления
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             int indexToRemove = randomIndex;
 
             selectedNode.NodeType = _nodesGenerator.GetNewNode(_nodeTypes, _excludedNodeTypes);
@@ -537,12 +590,12 @@ public class MachTreeView : MonoBehaviour
             selectedNode.transform.DOMove(selectedNode.transform.position - Vector3.up * 100, 0.1f)
                 .OnComplete(() =>
                 {
-                    // Проверяем, что индекс на момент удаления все еще действителен
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                     if (indexToRemove >= 0 && indexToRemove < _newNodes.Count)
                     {
                         _newNodes.RemoveAt(indexToRemove);
 
-                        // Проверяем, что еще остались ноды в списке для продолжения
+                        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                         if (_newNodes.Count > 0)
                             Invoke(nameof(NewNode), 0.1f);
                         else
@@ -555,7 +608,7 @@ public class MachTreeView : MonoBehaviour
                     {
                         var matches = CheckAllNodesForMatches();
                         if (!matches)
-                            print("Available Matches Horizontal " + FindAvailableMatchesHorizontal(Nodes));
+                            FindAvailableMatchesHorizontal();
                     }
 
                     _isBlock = false;
