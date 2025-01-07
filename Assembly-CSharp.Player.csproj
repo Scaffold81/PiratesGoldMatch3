@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\NodeBase.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\MachTreeView.cs" />
+    <Compile Include="Assets\Scripts\Structures\AvalableNodeForMatch.cs" />
     <Compile Include="Assets\Scripts\FieldGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
