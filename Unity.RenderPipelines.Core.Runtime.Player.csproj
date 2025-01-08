@@ -516,6 +516,10 @@
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.42f1\Editor\Data\PlaybackEngines\AndroidPlayer\Variations\mono\Managed\UnityEngine.XRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Reactive">
+      <HintPath>Assets\Packages\System.Reactive.5.0.0\lib\netstandard2.0\System.Reactive.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\Plugins\Demigiant\DOTween\DOTween.dll</HintPath>
       <Private>False</Private>

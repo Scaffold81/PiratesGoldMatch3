@@ -60,17 +60,38 @@
     <Analyzer Include="C:\Program Files\Unity\Hub\Editor\2022.3.42f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Data\SceneDataProvider.cs" />
     <Compile Include="Assets\Scripts\Common\LoadAddressables.cs" />
+    <Compile Include="Assets\Scripts\Extensions\RxExtensions\TMPExtenstions.cs" />
+    <Compile Include="Assets\Scripts\PanelStateManager\UIPanelStateController.cs" />
+    <Compile Include="Assets\Scripts\Common\StartUpScene.cs" />
+    <Compile Include="Assets\Scripts\Extensions\RxExtensions\AddToRxExtension.cs" />
+    <Compile Include="Assets\Scripts\PanelStateManager\UIButtonPanelState.cs" />
     <Compile Include="Assets\Scripts\NodeType.cs" />
+    <Compile Include="Assets\Scripts\Structures\LevelConfig.cs" />
     <Compile Include="Assets\Scripts\NodesGenerator.cs" />
+    <Compile Include="Assets\Scripts\PanelStateManager\UIPanelStateManager.cs" />
+    <Compile Include="Assets\Scripts\Extensions\RxExtensions\EnumExtenstions.cs" />
+    <Compile Include="Assets\Scripts\Extensions\RxExtensions\EnumerableExtenstions.cs" />
+    <Compile Include="Assets\Scripts\Extensions\RxExtensions\UnityEventExtensions.cs" />
     <Compile Include="Assets\Scripts\NodeBase.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+    <Compile Include="Assets\Scripts\Enums\EventNames.cs" />
+    <Compile Include="Assets\Scripts\Data\DataProviderBase.cs" />
+    <Compile Include="Assets\Scripts\Common\SaveSystem.cs" />
     <Compile Include="Assets\Scripts\MachTreeView.cs" />
+    <Compile Include="Assets\Scripts\Extensions\RxExtensions\GameObjectExtensions.cs" />
+    <Compile Include="Assets\Scripts\Common\LoadLevelSceneController.cs" />
+    <Compile Include="Assets\Scripts\PanelStateManager\UIUICustomButtonBase.cs" />
+    <Compile Include="Assets\Scripts\Common\TransitionManager.cs" />
+    <Compile Include="Assets\Scripts\PanelStateManager\UIButtonLevel.cs" />
     <Compile Include="Assets\Scripts\Structures\AvalableNodeForMatch.cs" />
     <Compile Include="Assets\Scripts\FieldGenerator.cs" />
+    <Compile Include="Assets\Scripts\Extensions\RxExtensions\DestroyTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
+    <None Include="Assets\Packages\System.Reactive.5.0.0\lib\netstandard2.0\System.Reactive.dll" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
@@ -411,6 +432,10 @@
     </Reference>
     <Reference Include="UnityEditor.UnityConnectModule">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.42f1\Editor\Data\Managed\UnityEngine\UnityEditor.UnityConnectModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Reactive">
+      <HintPath>Assets\Packages\System.Reactive.5.0.0\lib\netstandard2.0\System.Reactive.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DOTween">

@@ -1,5 +1,6 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using Game.Core.Generators;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -16,30 +17,31 @@ public class MachTreeView : MonoBehaviour
     private NodeType[] _nodeTypes;
     [SerializeField]
     private NodeType[] _excludedNodeTypes = { NodeType.Hidden };
+    public NodeBase[,] Nodes { get; private set; }
 
-    [SerializeField]
-    private NodeBase[,] _nodes;
-    public NodeBase[,] Nodes { get; set; }
-
-    private NodesGenerator _nodesGenerator;
-    [SerializeField]
-    private NodeBase _selectedNode01;
-    [SerializeField]
-    private NodeBase _selectedNode02;
-    private bool _isBlock = false;
-    private List<NodeBase> _emptyNodes;
-    private List<NodeBase> _newNodes;
-[SerializeField]
     private List<AvalableNodeForMatch> _avalableNodeForMatches;
+    private NodesGenerator _nodesGenerator;
+
+    private NodeBase _selectedNode01;
+    private NodeBase _selectedNode02;
+    private NodeBase _emptyNode = null;
+
+    private bool _isBlock = false;
+
+    [SerializeField]
+    private float _moveNodeTime = 0.01f;
+    [SerializeField]
+    private float _nodeDescentTime = 0.01f;
+    [SerializeField]
+    private float _executionDelay = 0.01f;
+    [SerializeField]
+    private float _scaleMultiplier =1.05f;
 
     private void Awake()
     {
         AddNodes();
         Invoke(nameof(GridLayoutGroupOff), 1);
-
-        _emptyNodes = new List<NodeBase>();
-        _newNodes = new List<NodeBase>();
-        _avalableNodeForMatches= new List<AvalableNodeForMatch>();
+        _avalableNodeForMatches = new List<AvalableNodeForMatch>();
     }
 
     private void GridLayoutGroupOff() => GetComponent<GridLayoutGroup>().enabled = false;
@@ -53,12 +55,11 @@ public class MachTreeView : MonoBehaviour
         foreach (var node in nodes)
         {
             Nodes[(int)node.Position.x, (int)node.Position.y] = node;
-            node.Show(Nodes[(int)node.Position.x, (int)node.Position.y].Position);
+            node.Show();
         }
 
         _nodesGenerator = new NodesGenerator(_nodeTypes, _excludedNodeTypes, Nodes, this);
-        Invoke(nameof(FindAvailableMatchesHorizontal),0.1f);
-        FindAvailableMatchesHorizontal();
+        Invoke(nameof(FindAvailableMatchesHorizontal), 0.1f);
     }
 
     public void SetSelectedNode(NodeBase nodeBase)
@@ -83,7 +84,6 @@ public class MachTreeView : MonoBehaviour
                 _selectedNode01 = nodeBase;
                 _selectedNode02 = null;
             }
-
         }
     }
 
@@ -96,25 +96,34 @@ public class MachTreeView : MonoBehaviour
         var pos01 = selectedNode01.Position;
         var pos02 = selectedNode02.Position;
 
-        // ������������ ����������� ��� �� ����� � �������������� DOTween
-        selectedNode01.transform.DOMove(selectedNode02.transform.position, 0.5f)
+        var initialScale= selectedNode01.transform.localScale;
+
+        selectedNode01.transform.SetAsLastSibling();
+
+        selectedNode01.transform.DOMove(selectedNode02.transform.position, _moveNodeTime)
             .OnComplete(() =>
             {
-                // ����� ���������� �������� ������ ���� ��������� ������� � �������
                 Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
                 selectedNode01.Position = pos02;
-                selectedNode01.Show(selectedNode01.Position);
+                selectedNode01.Show();
                 selectedNode01.Rename();
-                _isBlock = false;
+            });
+        
+        selectedNode01.transform.DOScale(initialScale * _scaleMultiplier, _moveNodeTime / 2)
+            .SetEase(Ease.InOutQuart)
+            .OnComplete(() =>
+            {
+                selectedNode01.transform.DOScale(initialScale, _moveNodeTime / 2)
+                .SetEase(Ease.InOutQuart);
             });
 
-        selectedNode02.transform.DOMove(selectedNode01.transform.position, 0.5f)
+
+        selectedNode02.transform.DOMove(selectedNode01.transform.position, _moveNodeTime)
         .OnComplete(() =>
         {
-            // ����� ���������� �������� ������ ���� ��������� ������� � �������
             Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
             selectedNode02.Position = pos01;
-            selectedNode02.Show(Nodes[(int)pos01.x, (int)pos01.y].Position);
+            selectedNode02.Show();
             selectedNode02.Rename();
 
             matchNode01 = !isReverse && CheckCloseNodesForMatches(selectedNode01);
@@ -131,34 +140,39 @@ public class MachTreeView : MonoBehaviour
 
             _selectedNode01 = null;
             _selectedNode02 = null;
-            _isBlock = false;
         });
     }
 
     private void Reverse(NodeBase selectedNode01, NodeBase selectedNode02)
     {
+        var initialScale = selectedNode01.transform.localScale;
+
         var pos01 = selectedNode01.Position;
         var pos02 = selectedNode02.Position;
 
-        // ������������ ����������� ��� �� ����� � �������������� DOTween
-        selectedNode01.transform.DOMove(selectedNode02.transform.position, 0.5f)
+        selectedNode01.transform.DOMove(selectedNode02.transform.position, _moveNodeTime)
             .OnComplete(() =>
             {
-                // ����� ���������� �������� ������ ���� ��������� ������� � �������
                 Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
                 selectedNode01.Position = pos02;
-                selectedNode01.Show(Nodes[(int)pos02.x, (int)pos02.y].Position);
+                selectedNode01.Show();
                 _selectedNode01 = null;
-                _isBlock = false;
-            });
-
-        selectedNode02.transform.DOMove(selectedNode01.transform.position, 0.5f)
+            }); 
+        
+        selectedNode01.transform.DOScale(initialScale * _scaleMultiplier, _moveNodeTime / 2)
+            .SetEase(Ease.InOutQuart)
             .OnComplete(() =>
             {
-                // ����� ���������� �������� ������ ���� ��������� ������� � �������
+                selectedNode01.transform.DOScale(initialScale, _moveNodeTime / 2)
+                .SetEase(Ease.InOutQuart);
+            });
+
+        selectedNode02.transform.DOMove(selectedNode01.transform.position, _moveNodeTime)
+            .OnComplete(() =>
+            {
                 Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
                 selectedNode02.Position = pos01;
-                selectedNode02.Show(Nodes[(int)pos01.x, (int)pos01.y].Position);
+                selectedNode02.Show();
                 _selectedNode02 = null;
                 _isBlock = false;
             });
@@ -166,14 +180,12 @@ public class MachTreeView : MonoBehaviour
 
     public bool AreNodesNeighbors(NodeBase node1, NodeBase node2)
     {
-        // ���������, �������� �� �������� ���� ��������� � ������� ����
         int x1 = (int)node1.Position.x;
         int y1 = (int)node1.Position.y;
 
         int x2 = (int)node2.Position.x;
         int y2 = (int)node2.Position.y;
 
-        // ���� ��������, ���� �� ������� ���������� ����� �� 1 �� ����� �� ���� (��������� ��� �����������)
         return Mathf.Abs(x1 - x2) + Mathf.Abs(y1 - y2) == 1;
     }
 
@@ -264,7 +276,6 @@ public class MachTreeView : MonoBehaviour
         List<NodeBase> matchedNodes = new List<NodeBase>();
         bool foundMatch = false;
 
-        // �������� ����� �� �����
         for (int y = 0; y < Nodes.GetLength(1); y++)
         {
             int consecutiveCountX = 1;
@@ -298,7 +309,6 @@ public class MachTreeView : MonoBehaviour
             }
         }
 
-        // �������� �������� �� �����
         for (int x = 0; x < Nodes.GetLength(0); x++)
         {
             int consecutiveCountY = 1;
@@ -345,6 +355,7 @@ public class MachTreeView : MonoBehaviour
             {
                 node.DestroyNode();
             }
+            FindEmptyNodes();
         }
         else
         {
@@ -369,7 +380,7 @@ public class MachTreeView : MonoBehaviour
 
     public void FindAvailableMatchesHorizontal()
     {
-        var nodes=Nodes;
+        var nodes = Nodes;
         _avalableNodeForMatches.Clear();
 
         for (int y = 0; y < nodes.GetLength(1); y++)
@@ -399,17 +410,17 @@ public class MachTreeView : MonoBehaviour
                 {
                     // �������� �������������� ��������� � ����� ������
                     CheckHorizontalMatch(nodes, x, y, 0, 1, 3, 0);
-                   CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 0);
+                    CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 0);
                 }
             }
         }
-        
+
         FindAvailableMatchesVertical();
     }
 
     public void FindAvailableMatchesVertical()
-    { 
-        var nodes=Nodes;
+    {
+        var nodes = Nodes;
         for (int x = 0; x < nodes.GetLength(0); x++)
         {
             for (int y = 0; y < nodes.GetLength(1); y++)
@@ -417,22 +428,22 @@ public class MachTreeView : MonoBehaviour
                 if (y < nodes.GetLength(1) - 2)
                 {
                     // �������� �������������� ��������� ����� �����
-                    if (x< nodes.GetLength(0) - 1)
+                    if (x < nodes.GetLength(0) - 1)
                     {
                         CheckVerticalMatch(nodes, x, y, 0, 1, 2, 1);
-                       CheckVerticalMatch(nodes, x, y, 0, 2, 1, 1);
-                       CheckVerticalMatch(nodes, x, y, 1, 2, 0, 1);
+                        CheckVerticalMatch(nodes, x, y, 0, 2, 1, 1);
+                        CheckVerticalMatch(nodes, x, y, 1, 2, 0, 1);
                     }
 
                     // �������� �������������� ��������� ������ ����
                     if (x > 0)
                     {
-                       CheckVerticalMatch(nodes, x, y, 0, 1, 2, -1);
+                        CheckVerticalMatch(nodes, x, y, 0, 1, 2, -1);
                         CheckVerticalMatch(nodes, x, y, 0, 2, 1, -1);
                         CheckVerticalMatch(nodes, x, y, 1, 2, 0, -1);
                     }
                 }
-                
+
                 if (y < nodes.GetLength(1) - 3)
                 {
                     // �������� �������������� ��������� � ����� ������
@@ -441,180 +452,153 @@ public class MachTreeView : MonoBehaviour
                 }
             }
         }
-        if(_avalableNodeForMatches.Count()<=0){
-        print("Avalable matches not found");
-       }
+        if (_avalableNodeForMatches.Count() <= 0)
+        {
+            print("Avalable matches not found");
+        }
     }
-    
+
     private void CheckHorizontalMatch(NodeBase[,] nodes, int x, int y, int offsetX1, int offsetX2, int targetOffsetX, int offsetY1)
     {
         if (nodes[x + offsetX1, y].NodeType == nodes[x + offsetX2, y].NodeType && nodes[x + offsetX1, y].NodeType == nodes[x + targetOffsetX, y + offsetY1].NodeType)
         {
-           // nodes[x + targetOffsetX, y].TestShowText();
-           // nodes[x + targetOffsetX, y + offsetY1].TestShowText();
-        
-        AvalableNodeForMatch  avlableNodes =new AvalableNodeForMatch
-        {
-            NodePosition01=new Vector2(x + targetOffsetX, y),
-            Node0Position02=new Vector2(x + targetOffsetX, y + offsetY1)
-        };
-        _avalableNodeForMatches.Add(avlableNodes);
-         }
+
+            AvalableNodeForMatch avlableNodes = new AvalableNodeForMatch
+            {
+                NodePosition01 = new Vector2(x + targetOffsetX, y),
+                Node0Position02 = new Vector2(x + targetOffsetX, y + offsetY1)
+            };
+            _avalableNodeForMatches.Add(avlableNodes);
+        }
     }
-    
+
     private void CheckVerticalMatch(NodeBase[,] nodes, int x, int y, int offset1, int offset2, int targetOffset, int offsetX1)
     {
-        if (nodes[x , y+offset1].NodeType == nodes[x , y+ offset2].NodeType && nodes[x , y+ offset1].NodeType == nodes[x + offsetX1, y +targetOffset ].NodeType)
+        if (nodes[x, y + offset1].NodeType == nodes[x, y + offset2].NodeType && nodes[x, y + offset1].NodeType == nodes[x + offsetX1, y + targetOffset].NodeType)
         {
-           // nodes[x , y+ targetOffset].TestShowText();
-           // nodes[x  + offsetX1, y+ targetOffset].TestShowText();
-        
-        AvalableNodeForMatch  avlableNodes =new AvalableNodeForMatch
-        {
-            NodePosition01=new Vector2( x, y+ targetOffset),
-            Node0Position02=new Vector2(x  + offsetX1, y+ targetOffset)
-        };
-        _avalableNodeForMatches.Add(avlableNodes);
-       }
-       
+            // nodes[x , y+ targetOffset].TestShowText();
+            // nodes[x  + offsetX1, y+ targetOffset].TestShowText();
+
+            AvalableNodeForMatch avlableNodes = new AvalableNodeForMatch
+            {
+                NodePosition01 = new Vector2(x, y + targetOffset),
+                Node0Position02 = new Vector2(x + offsetX1, y + targetOffset)
+            };
+            _avalableNodeForMatches.Add(avlableNodes);
+        }
+
     }
 
 
     private void FindEmptyNodes()
     {
-        for (int y = 0; y < Nodes.GetLength(1) - 1; y++)
+        bool isEmptyNodeFound = false; // Flag to track if an empty node is found
+
+        for (int y = 0; y < Nodes.GetLength(1) && !isEmptyNodeFound; y++)
         {
             for (int x = 0; x < Nodes.GetLength(0); x++)
             {
-                if (Nodes[x, 0].NodeType == NodeType.Ready)
+                if (y < Nodes.GetLength(1)) // Check if y is not the last line
                 {
-                    if (!_newNodes.Contains(Nodes[x, 0]))
-                    {
-                        _newNodes.Add(Nodes[x, 0]);
-                    }
-                }
 
-                if (y < Nodes.GetLength(1) - 1) // Check if y is not the last line
-                {
-                    if (Nodes[x, y].NodeType != NodeType.Ready && Nodes[x, y + 1].NodeType == NodeType.Ready)
+                    if (Nodes[x, y].NodeType == NodeType.Ready)
                     {
-                        _emptyNodes.Add(Nodes[x, y]);
+                        _emptyNode = Nodes[x, y];
+                        StartCoroutine(DescentNodeCoroutine());
+                        isEmptyNodeFound = true; // Set the flag to true to stop both loops
+                        break; // Exit the inner loop
                     }
                 }
             }
         }
-        NewNode();
-        MoveNode();
     }
 
-    private void MoveNode()
+    private IEnumerator DescentNodeCoroutine()
     {
-        if (_emptyNodes.Count > 0)
+        _isBlock = true;
+
+        var emptyNode = _emptyNode;
+
+        if (emptyNode.Position.y != 0)
         {
-            _isBlock = true;
+            var topNode = Nodes[(int)emptyNode.Position.x, (int)emptyNode.Position.y - 1];
 
-            int randomIndex = UnityEngine.Random.Range(0, _emptyNodes.Count);
-            int indexToRemove = randomIndex;
-            var selectedNode = _emptyNodes[randomIndex];
+            // Store the positions before swapping
+            var pos01 = new Vector2Int((int)emptyNode.Position.x, (int)emptyNode.Position.y);
+            var pos02 = new Vector2Int((int)emptyNode.Position.x, (int)emptyNode.Position.y - 1);
 
-            if ((int)selectedNode.Position.y + 1 < Nodes.GetLength(1))
+            var topNodeTransformPosition = Nodes[pos02.x, pos02.y].transform.position;
+            // Animate the top node moving to the empty node's position
+            yield return topNode.transform.DOMove(emptyNode.transform.position, _nodeDescentTime).WaitForCompletion();
+
+            // Update the positions and display of the nodes
+            emptyNode.transform.position = topNodeTransformPosition;
+
+            emptyNode.Position = new Vector2(pos02.x, pos02.y);
+            emptyNode.Show();
+            emptyNode.Rename();
+            Nodes[(int)emptyNode.Position.x, (int)emptyNode.Position.y] = emptyNode;
+
+            yield return new WaitForSeconds(_executionDelay);
+
+            topNode.Position = new Vector2(pos01.x, pos01.y);
+            topNode.Show();
+            topNode.Rename();
+            Nodes[(int)topNode.Position.x, (int)topNode.Position.y] = topNode;
+
+            // Add a delay before the next node movement
+            yield return new WaitForSeconds(_executionDelay);
+
+            // Perform any actions after the swap
+
+            if ((int)topNode.Position.y + 1 < Nodes.GetLength(1))
             {
-                var belowNode = Nodes[(int)selectedNode.Position.x, (int)selectedNode.Position.y + 1];
-                var pos = selectedNode.Position;
-
-                selectedNode.transform.DOMove(belowNode.transform.position, 0.1f)
-                    .OnComplete(() =>
-                    {
-                        Nodes[(int)belowNode.Position.x, (int)belowNode.Position.y] = selectedNode;
-                        selectedNode.Position = belowNode.Position;
-                        selectedNode.Show(selectedNode.Position);
-                        selectedNode.Rename();
-                        _isBlock = false;
-                    });
-
-                belowNode.transform.DOMove(selectedNode.transform.position, 0.1f)
-                    .OnComplete(() =>
-                    {
-                        // Check the array bounds before accessing elements
-                        if ((int)pos.x < Nodes.GetLength(0) && (int)pos.y < Nodes.GetLength(1) &&
-                            (int)belowNode.Position.x < Nodes.GetLength(0) && (int)belowNode.Position.y < Nodes.GetLength(1))
-                        {
-                            Nodes[(int)pos.x, (int)pos.y] = belowNode;
-                            belowNode.Position = pos;
-                            belowNode.Show(belowNode.Position);
-                            belowNode.Rename();
-
-                            if ((int)selectedNode.Position.y + 1 < Nodes.GetLength(1) &&
-                                Nodes[(int)selectedNode.Position.x, (int)selectedNode.Position.y + 1].NodeType != NodeType.Ready)
-                            {
-                                _emptyNodes.Remove(selectedNode);
-                            }
-
-                            if (_emptyNodes.Count > 0)
-                                Invoke(nameof(MoveNode), 0.1f);
-                            else
-                                Invoke(nameof(FindEmptyNodes), 0.2f);
-                            _isBlock = false;
-                        }
-                    });
+                if (Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType == NodeType.Ready)
+                {
+                    _emptyNode = Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1];
+                    StartCoroutine(DescentNodeCoroutine());
+                }
+                else
+                {
+                    FindEmptyNodes();
+                }
             }
             else
             {
-                if (_emptyNodes.Count > 0)
-                {
-                    _emptyNodes.Clear();
-                    Invoke(nameof(FindEmptyNodes), 0.2f);
-                }
-                _isBlock = false;
+                FindEmptyNodes();
             }
+        }
+        else
+        {
+            StartCoroutine(NewNodeCoroutine());
         }
     }
 
-    private void NewNode()
+    private IEnumerator NewNodeCoroutine()
     {
-        if (_newNodes.Count > 0)
+        _isBlock = true;
+
+        NodeBase selectedNode = _emptyNode;
+
+        selectedNode.NodeType = _nodesGenerator.GetNewNode(_nodeTypes, _excludedNodeTypes);
+        selectedNode.LoadNewSprite();
+        selectedNode.transform.position = selectedNode.transform.position + Vector3.up * 100;
+
+        yield return selectedNode.transform.DOMove(selectedNode.transform.position - Vector3.up * 100, 0.05f).WaitForCompletion();
+
+        yield return new WaitForSeconds(_executionDelay);
+        FindEmptyNodes();
+
+        var fully = CheckIfBoardIsFull();
+
+        if (fully)
         {
-            _isBlock = true;
-
-            int randomIndex = UnityEngine.Random.Range(0, _newNodes.Count);
-
-            NodeBase selectedNode = _newNodes[randomIndex];
-
-            // ��������� ��������� ������ ��� ������������ ��������
-            int indexToRemove = randomIndex;
-
-            selectedNode.NodeType = _nodesGenerator.GetNewNode(_nodeTypes, _excludedNodeTypes);
-            selectedNode.LoadNewSprite();
-            selectedNode.transform.position = selectedNode.transform.position + Vector3.up * 100;
-
-            selectedNode.transform.DOMove(selectedNode.transform.position - Vector3.up * 100, 0.1f)
-                .OnComplete(() =>
-                {
-                    // ���������, ��� ������ �� ������ �������� ��� ��� ������������
-                    if (indexToRemove >= 0 && indexToRemove < _newNodes.Count)
-                    {
-                        _newNodes.RemoveAt(indexToRemove);
-
-                        // ���������, ��� ��� �������� ���� � ������ ��� �����������
-                        if (_newNodes.Count > 0)
-                            Invoke(nameof(NewNode), 0.1f);
-                        else
-                            Invoke(nameof(FindEmptyNodes), 0.1f);
-                    }
-
-                    var fully = CheckIfBoardIsFull();
-
-                    if (fully)
-                    {
-                        var matches = CheckAllNodesForMatches();
-                        if (!matches)
-                            FindAvailableMatchesHorizontal();
-                    }
-
-                    _isBlock = false;
-                });
+            var matches = CheckAllNodesForMatches();
+            if (!matches)
+                FindAvailableMatchesHorizontal();
         }
 
+        _isBlock = false;
     }
 }
 

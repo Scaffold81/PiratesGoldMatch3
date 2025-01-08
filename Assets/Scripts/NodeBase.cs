@@ -68,9 +68,11 @@ public class NodeBase:MonoBehaviour, IPointerDownHandler
         PositionText.gameObject.SetActive(true);
     }
 
-    public void Show(Vector2 position)
+    public void Show()
     {
-        PositionText.gameObject.SetActive(false);
+        PositionText.text = Position.x + "/" + Position.y;
+       // PositionText.gameObject.SetActive(false);
+        
         if (_nodeType == NodeType.Ready)
             Image.enabled = false;
         else 

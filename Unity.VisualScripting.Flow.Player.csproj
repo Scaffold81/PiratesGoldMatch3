@@ -90,8 +90,8 @@
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Events\Input\OnButtonInput.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Literal.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Variables\Obsolete\SetSavedVariable.cs" />
-    <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Control\ToggleFlow.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Logic\Or.cs" />
+    <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Control\ToggleFlow.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Control\Cache.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Math\DotProduct.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Collections\Lists\CreateList.cs" />
@@ -443,8 +443,8 @@
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Logic\EqualityComparison.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Events\GUI\OnPointerEnter.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Graph\GetScriptGraph.cs" />
-    <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Variables\IUnifiedVariableUnit.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Variables\Obsolete\ISavedVariableUnit.cs" />
+    <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Variables\IUnifiedVariableUnit.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Time\WaitWhileUnit.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Math\Maximum.cs" />
     <Compile Include="Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Framework\Math\Vector3\Vector3Angle.cs" />
@@ -722,6 +722,10 @@
     </Reference>
     <Reference Include="UnityEngine.XRModule">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2022.3.42f1\Editor\Data\PlaybackEngines\AndroidPlayer\Variations\mono\Managed\UnityEngine.XRModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Reactive">
+      <HintPath>Assets\Packages\System.Reactive.5.0.0\lib\netstandard2.0\System.Reactive.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DOTween">
