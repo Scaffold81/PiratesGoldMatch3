@@ -1,22 +1,23 @@
-﻿using System.Linq;
+﻿using Game.Gameplay.Nodes;
+using System.Linq;
 using UnityEngine;
 
-namespace Game.Core.Generators
+namespace Game.Gameplay.Generators
 {
     public class NodesGenerator
     {
         private NodeBase[,] nodes;
         private NodeType _previosNode;
+        private NodesSO _repository;
 
-        public NodesGenerator(NodeType[] nodeTypes, NodeType[] excludedNodeTypes, NodeBase[,] nodes, MachTreeView machTreeView)
+        public NodesGenerator(NodesSO nodeRepository)
         {
-            this.nodes = nodes;
-
-            GenerateNodes(nodeTypes, excludedNodeTypes, machTreeView);
+            _repository = nodeRepository;
         }
 
-        private void GenerateNodes(NodeType[] nodeTypes, NodeType[] excludedNodeTypes, MachTreeView machTreeView)
+        public void GenerateNodes(NodeType[] nodeTypes, NodeType[] excludedNodeTypes, NodeBase[,] nodes, MachTreeView machTreeView)
         {
+            this.nodes = nodes;
             for (int x = 0; x < nodes.GetLength(0); x++)
             {
                 for (int y = 0; y < nodes.GetLength(1); y++)
@@ -24,7 +25,8 @@ namespace Game.Core.Generators
                     var node = nodes[x, y];
                     // Set the NodeType of the node
                     var nodeType = GetUniqueNode(nodeTypes, excludedNodeTypes);
-                    node.Init(nodeType, machTreeView);
+                    var nodeConfig = GetNodeConfig(nodeType);
+                    node.Init(nodeType, machTreeView, nodeConfig.nodeReward);
                 }
             }
 
@@ -126,7 +128,13 @@ namespace Game.Core.Generators
 
         private void ReplaceNode(int x, int y, NodeType newNode, MachTreeView machTreeView)
         {
-            nodes[x, y].Init(newNode, machTreeView); // Replace the node at position (x, y) with the new node
+            var nodeConfig = GetNodeConfig(newNode);
+            nodes[x, y].Init(newNode, machTreeView, nodeConfig.nodeReward); // Replace the node at position (x, y) with the new node
+        }
+
+        private NodeSO GetNodeConfig(NodeType newNode)
+        {
+            return _repository.nodesRepository.FirstOrDefault(q => q.nodeType == newNode);
         }
     }
 }

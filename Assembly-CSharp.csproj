@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\PanelStateManager\UIButtonPanelState.cs" />
     <Compile Include="Assets\Scripts\NodeType.cs" />
     <Compile Include="Assets\Scripts\Structures\LevelConfig.cs" />
+    <Compile Include="Assets\Scripts\NodeReward.cs" />
     <Compile Include="Assets\Scripts\NodesGenerator.cs" />
     <Compile Include="Assets\Scripts\PanelStateManager\UIPanelStateManager.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\EnumExtenstions.cs" />
@@ -81,6 +82,8 @@
     <Compile Include="Assets\Scripts\Common\SaveSystem.cs" />
     <Compile Include="Assets\Scripts\MachTreeView.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\GameObjectExtensions.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObjects\NodesSO.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObjects\NodeSO.cs" />
     <Compile Include="Assets\Scripts\Common\LoadLevelSceneController.cs" />
     <Compile Include="Assets\Scripts\PanelStateManager\UIUICustomButtonBase.cs" />
     <Compile Include="Assets\Scripts\Common\TransitionManager.cs" />
