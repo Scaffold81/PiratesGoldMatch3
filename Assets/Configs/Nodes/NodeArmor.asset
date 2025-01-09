@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodeType: 3
   nodeReward:
-    rewardValue: 10
+    rewardValue: 5
