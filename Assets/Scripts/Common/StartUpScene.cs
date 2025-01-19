@@ -15,7 +15,5 @@ namespace Game.Common
             _sceneDataProvider = SceneDataProvider.Instance;
             _sceneDataProvider.Publish(EventNames.UIPanelStateChange, _startPanel);
         }
-
-        
     }
 }

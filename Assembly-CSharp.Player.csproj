@@ -67,30 +67,47 @@
     <Compile Include="Assets\Scripts\Common\StartUpScene.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\AddToRxExtension.cs" />
     <Compile Include="Assets\Scripts\PanelStateManager\UIButtonPanelState.cs" />
-    <Compile Include="Assets\Scripts\NodeType.cs" />
+    <Compile Include="Assets\Scripts\Enums\PlayerСurrency.cs" />
+    <Compile Include="Assets\Scripts\Nodes\NodesGenerator.cs" />
     <Compile Include="Assets\Scripts\Structures\LevelConfig.cs" />
-    <Compile Include="Assets\Scripts\NodeReward.cs" />
-    <Compile Include="Assets\Scripts\NodesGenerator.cs" />
+    <Compile Include="Assets\Scripts\UI\UICustonTextField.cs" />
     <Compile Include="Assets\Scripts\PanelStateManager\UIPanelStateManager.cs" />
+    <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionItem.cs" />
+    <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\EnumExtenstions.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\EnumerableExtenstions.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\UnityEventExtensions.cs" />
-    <Compile Include="Assets\Scripts\NodeBase.cs" />
+    <Compile Include="Assets\Scripts\Enums\NodeType.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+    <Compile Include="Assets\Scripts\Common\NumericParser.cs" />
     <Compile Include="Assets\Scripts\Enums\EventNames.cs" />
+    <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\SerializedPropertyExtensions.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Data\DataProviderBase.cs" />
+    <Compile Include="Assets\Scripts\Enums\DataProvidersNames.cs" />
+    <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionSystem.cs" />
     <Compile Include="Assets\Scripts\Common\SaveSystem.cs" />
     <Compile Include="Assets\Scripts\MachTreeView.cs" />
+    <Compile Include="Assets\DropdownAttributes\Core\Scripts\DropdownPropertyDrawer.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\GameObjectExtensions.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\NodesSO.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\NodeSO.cs" />
+    <Compile Include="Assets\Scripts\Common\DefaultValues.cs" />
+    <Compile Include="Assets\Scripts\Data\GetDataProvider.cs" />
     <Compile Include="Assets\Scripts\Common\LoadLevelSceneController.cs" />
     <Compile Include="Assets\Scripts\PanelStateManager\UIUICustomButtonBase.cs" />
+    <Compile Include="Assets\Scripts\Data\GetEnumBase.cs" />
+    <Compile Include="Assets\Scripts\Nodes\NodeBase.cs" />
+    <Compile Include="Assets\Scripts\Structures\NodeReward.cs" />
     <Compile Include="Assets\Scripts\Common\TransitionManager.cs" />
     <Compile Include="Assets\Scripts\PanelStateManager\UIButtonLevel.cs" />
     <Compile Include="Assets\Scripts\Structures\AvalableNodeForMatch.cs" />
+    <Compile Include="Assets\DropdownAttributes\Core\Scripts\DropdownAttribute.cs" />
     <Compile Include="Assets\Scripts\FieldGenerator.cs" />
+    <Compile Include="Assets\Scripts\Common\SaveDataManager.cs" />
+    <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionItemType.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\DestroyTrigger.cs" />
+    <Compile Include="Assets\Scripts\Data\EnumProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -383,6 +400,10 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.2.1\Runtime\AOT\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">

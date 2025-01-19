@@ -172,8 +172,8 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.11\Editor\DefaultScene\UniversalProjectSettings.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.11\Editor\ShaderGUI\Shaders\SimpleLitShader.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.11\Editor\ShaderGUI\Shaders\ParticlesUnlitShader.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.11\Editor\2D\LightBatchingDebugger\LightBatchingDebugger.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.11\Editor\2D\Converter\BuiltInToURP2DMaterialUpgrader.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.11\Editor\2D\LightBatchingDebugger\LightBatchingDebugger.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.11\Editor\2D\ShapeEditor\Shapes\ShapeExtensions.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.11\Editor\Analytics\AssetReimporterAnalytic.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.universal@14.0.11\Editor\2D\ShapeEditor\GUIFramework\CommandAction.cs" />
@@ -749,6 +749,10 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.4\Runtime\VisualScripting.Flow\Dependencies\NCalc\Unity.VisualScripting.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Library\PackageCache\com.unity.nuget.newtonsoft-json@3.2.1\Runtime\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.VisualScripting.TextureAssets">

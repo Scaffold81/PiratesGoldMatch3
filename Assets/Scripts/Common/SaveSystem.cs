@@ -1,34 +1,68 @@
 using UnityEngine;
+using Newtonsoft.Json;
 
-public static class SaveSystem
+namespace Game.Common
 {
-    public static bool HasKeyData(string saveSlot)
+    public class SaveSystem
     {
-        return PlayerPrefs.HasKey(saveSlot);
-    }
-
-    public static void SaveData(string saveSlot, string data)
-    {
-        PlayerPrefs.SetString(saveSlot, data);
-    }
-    
-    public static string LoadData(string saveSlot)
-    {
-        if (PlayerPrefs.HasKey(saveSlot))
+        public  bool HasKeyData(string saveSlot)
         {
-            return PlayerPrefs.GetString(saveSlot);
+            return PlayerPrefs.HasKey(saveSlot);
         }
-        else
+
+        public static void SaveData(string saveSlot, string data)
         {
-            Debug.LogError(saveSlot +" "+ "PlayerPrefs.HasKey value is not valid");
-            return null;
+            PlayerPrefs.SetString(saveSlot, data);
+        }
+
+        public string LoadDataOrDefault(string key, string defaultValue)
+        {
+            string loadedData = LoadData(key);
+            return string.IsNullOrEmpty(loadedData) ? defaultValue : loadedData;
+        }
+
+        private string LoadData(string saveSlot)
+        {
+            if (PlayerPrefs.HasKey(saveSlot))
+            {
+                return PlayerPrefs.GetString(saveSlot);
+            }
+            else
+            {
+                Debug.LogError(saveSlot + " " + "PlayerPrefs.HasKey value is not valid");
+                return null;
+            }
+        }
+
+        public  void DeleteData(string saveSlot)
+        {
+            PlayerPrefs.DeleteKey(saveSlot);
+        }
+
+        public  string SaveJSON(string saveSlot, object data)
+        {
+            string jsonData = JsonConvert.SerializeObject(data);
+
+            PlayerPrefs.SetString(saveSlot, jsonData);
+            PlayerPrefs.Save();
+
+            return jsonData;
+        }
+
+        public  T LoadJSON<T>(string saveSlot)
+        {
+            string jsonData = PlayerPrefs.GetString(saveSlot);
+
+            if (!string.IsNullOrEmpty(jsonData))
+            {
+                T data = JsonConvert.DeserializeObject<T>(jsonData);
+                return data;
+            }
+            else
+            {
+                Debug.LogError(saveSlot + " data not found in PlayerPrefs");
+                return default(T);
+            }
         }
     }
-
-    public static void DeleteData(string saveSlot)
-    {
-        PlayerPrefs.DeleteKey(saveSlot);
-    }
-
-   
 }

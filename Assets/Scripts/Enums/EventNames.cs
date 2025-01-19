@@ -38,4 +38,12 @@
         Empty19 = 30
         #endregion  GameEventNames
     }
+    public enum SaveSlotNames
+    {
+        None = 0,
+        Piastres, 
+        Doubloons,
+        LevelsData,
+        LevelConfig
+    }
 }

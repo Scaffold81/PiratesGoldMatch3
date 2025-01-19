@@ -1,10 +1,13 @@
 ﻿using Core.Data;
 using DG.Tweening;
+using Game.Enums;
 using Game.Gameplay.Generators;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering.LookDev;
 using UnityEngine.UI;
 
 namespace Game.Gameplay.Nodes
@@ -13,6 +16,13 @@ namespace Game.Gameplay.Nodes
     {
         private NodesGenerator _nodesGenerator;
         private SceneDataProvider _sceneDataProvider;
+        
+        [SerializeField]
+        private GridLayoutGroup _layoutGroup;
+
+        [SerializeField]
+        private GameManagerBase _gameManager;
+
         [SerializeField]
         private NodesSO _nodeRepository;
 
@@ -28,7 +38,7 @@ namespace Game.Gameplay.Nodes
         public NodeBase[,] Nodes { get; private set; }
 
         private List<AvalableNodeForMatch> _avalableNodeForMatches;
-        
+
         private NodeBase _selectedNode01;
         private NodeBase _selectedNode02;
         private NodeBase _emptyNode = null;
@@ -47,7 +57,7 @@ namespace Game.Gameplay.Nodes
         private void Awake()
         {
             _nodesGenerator = new NodesGenerator(_nodeRepository);
-
+            _gameManager = GetComponent<GameManagerBase>();
             AddNodes();
             Invoke(nameof(GridLayoutGroupOff), 1);
             _avalableNodeForMatches = new List<AvalableNodeForMatch>();
@@ -56,9 +66,18 @@ namespace Game.Gameplay.Nodes
         private void Start()
         {
             _sceneDataProvider = new SceneDataProvider();
+            Subscribes();
         }
 
-        private void GridLayoutGroupOff() => GetComponent<GridLayoutGroup>().enabled = false;
+        private void Subscribes()
+        {
+            _sceneDataProvider.Receive<EventNames>(EventNames.EndGame).Subscribe(newValue =>
+            {
+                _isBlock = true;
+            });
+        }
+
+        private void GridLayoutGroupOff() => _layoutGroup.enabled = false;
 
         private void AddNodes()
         {
@@ -72,7 +91,7 @@ namespace Game.Gameplay.Nodes
                 node.Show();
             }
 
-            
+
             _nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, Nodes, this);
             Invoke(nameof(FindAvailableMatchesHorizontal), 0.1f);
         }
@@ -455,8 +474,10 @@ namespace Game.Gameplay.Nodes
                     }
                 }
             }
+           
             if (_avalableNodeForMatches.Count() <= 0)
             {
+                _sceneDataProvider.Publish(EventNames.EndGame, EventNames.Lose);
                 print("Avalable matches not found");
             }
         }
@@ -488,7 +509,7 @@ namespace Game.Gameplay.Nodes
             }
 
         }
-        
+
         private void FindEmptyNodes()
         {
             bool isEmptyNodeFound = false; // Flag to track if an empty node is found
@@ -602,7 +623,7 @@ namespace Game.Gameplay.Nodes
 
         public void Reward(NodeBase node)
         {
-            print("Mode reward " + node.NodeReward);
+            _gameManager.AddPiastres(node.NodeReward);
         }
     }
 }
