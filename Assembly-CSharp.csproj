@@ -68,13 +68,13 @@
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\AddToRxExtension.cs" />
     <Compile Include="Assets\Scripts\Enums\PlayerСurrency.cs" />
     <Compile Include="Assets\Scripts\Nodes\NodesGenerator.cs" />
-    <Compile Include="Assets\Scripts\Structures\LevelConfig.cs" />
     <Compile Include="Assets\Scripts\UI\UICustonTextField.cs" />
     <Compile Include="Assets\Scripts\UI\UISceneTransitionButton.cs" />
     <Compile Include="Assets\Scripts\UI\UIButtonPanelState.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionItem.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionExtensions.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\EnumExtenstions.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObjects\LevelConfigSO.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\EnumerableExtenstions.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\UnityEventExtensions.cs" />
     <Compile Include="Assets\Scripts\Enums\NodeType.cs" />

@@ -19,11 +19,6 @@ public class UICustonTextField : EnumProvider
         if (_sceneDataProvider == null)
         {
             _sceneDataProvider = SceneDataProvider.Instance;
-            if (_sceneDataProvider == null)
-            {
-                UnityEngine.Debug.LogError("SceneDataProvider provider not found. Please check SceneDataProvider in your scene");
-                return;
-            }
 
             Subscribes();
         }

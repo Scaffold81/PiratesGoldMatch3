@@ -1,6 +1,7 @@
 using Core.Data;
 using Game.Common;
 using Game.Enums;
+using Game.ScriptableObjects;
 using RxExtensions;
 using System;
 using System.Reactive.Disposables;
@@ -16,6 +17,7 @@ public class SaveDataManager : MonoBehaviour
     private CompositeDisposable _disposables = new();
 
     private SaveSystem _saveSystem;
+
     private void Awake()
     {
         _saveSystem = new SaveSystem();

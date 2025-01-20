@@ -1,7 +1,5 @@
 using Core.Data;
 using Game.Enums;
-using Game.Structures;
-using Game.UI;
 using RxExtensions;
 using System;
 using System.Reactive.Disposables;
