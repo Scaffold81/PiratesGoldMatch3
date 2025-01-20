@@ -6,7 +6,6 @@ public class LoadLevelSceneController : MonoBehaviour
 {
     private void Start()
     {
-        
         LoadLevel();
     }
 

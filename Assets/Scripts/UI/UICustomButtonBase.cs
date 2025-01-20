@@ -3,7 +3,7 @@ using UnityEngine.UI;
 namespace Game.UI
 {
     [RequireComponent(typeof(Button))]
-    public class UIUICustomButtonBase : MonoBehaviour
+    public class UICustomButtonBase : EnumProvider
     {
         private Button _btn;
 

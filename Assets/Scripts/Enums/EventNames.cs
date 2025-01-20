@@ -22,7 +22,7 @@
         #endregion  UIPanelNames
 
         #region  GameEventNames
-        LoadLevel = 16,
+        LoadScene = 16,
         StartGame = 17,
         EndGame = 18,
         Win = 19,

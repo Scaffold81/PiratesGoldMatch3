@@ -10,7 +10,7 @@ namespace Game.Common
             return PlayerPrefs.HasKey(saveSlot);
         }
 
-        public static void SaveData(string saveSlot, string data)
+        public  void SaveData(string saveSlot, string data)
         {
             PlayerPrefs.SetString(saveSlot, data);
         }
@@ -34,7 +34,7 @@ namespace Game.Common
             }
         }
 
-        public  void DeleteData(string saveSlot)
+        public void DeleteData(string saveSlot)
         {
             PlayerPrefs.DeleteKey(saveSlot);
         }

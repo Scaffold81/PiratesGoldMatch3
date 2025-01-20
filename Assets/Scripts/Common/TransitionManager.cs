@@ -23,16 +23,16 @@ namespace Game.Common
 
         private void Subscribe()
         {
-            _sceneDataProvider.Receive<LevelConfig>(EventNames.LoadLevel).Subscribe(newValue =>
+            _sceneDataProvider.Receive<int>(EventNames.LoadScene).Subscribe(value =>
             {
-                LoadLevel();
+                LoadScene(value);
 
             }).AddTo(_disposables);
         }
 
-        private void LoadLevel()
+        private void LoadScene(int sceneIndex)
         {
-            PlayerPrefs.SetInt(EventNames.TargetScene.ToString(), 2);
+            PlayerPrefs.SetInt(EventNames.TargetScene.ToString(), sceneIndex);
             SceneManager.LoadSceneAsync(0);
         }
 

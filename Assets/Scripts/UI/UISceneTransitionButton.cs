@@ -5,16 +5,12 @@ using UnityEngine;
 
 namespace Game.UI
 {
-    public class UIButtonLevel : UIUICustomButtonBase
+    public class UISceneTransitionButton : UICustomButtonBase
     {
-        
-        private EventNames _targetName = EventNames.LoadLevel;
-        
-
         private SceneDataProvider _sceneDataProvider;
-
+        private EventNames _eventNames;
         [SerializeField]
-        private LevelConfig _levelConfig;
+        private int _sceneIndex;
         
         private void Start()
         {
@@ -23,7 +19,7 @@ namespace Game.UI
 
         protected override void OnClick()
         {
-            _sceneDataProvider.Publish(_targetName,_levelConfig);
+            _sceneDataProvider.Publish(SelectedEnumValue, _sceneIndex);
         }
     }
 }

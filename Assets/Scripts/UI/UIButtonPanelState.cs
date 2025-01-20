@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game.UI
 {
-    public class UIButtonPanelState : UIUICustomButtonBase
+    public class UIButtonPanelState : UICustomButtonBase
     {
         [SerializeField]
         private EventNames _targetName = EventNames.UIPanelStateChange;

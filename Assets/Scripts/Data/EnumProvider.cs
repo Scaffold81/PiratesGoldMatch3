@@ -11,9 +11,8 @@ public class EnumProvider : MonoBehaviour
     private Enum selectedEnumValue;
 
     [Dropdown("enumNames")]
-    public string selectedEnumValueTemp;
+    public string _selectedEnumValueTemp;
     private List<string> enumNames = new();
-    [SerializeField]
     private int selectedIndex;
 
     public EnumType SelectedEnumType { get => selectedEnumType; set => selectedEnumType = value; }
@@ -23,12 +22,6 @@ public class EnumProvider : MonoBehaviour
     private void OnValidate()
     {
         EnumSelection(SelectedEnumType);
-    }
-
-    private void Awake()
-    {
-        EnumSelection(SelectedEnumType);
-        // Debug.Log("EnumProvider " + SelectedEnumValue);
     }
 
     public void EnumSelection(EnumType enumType)
@@ -48,7 +41,7 @@ public class EnumProvider : MonoBehaviour
     private void SelectEnumValue(Type type)
     {
         enumNames = new List<string>(Enum.GetNames(type));
-        selectedIndex = enumNames.IndexOf(selectedEnumValueTemp);
+        selectedIndex = enumNames.IndexOf(_selectedEnumValueTemp);
         if (selectedIndex < 0)
         {
             selectedIndex = 0;

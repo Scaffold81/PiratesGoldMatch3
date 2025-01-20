@@ -1716,7 +1716,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 260878646}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.49401975
+  m_Size: 0.7644053
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2190,9 +2190,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcb7a076a33be4244a8b7d88a10a981b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelConfig:
-    level: 0
-    isLevelLocked: 0
+  selectedEnumType: 0
+  _selectedEnumValueTemp: LoadScene
+  _sceneIndex: 2
 --- !u!114 &1370184448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2385,7 +2385,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1947.0001}
+  m_AnchoredPosition: {x: 0, y: 907.00006}
   m_SizeDelta: {x: 0, y: 3850}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &1503248124
@@ -3364,6 +3364,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3123763972537809550, guid: ca248713f362a394aa95400e865da526,
+        type: 3}
+      propertyPath: _startPanel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5604212212878878592, guid: ca248713f362a394aa95400e865da526,
+        type: 3}
+      propertyPath: defaultValues
+      value: 
+      objectReference: {fileID: 11400000, guid: cfcda5b5c3d28274080fd6055ae7915c,
+        type: 2}
     - target: {fileID: 8204537979555994939, guid: ca248713f362a394aa95400e865da526,
         type: 3}
       propertyPath: m_LocalPosition.x

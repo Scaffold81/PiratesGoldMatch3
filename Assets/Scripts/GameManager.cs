@@ -2,10 +2,13 @@ using Core.Data;
 using Game.Gameplay.Nodes;
 using UnityEngine;
 using System;
+using RxExtensions;
+using System.Reactive.Disposables;
 
 public class GameManagerBase : MonoBehaviour
 {
-    private SceneDataProvider _sceneDataProvider;
+    private SceneDataProvider _sceneDataProvider; 
+    private CompositeDisposable _disposables = new();
 
     private float _doubloons;
 
@@ -45,7 +48,7 @@ public class GameManagerBase : MonoBehaviour
         _sceneDataProvider.Receive<string>(Player—urrency.Piastres).Subscribe(newValue =>
         {
 
-        });
+        }).AddTo(_disposables);
     }
 
     public void AddPiastres(NodeReward reward)
@@ -53,6 +56,10 @@ public class GameManagerBase : MonoBehaviour
         var piastres = (float?)_sceneDataProvider.GetValue(Player—urrency.Piastres) ?? 0;
         piastres += reward.rewardValue;
         _sceneDataProvider.Publish(Player—urrency.Piastres, piastres);
+    }
+    private void OnDestroy()
+    {
+        _disposables.Dispose();
     }
 }
 

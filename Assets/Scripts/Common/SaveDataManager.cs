@@ -1,13 +1,15 @@
 using Core.Data;
 using Game.Common;
 using Game.Enums;
+using RxExtensions;
+using System;
 using System.Reactive.Disposables;
 using UnityEngine;
 
 public class SaveDataManager : MonoBehaviour
 {
     [SerializeField]
-    private DefaultValues defaultValues;
+    private DefaultValuesSO defaultValues;
 
     private SceneDataProvider _sceneDataProvider;
 
@@ -23,6 +25,26 @@ public class SaveDataManager : MonoBehaviour
     {
         _sceneDataProvider = SceneDataProvider.Instance;
         LoadAndPublishSaves();
+        Subscribe();
+    }
+    private void Subscribe()
+    {
+        _sceneDataProvider.Receive<float>(Player—urrency.Piastres).Subscribe(value =>
+        {
+            Save(Player—urrency.Piastres.ToString(), value.ToString());
+
+        }).AddTo(_disposables); 
+        
+        _sceneDataProvider.Receive<float>(Player—urrency.Doubloons).Subscribe(value =>
+        {
+            Save(Player—urrency.Doubloons.ToString(), value.ToString());
+
+        }).AddTo(_disposables);
+    }
+
+    private void Save(string key, string value)
+    {
+        _saveSystem.SaveData(key, value);
     }
 
     public void LoadAndPublishSaves()
