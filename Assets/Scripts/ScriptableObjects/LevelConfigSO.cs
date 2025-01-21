@@ -1,45 +1,39 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
+using System;
 
 namespace Game.ScriptableObjects
 {
-
-    [CreateAssetMenu(fileName = "LevelConfig", menuName = "Configs/LevelConfigs")]
+    [CreateAssetMenu(fileName = "LevelConfig", menuName = "Configs/LevelConfig")]
     public class LevelConfigSO : ScriptableObject
     {
-        public string levelId;
+       public LevelConfig config;
+    }
+
+    [Serializable]
+    public class LevelConfig
+    {
+        public int levelId;
 
         public bool isLevelPassed = false;
         public bool dialogueInLevelPassed = false;
         public bool dialogueInMapPassed = false;
         public float maxScoreValue = 100;
 
-    }
-
-    [CreateAssetMenu(fileName = "LevelObjects", menuName = "Configs/LevelObjects")]
-    public class LevelObjectsSO : ScriptableObject
-    {
-        public string levelId;
-
-        public GameObject dialogueInLevelPrefab;
-        public GameObject dialogueInMapPrefab;
-        public GameObject levelPrefab;
-
+        public string dialogueInLevelName;
+        public string dialogueInMapName;
+        public string levelName;
     }
 
     [CreateAssetMenu(fileName = "LevelConfigRepository", menuName = "Configs/LevelConfigRepository")]
     public class LevelConfigRepositorySO : ScriptableObject
     {
-        public List<LevelConfigSO> levelConfigs=new List<LevelConfigSO>();
+        public LevelConfigRepository levelConfigs;
     }
 
-    [CreateAssetMenu(fileName = "LevelObject", menuName = "Configs/LevelObject")]
-    public class LevelObjectRepositorySO : ScriptableObject
+    [Serializable]
+    public class LevelConfigRepository 
     {
-        public List<LevelObjectsSO> levelObjects = new List<LevelObjectsSO>();
+        public List<LevelConfigSO> levelConfigs = new List<LevelConfigSO>();
     }
 }

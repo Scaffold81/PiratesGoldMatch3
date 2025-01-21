@@ -16,10 +16,9 @@ public class UICustonTextField : EnumProvider
 
     private void Start()
     {
-        if (_sceneDataProvider == null)
+        _sceneDataProvider = SceneDataProvider.Instance;
+        if (_sceneDataProvider != null)
         {
-            _sceneDataProvider = SceneDataProvider.Instance;
-
             Subscribes();
         }
     }

@@ -4,9 +4,12 @@ using UnityEngine;
 using System;
 using RxExtensions;
 using System.Reactive.Disposables;
+using Game.ScriptableObjects;
+using Game.Enums;
 
 public class GameManagerBase : MonoBehaviour
 {
+    public LevelConfigSO levelConfig;
     private SceneDataProvider _sceneDataProvider; 
     private CompositeDisposable _disposables = new();
 
@@ -45,9 +48,13 @@ public class GameManagerBase : MonoBehaviour
 
     private void Subscribes()
     {
-        _sceneDataProvider.Receive<string>(PlayerÑurrency.Piastres).Subscribe(newValue =>
+        _sceneDataProvider.Receive<LevelConfig>(SaveSlotNames.LevelConfig).Subscribe(newValue =>
         {
-
+            if (newValue is LevelConfig)
+            {
+               levelConfig = ScriptableObject.CreateInstance<LevelConfigSO>();
+               levelConfig.config = newValue;
+            }
         }).AddTo(_disposables);
     }
 

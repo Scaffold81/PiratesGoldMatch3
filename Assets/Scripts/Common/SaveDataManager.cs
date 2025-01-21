@@ -25,10 +25,12 @@ public class SaveDataManager : MonoBehaviour
 
     private void Start()
     {
-        _sceneDataProvider = SceneDataProvider.Instance;
-        LoadAndPublishSaves();
+        _sceneDataProvider = SceneDataProvider.Instance; 
         Subscribe();
+        // Invoke(nameof(  LoadAndPublishSaves),0.1f);
+        LoadAndPublishSaves();
     }
+
     private void Subscribe()
     {
         _sceneDataProvider.Receive<float>(Player—urrency.Piastres).Subscribe(value =>
@@ -42,6 +44,17 @@ public class SaveDataManager : MonoBehaviour
             Save(Player—urrency.Doubloons.ToString(), value.ToString());
 
         }).AddTo(_disposables);
+
+        _sceneDataProvider.Receive<LevelConfig>(SaveSlotNames.LevelConfig).Subscribe(value =>
+        {
+            SaveLevelConfigJson(SaveSlotNames.LevelConfig, value);
+
+        }).AddTo(_disposables);
+    }
+
+    private void SaveLevelConfigJson(SaveSlotNames key, LevelConfig levelConfig )
+    {
+        _saveSystem.SaveJSON (key.ToString(), levelConfig);
     }
 
     private void Save(string key, string value)
@@ -56,6 +69,9 @@ public class SaveDataManager : MonoBehaviour
        
         var doubloons = GetNumericDataOrDefault(SaveSlotNames.Doubloons.ToString(), defaultValues.doubloonsDefault);
         _sceneDataProvider.Publish(Player—urrency.Doubloons, doubloons);
+
+        var levelConfig = _saveSystem.LoadJSON<LevelConfig>(SaveSlotNames.LevelConfig.ToString());
+        _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, levelConfig);
     }
 
     private float GetNumericDataOrDefault(string key, float defaultValue)

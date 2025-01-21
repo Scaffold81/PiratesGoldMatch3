@@ -1,5 +1,6 @@
 using UnityEngine;
 using Newtonsoft.Json;
+using Unity.VisualScripting.FullSerializer;
 
 namespace Game.Common
 {
@@ -42,7 +43,7 @@ namespace Game.Common
         public  string SaveJSON(string saveSlot, object data)
         {
             string jsonData = JsonConvert.SerializeObject(data);
-
+           
             PlayerPrefs.SetString(saveSlot, jsonData);
             PlayerPrefs.Save();
 
@@ -52,9 +53,10 @@ namespace Game.Common
         public  T LoadJSON<T>(string saveSlot)
         {
             string jsonData = PlayerPrefs.GetString(saveSlot);
-
+            
             if (!string.IsNullOrEmpty(jsonData))
             {
+                
                 T data = JsonConvert.DeserializeObject<T>(jsonData);
                 return data;
             }
