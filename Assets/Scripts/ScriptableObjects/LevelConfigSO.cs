@@ -18,7 +18,6 @@ namespace Game.ScriptableObjects
         public bool isLevelPassed = false;
         public bool dialogueInLevelPassed = false;
         public bool dialogueInMapPassed = false;
-        public float maxScoreValue = 100;
 
         public string dialogueInLevelName;
         public string dialogueInMapName;

@@ -71,9 +71,9 @@ namespace Game.Gameplay.Nodes
 
         private void Subscribes()
         {
-            _sceneDataProvider.Receive<EventNames>(EventNames.EndGame).Subscribe(newValue =>
+            _sceneDataProvider.Receive<bool>(EventNames.Pause).Subscribe(newValue =>
             {
-                _isBlock = true;
+                _isBlock = newValue;
             });
         }
 
@@ -477,7 +477,7 @@ namespace Game.Gameplay.Nodes
            
             if (_avalableNodeForMatches.Count() <= 0)
             {
-                _sceneDataProvider.Publish(EventNames.EndGame, EventNames.Lose);
+                _sceneDataProvider.Publish(EventNames.Lose, EventNames.Lose);
                 print("Avalable matches not found");
             }
         }
@@ -618,7 +618,8 @@ namespace Game.Gameplay.Nodes
                     FindAvailableMatchesHorizontal();
             }
 
-            _isBlock = false;
+            if (_avalableNodeForMatches.Count() > 0)
+                _isBlock = false;
         }
 
         public void Reward(NodeBase node)

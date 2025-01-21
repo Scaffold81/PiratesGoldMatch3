@@ -37,7 +37,6 @@ public class LevelManager : MonoBehaviour
 
     private void CreateLevel(LevelConfig newValue)
     {
-        print(newValue.levelName);
         var path = "Prefabs/Levels/" + newValue.levelName; // Путь к префабу
         GameObject levelPrefab = Resources.Load<GameObject>(path);
 

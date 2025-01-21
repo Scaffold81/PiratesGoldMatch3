@@ -29,7 +29,7 @@
         Lose = 20,
         UIPanelStateChange = 21,
         TargetScene = 22,
-        Empty13 = 23,
+        Pause = 23,
         Empty14 = 25,
         Empty15 = 26,
         Empty16 = 27,
