@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -10,6 +12,8 @@ namespace Game.Gameplay.Nodes
 {
     public class NodeBase : MonoBehaviour, IPointerDownHandler
     {
+        private MachTree _machTreeView;
+
         [SerializeField]
         private NodeType _nodeType;
 
@@ -22,24 +26,21 @@ namespace Game.Gameplay.Nodes
         private Image _imageBackground;
         [SerializeField]
         private Vector2 _position;
-        [SerializeField]
-        private TMP_Text _positionText;
-
-        [SerializeField]
-        private MachTreeView _machTreeView;
+        private float _initialScale;
+        private float _duration=0.5f;
+        private bool _isActive;
 
         public NodeType NodeType { get => _nodeType; set => _nodeType = value; }
         public Vector2 Position { get => _position; set => _position = value; }
         public Image Image { get => _image; set => _image = value; }
         public Image ImageBackground { get => _imageBackground; set => _imageBackground = value; }
-        public TMP_Text PositionText { get => _positionText; set => _positionText = value; }
         public NodeReward NodeReward { get => _nodeReward; private set => _nodeReward = value; }
 
-        public void Init(NodeType type, MachTreeView machTreeView,NodeReward nodeReward)
+        public void Init(NodeType type, MachTree machTreeView,NodeReward nodeReward)
         {
-            _nodeReward= nodeReward;
+            _initialScale = transform.localScale.x;
+            _nodeReward = nodeReward;
             _machTreeView = machTreeView;
-            PositionText.gameObject.SetActive(false);
 
             if (_nodeType != NodeType.Hidden)
             {
@@ -56,6 +57,7 @@ namespace Game.Gameplay.Nodes
         {
             if (NodeType == NodeType.Ready || NodeType == NodeType.Hidden) return;
             _machTreeView.SetSelectedNode(this);
+            StopScaleAnimation();
         }
 
         public void Rename()
@@ -69,16 +71,8 @@ namespace Game.Gameplay.Nodes
             ImageBackground.enabled = false;
         }
 
-        public void TestShowText()
-        {
-            PositionText.gameObject.SetActive(true);
-        }
-
         public void Show()
         {
-            PositionText.text = Position.x + "/" + Position.y;
-            // PositionText.gameObject.SetActive(false);
-
             if (_nodeType == NodeType.Ready)
                 Image.enabled = false;
             else
@@ -114,6 +108,35 @@ namespace Game.Gameplay.Nodes
             NodeType = NodeType.Ready;
             _machTreeView.Reward(this);
             Image.enabled = false;
+        }
+
+        public void HightlightOn()
+        {
+            StartScaleAnimation();
+            _isActive = true;
+        }
+
+        private void StartScaleAnimation()
+        {
+            transform.DOScale(_initialScale+0.1f, _duration)
+            .SetEase(Ease.InOutSine)
+            .OnComplete(() =>
+            {
+                transform.DOScale(_initialScale, _duration)
+                    .SetEase(Ease.InOutSine)
+                    .OnComplete(() =>
+                    {
+                        if(_isActive)
+                            StartScaleAnimation(); // Рекурсивный вызов для создания постоянного эффекта
+                    });
+            });
+        }
+
+        public void StopScaleAnimation()
+        {
+            _isActive=false;
+            transform.DOScale(_initialScale, _duration); // Возвращаемся к начальному масштабу
+           
         }
     }
 }

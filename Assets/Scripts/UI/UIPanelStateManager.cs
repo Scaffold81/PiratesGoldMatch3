@@ -12,9 +12,9 @@ namespace Game.UI
     {
         private List<UIPanelStateController> _panelStateControllers = new List<UIPanelStateController>();
         private SceneDataProvider _sceneDataProvider;
-       
+
         private CompositeDisposable _disposables = new();
-        
+
         private void Awake()
         {
             GetControllers();
@@ -29,11 +29,32 @@ namespace Game.UI
 
         private void Subscribe()
         {
-            _sceneDataProvider.Receive<EventNames>(EventNames.UIPanelStateChange).Subscribe(newValue =>
+            _sceneDataProvider.Receive<EventNames>(EventNames.UIPanelsStateChange).Subscribe(newValue =>
             {
                 PanelStateChange(newValue);
 
             }).AddTo(_disposables);
+
+            _sceneDataProvider.Receive<EventNames>(EventNames.UIPanelStateChange).Subscribe(newValue =>
+            {
+                SinglePanelStateChange(newValue);
+
+            }).AddTo(_disposables);
+        }
+
+        private void SinglePanelStateChange(EventNames panelName)
+        {
+            foreach (var panel in _panelStateControllers)
+            {
+                if (panel.UIPanelName == panelName)
+                {
+                    if (panel.IsActive)
+                        panel.Hide();
+                    else
+                        panel.Show();
+
+                }
+            }
         }
 
         private void GetControllers()
@@ -58,15 +79,15 @@ namespace Game.UI
 
         private void PanelStateChange(EventNames name)
         {
-            foreach(var panel in _panelStateControllers)
+            foreach (var panel in _panelStateControllers)
             {
-                if(panel.UIPanelName == name)
+                if (panel.UIPanelName == name)
                     panel.Show();
-                else 
+                else
                     panel.Hide();
             }
         }
-        
+
         private void HideAllPanel()
         {
             foreach (var panel in _panelStateControllers)

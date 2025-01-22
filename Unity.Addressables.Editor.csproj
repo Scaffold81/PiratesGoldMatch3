@@ -172,8 +172,8 @@
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.3\Editor\Build\Layout\BuildLayoutHelpers.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.3\Editor\Settings\AddressableAssetEntryCollection.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.3\Editor\GUI\AddressableAssetGroupTemplateInspector.cs" />
-    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.3\Editor\Diagnostics\GUI\Graph\GraphLayerBase.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.3\Editor\Build\BuildPipelineTasks\ExtractDataTask.cs" />
+    <Compile Include="Library\PackageCache\com.unity.addressables@1.22.3\Editor\Diagnostics\GUI\Graph\GraphLayerBase.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.3\Editor\GUI\GUIElements\SearchStringFilters.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.3\Editor\Diagnostics\Data\EventDataPlayerSessionCollection.cs" />
     <Compile Include="Library\PackageCache\com.unity.addressables@1.22.3\Editor\Settings\GroupSchemas\BundledAssetGroupSchema.cs" />

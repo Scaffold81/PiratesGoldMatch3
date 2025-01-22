@@ -13,7 +13,7 @@ namespace Game.Common
         private void Start()
         {
             _sceneDataProvider = SceneDataProvider.Instance;
-            _sceneDataProvider.Publish(EventNames.UIPanelStateChange, _startPanel);
+            _sceneDataProvider.Publish(EventNames.UIPanelsStateChange, _startPanel);
         }
     }
 }

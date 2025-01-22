@@ -72,7 +72,7 @@
     <Compile Include="Assets\Scripts\UI\UICustonTextField.cs" />
     <Compile Include="Assets\Scripts\UI\UISceneTransitionButton.cs" />
     <Compile Include="Assets\Scripts\UI\UIButtonPanelState.cs" />
-    <Compile Include="Assets\Scripts\Game\MachTreeView.cs" />
+    <Compile Include="Assets\Scripts\UI\UICustomButton.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionItem.cs" />
     <Compile Include="Assets\Scripts\Game\FieldGenerator.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionExtensions.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="Assets\Scripts\LevelManager.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Common\NumericParser.cs" />
+    <Compile Include="Assets\Scripts\Game\MachTree.cs" />
     <Compile Include="Assets\Scripts\Enums\EventNames.cs" />
     <Compile Include="Assets\Scripts\UI\UICustomButtonBase.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\SerializedPropertyExtensions.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Assets\Scripts\UI\UIPanelStateController.cs" />
     <Compile Include="Assets\Scripts\Structures\NodeReward.cs" />
     <Compile Include="Assets\Scripts\Common\TransitionManager.cs" />
+    <Compile Include="Assets\Scripts\UI\UIHintPanel.cs" />
     <Compile Include="Assets\Scripts\Structures\AvalableNodeForMatch.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\DropdownAttribute.cs" />
     <Compile Include="Assets\Scripts\Common\SaveDataManager.cs" />

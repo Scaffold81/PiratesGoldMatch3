@@ -7,7 +7,7 @@ namespace Game.UI
     public class UIButtonPanelState : UICustomButtonBase
     {
         [SerializeField]
-        private EventNames _targetName = EventNames.UIPanelStateChange;
+        private EventNames _targetName = EventNames.UIPanelsStateChange;
         [SerializeField]
         private EventNames _sendName;
 

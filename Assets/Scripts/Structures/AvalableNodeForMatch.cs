@@ -3,5 +3,5 @@ using UnityEngine;
 public struct AvalableNodeForMatch
 {
    public Vector2 NodePosition01;
-   public Vector2 Node0Position02;
+   public Vector2 NodePosition02;
 }

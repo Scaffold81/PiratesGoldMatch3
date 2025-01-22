@@ -4,15 +4,15 @@ using UnityEngine;
 using System;
 using RxExtensions;
 using System.Reactive.Disposables;
-using Game.ScriptableObjects;
 using Game.Enums;
 
 public class GameManagerBase : MonoBehaviour
 {
-    private SceneDataProvider _sceneDataProvider; 
+    private SceneDataProvider _sceneDataProvider;
     private CompositeDisposable _disposables = new();
+    private MachTree _machTree;
     [SerializeField]
-    private float _targetPiastres=1000;
+    private float _targetPiastres = 1000;
 
     private float _currentPiastres;
 
@@ -26,6 +26,12 @@ public class GameManagerBase : MonoBehaviour
                 Win();
         }
     }
+
+    private void Awake()
+    {
+        _machTree = GetComponent<MachTree>();
+    }
+
     private void Start()
     {
         _sceneDataProvider = SceneDataProvider.Instance;
@@ -42,27 +48,47 @@ public class GameManagerBase : MonoBehaviour
         {
             Lose();
         }).AddTo(_disposables);
+
+        _sceneDataProvider.Receive<bool>(EventNames.Hint).Subscribe(newValue =>
+        {
+            Hint();
+        }).AddTo(_disposables);
+    }
+
+    private void Hint()
+    {
+        var hintValue = (float)_sceneDataProvider.GetValue(Player—urrency.HintMark);
+
+        if (hintValue <= 0)
+        {
+            _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.HintPanel);
+        }
+        else
+        {
+            hintValue -= 1;
+            _machTree.Hint();
+            _sceneDataProvider.Publish(Player—urrency.HintMark, hintValue);
+        }
     }
 
     private void Lose()
     {
         _sceneDataProvider.Publish(EventNames.Pause, true);
-        print("Level Lose");
     }
 
     private void Win()
     {
         _sceneDataProvider.Publish(EventNames.Win, true);
+        _sceneDataProvider.Publish(EventNames.WinPanel, true);
         _sceneDataProvider.Publish(EventNames.Pause, true);
         OpenLevel();
     }
-    
+
     private void OpenLevel()
     {
-        OpenLevel();
-        print("Level win");
+
     }
-    
+
     public void AddPiastres(NodeReward reward)
     {
         var piastres = (float?)_sceneDataProvider.GetValue(Player—urrency.Piastres) ?? 0;

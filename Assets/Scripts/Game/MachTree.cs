@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace Game.Gameplay.Nodes
 {
-    public class MachTreeView : MonoBehaviour
+    public class MachTree : MonoBehaviour
     {
         private NodesGenerator _nodesGenerator;
         private SceneDataProvider _sceneDataProvider;
@@ -490,7 +490,7 @@ namespace Game.Gameplay.Nodes
                 AvalableNodeForMatch avlableNodes = new AvalableNodeForMatch
                 {
                     NodePosition01 = new Vector2(x + targetOffsetX, y),
-                    Node0Position02 = new Vector2(x + targetOffsetX, y + offsetY1)
+                    NodePosition02 = new Vector2(x + targetOffsetX, y + offsetY1)
                 };
                 _avalableNodeForMatches.Add(avlableNodes);
             }
@@ -503,7 +503,7 @@ namespace Game.Gameplay.Nodes
                 AvalableNodeForMatch avlableNodes = new AvalableNodeForMatch
                 {
                     NodePosition01 = new Vector2(x, y + targetOffset),
-                    Node0Position02 = new Vector2(x + offsetX1, y + targetOffset)
+                    NodePosition02 = new Vector2(x + offsetX1, y + targetOffset)
                 };
                 _avalableNodeForMatches.Add(avlableNodes);
             }
@@ -625,6 +625,14 @@ namespace Game.Gameplay.Nodes
         public void Reward(NodeBase node)
         {
             _gameManager.AddPiastres(node.NodeReward);
+        }
+
+        public void Hint()
+        {
+            var randomValue=UnityEngine.Random.Range(0, _avalableNodeForMatches.Count);
+            var avalableNodes = _avalableNodeForMatches[randomValue];
+            Nodes[(int)avalableNodes.NodePosition01.x,(int)avalableNodes.NodePosition01.y].HightlightOn();
+            Nodes[(int)avalableNodes.NodePosition02.x, (int)avalableNodes.NodePosition02.y].HightlightOn();
         }
     }
 }

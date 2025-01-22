@@ -10,9 +10,9 @@
         ShopPanel = 4,
         MainPanel = 5,
         GamePanel = 6,
-        Empty1 = 7,
-        Empty2 = 8,
-        Empty3 = 9,
+        HintPanel = 7,
+        WinPanel = 8,
+        LosePanel = 9,
         Empty4 = 10,
         Empty5 = 11,
         Empty6 = 12,
@@ -27,15 +27,17 @@
         EndGame = 18,
         Win = 19,
         Lose = 20,
-        UIPanelStateChange = 21,
-        TargetScene = 22,
-        Pause = 23,
-        Empty14 = 25,
-        Empty15 = 26,
-        Empty16 = 27,
+        UIPanelsStateChange = 21,
+        UIPanelStateChange= 22,
+        TargetScene = 23,
+        Pause = 24,
+        GetHintForAdv = 25,
+        GetHintForDoubloons = 26,
+        Hint = 27,
         Empty17 = 28,
         Empty18 = 29,
-        Empty19 = 30
+        Empty19 = 30,
+        DefaultValues = 31
         #endregion  GameEventNames
     }
     public enum SaveSlotNames
@@ -43,6 +45,7 @@
         None = 0,
         Piastres, 
         Doubloons,
+        Hints,
         LevelsData,
         LevelConfig
     }

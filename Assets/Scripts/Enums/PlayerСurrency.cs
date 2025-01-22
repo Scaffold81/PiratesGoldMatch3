@@ -3,4 +3,5 @@
     CurrentPiastres,
     Piastres,
     Doubloons,
+    HintMark
 }
