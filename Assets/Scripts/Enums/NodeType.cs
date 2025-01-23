@@ -1,6 +1,5 @@
 ﻿public enum NodeType
 {
-    Ready,
     Empty,
     Hidden,
     Armor,

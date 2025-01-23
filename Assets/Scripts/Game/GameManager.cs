@@ -53,6 +53,26 @@ public class GameManagerBase : MonoBehaviour
         {
             Hint();
         }).AddTo(_disposables);
+
+        _sceneDataProvider.Receive<bool>(EventNames.NoVariants).Subscribe(newValue =>
+        {
+            NoVariants();
+        }).AddTo(_disposables);
+
+        _sceneDataProvider.Receive<bool>(EventNames.Refresh).Subscribe(newValue =>
+        {
+            RefreshBoard();
+        }).AddTo(_disposables);
+    }
+
+    private void RefreshBoard()
+    {
+        _machTree.Refresh();
+    }
+
+    private void NoVariants()
+    {
+        _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.NoVariantsPanel);
     }
 
     private void Hint()
@@ -73,14 +93,13 @@ public class GameManagerBase : MonoBehaviour
 
     private void Lose()
     {
-        _sceneDataProvider.Publish(EventNames.Pause, true);
+        _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.LosePanel);
     }
 
     private void Win()
     {
         _sceneDataProvider.Publish(EventNames.Win, true);
         _sceneDataProvider.Publish(EventNames.WinPanel, true);
-        _sceneDataProvider.Publish(EventNames.Pause, true);
         OpenLevel();
     }
 
@@ -96,7 +115,7 @@ public class GameManagerBase : MonoBehaviour
         CurrentPiastres += reward.rewardValue;
         _sceneDataProvider.Publish(Player—urrency.Piastres, piastres);
     }
-
+    
     private void OnDestroy()
     {
         _disposables.Dispose();

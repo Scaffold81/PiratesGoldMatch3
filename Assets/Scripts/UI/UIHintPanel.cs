@@ -10,12 +10,18 @@ using UnityEngine;
 public class UIHintPanel : MonoBehaviour
 {
     private SceneDataProvider _sceneDataProvider;
-
+    private DoubloonsProcessor _doubloonsProcessor;
     private CompositeDisposable _disposables = new();
-    // Start is called before the first frame update
-    void Start()
+    
+    private void Start()
+    {
+        Init();
+    }
+
+    private void Init()
     {
         _sceneDataProvider = SceneDataProvider.Instance;
+        _doubloonsProcessor = new DoubloonsProcessor(_sceneDataProvider);
         Subscribe();
     }
 
@@ -48,11 +54,9 @@ public class UIHintPanel : MonoBehaviour
         var doubloons = (float)_sceneDataProvider.GetValue(Player—urrency.Doubloons);
         var defaultValues=(DefaultValuesSO)_sceneDataProvider.GetValue(EventNames.DefaultValues);
        
-        if (doubloons >= defaultValues.hintMarkCostInDoubloons)
+        if (_doubloonsProcessor.ProcessForDoubloons(defaultValues.hintMarkCostDoubloons))
         {
-            doubloons-=defaultValues.hintMarkCostInDoubloons;
-            hitMark += 1;
-            _sceneDataProvider.Publish(Player—urrency.Doubloons, doubloons);
+            hitMark += 1; 
             _sceneDataProvider.Publish(Player—urrency.HintMark, hitMark);
         }
         _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.HintPanel);

@@ -79,6 +79,7 @@
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\EnumExtenstions.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\LevelConfigSO.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\EnumerableExtenstions.cs" />
+    <Compile Include="Assets\Scripts\Common\DoubloonsProcessor.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\UnityEventExtensions.cs" />
     <Compile Include="Assets\Scripts\Enums\NodeType.cs" />
     <Compile Include="Assets\Scripts\LevelManager.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Assets\Scripts\Data\GetEnumBase.cs" />
     <Compile Include="Assets\Scripts\Nodes\NodeBase.cs" />
     <Compile Include="Assets\Scripts\UI\UIPanelStateController.cs" />
+    <Compile Include="Assets\Scripts\UI\UINoVariantsPanel.cs" />
     <Compile Include="Assets\Scripts\Structures\NodeReward.cs" />
     <Compile Include="Assets\Scripts\Common\TransitionManager.cs" />
     <Compile Include="Assets\Scripts\UI\UIHintPanel.cs" />

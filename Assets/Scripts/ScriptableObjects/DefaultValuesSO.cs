@@ -9,6 +9,7 @@ namespace Game.ScriptableObjects
         public float piastresDefault = 0;
         public float doubloonsDefault = 100;
         public float hintMarkDefault = 5;
-        public float hintMarkCostInDoubloons = 50;
+        public float hintMarkCostDoubloons = 50;
+        public float refreshCostForDoubloons = 50;
     }
 }

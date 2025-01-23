@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bbaa8ebbfc390c469c4e5915579999a, type: 3}
   m_Name: DefaultValues
   m_EditorClassIdentifier: 
-  piastresDefault: 100
-  doubloonsDefault: 50
+  currentPiastresDefault: 0
+  piastresDefault: 0
+  doubloonsDefault: 1000
+  hintMarkDefault: 0
+  hintMarkCostDoubloons: 50
+  refreshCostForDoubloons: 0

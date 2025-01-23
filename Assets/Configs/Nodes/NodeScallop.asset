@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d090072d9f65f6468d671b7f9616c79, type: 3}
   m_Name: NodeScallop
   m_EditorClassIdentifier: 
-  nodeType: 7
+  nodeType: 6
   nodeReward:
     rewardValue: 10

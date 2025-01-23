@@ -145,8 +145,8 @@
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.11\Editor\Material\MaterialHeaderScopeList.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.11\Editor\Volume\VolumeComponentListEditor.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.11\Editor\RenderPipeline\RenderPipelineResourcesEditor.cs" />
-    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.11\Editor\Debugging\DebugUIDrawer.Builtins.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.11\Editor\EditorWindowWithHelpButton.cs" />
+    <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.11\Editor\Debugging\DebugUIDrawer.Builtins.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.11\Editor\MaterialUpgrader.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.11\Editor\Camera\CameraUI.Output.Drawers.cs" />
     <Compile Include="Library\PackageCache\com.unity.render-pipelines.core@14.0.11\Editor\LookDev\ToolbarRadio.cs" />

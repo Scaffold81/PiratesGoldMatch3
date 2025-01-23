@@ -16,7 +16,7 @@ namespace Game.Gameplay.Nodes
     {
         private NodesGenerator _nodesGenerator;
         private SceneDataProvider _sceneDataProvider;
-        
+
         [SerializeField]
         private GridLayoutGroup _layoutGroup;
 
@@ -90,8 +90,7 @@ namespace Game.Gameplay.Nodes
                 Nodes[(int)node.Position.x, (int)node.Position.y] = node;
                 node.Show();
             }
-
-
+            
             _nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, Nodes, this);
             Invoke(nameof(FindAvailableMatchesHorizontal), 0.1f);
         }
@@ -399,7 +398,7 @@ namespace Game.Gameplay.Nodes
         {
             foreach (NodeBase node in Nodes)
             {
-                if (node.NodeType == NodeType.Ready)
+                if (node.NodeType == NodeType.Empty)
                 {
                     return false;
                 }
@@ -474,10 +473,10 @@ namespace Game.Gameplay.Nodes
                     }
                 }
             }
-           
+
             if (_avalableNodeForMatches.Count() <= 0)
             {
-                _sceneDataProvider.Publish(EventNames.Lose, EventNames.Lose);
+                _sceneDataProvider.Publish(EventNames.NoVariants, true);
                 print("Avalable matches not found");
             }
         }
@@ -520,8 +519,7 @@ namespace Game.Gameplay.Nodes
                 {
                     if (y < Nodes.GetLength(1)) // Check if y is not the last line
                     {
-
-                        if (Nodes[x, y].NodeType == NodeType.Ready)
+                        if (Nodes[x, y].NodeType == NodeType.Empty)
                         {
                             _emptyNode = Nodes[x, y];
                             StartCoroutine(DescentNodeCoroutine());
@@ -573,7 +571,7 @@ namespace Game.Gameplay.Nodes
 
                 if ((int)topNode.Position.y + 1 < Nodes.GetLength(1))
                 {
-                    if (Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType == NodeType.Ready)
+                    if (Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType == NodeType.Empty && Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType != NodeType.Hidden)
                     {
                         _emptyNode = Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1];
                         StartCoroutine(DescentNodeCoroutine());
@@ -616,10 +614,8 @@ namespace Game.Gameplay.Nodes
                 var matches = CheckAllNodesForMatches();
                 if (!matches)
                     FindAvailableMatchesHorizontal();
-            }
-
-            if (_avalableNodeForMatches.Count() > 0)
                 _isBlock = false;
+            }
         }
 
         public void Reward(NodeBase node)
@@ -629,10 +625,25 @@ namespace Game.Gameplay.Nodes
 
         public void Hint()
         {
-            var randomValue=UnityEngine.Random.Range(0, _avalableNodeForMatches.Count);
+            var randomValue = UnityEngine.Random.Range(0, _avalableNodeForMatches.Count);
             var avalableNodes = _avalableNodeForMatches[randomValue];
-            Nodes[(int)avalableNodes.NodePosition01.x,(int)avalableNodes.NodePosition01.y].HightlightOn();
+            Nodes[(int)avalableNodes.NodePosition01.x, (int)avalableNodes.NodePosition01.y].HightlightOn();
             Nodes[(int)avalableNodes.NodePosition02.x, (int)avalableNodes.NodePosition02.y].HightlightOn();
+        }
+
+        public void Refresh()
+        {
+            for (int x = 0; x < Nodes.GetLength(0); x++)
+            {
+                for (int y = 0; y < Nodes.GetLength(1); y++)
+                {
+                    if (!_excludedNodeTypes.Contains(Nodes[x, y].NodeType))
+                    {
+                        Nodes[x, y].NodeType = NodeType.Empty;
+                    }
+                }
+            }
+            AddNodes();
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Game.Gameplay.Nodes
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (NodeType == NodeType.Ready || NodeType == NodeType.Hidden) return;
+            if (NodeType == NodeType.Empty || NodeType == NodeType.Hidden) return;
             _machTreeView.SetSelectedNode(this);
             StopScaleAnimation();
         }
@@ -73,7 +73,7 @@ namespace Game.Gameplay.Nodes
 
         public void Show()
         {
-            if (_nodeType == NodeType.Ready)
+            if (_nodeType == NodeType.Empty)
                 Image.enabled = false;
             else
                 Image.enabled = true;
@@ -105,7 +105,7 @@ namespace Game.Gameplay.Nodes
 
         public void DestroyNode()
         {
-            NodeType = NodeType.Ready;
+            NodeType = NodeType.Empty;
             _machTreeView.Reward(this);
             Image.enabled = false;
         }

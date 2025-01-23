@@ -1,5 +1,7 @@
 ﻿using Game.Gameplay.Nodes;
 using System.Linq;
+using Unity.VisualScripting.FullSerializer;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Game.Gameplay.Generators
@@ -23,10 +25,19 @@ namespace Game.Gameplay.Generators
                 for (int y = 0; y < nodes.GetLength(1); y++)
                 {
                     var node = nodes[x, y];
-                    // Set the NodeType of the node
-                    var nodeType = GetUniqueNode(nodeTypes, excludedNodeTypes);
-                    var nodeConfig = GetNodeConfig(nodeType);
-                    node.Init(nodeType, machTreeView, nodeConfig.nodeReward);
+                    if (nodes[x, y].NodeType == NodeType.Empty)
+                    {
+                        // Set the NodeType of the node
+                        var nodeType = GetUniqueNode(nodeTypes, excludedNodeTypes);
+                        var nodeConfig = GetNodeConfig(nodeType);
+                        node.Init(nodeType, machTreeView, nodeConfig.nodeReward);
+                    }
+                    else 
+                    {
+                        var nodeType = node.NodeType;
+                        var nodeConfig = GetNodeConfig(nodeType);
+                        node.Init(nodeType, machTreeView, nodeConfig.nodeReward);
+                    }
                 }
             }
 
@@ -38,7 +49,6 @@ namespace Game.Gameplay.Generators
             int attempts = 0;
             var randomNode = nodeTypes[Random.Range(0, nodeTypes.Length)];
             
-
             while (attempts < 100)
             {
                 if (!CheckCloseNodesForMatches(randomNode) && !excludedNodeTypes.Contains(randomNode)&&_previosNode== randomNode) {
