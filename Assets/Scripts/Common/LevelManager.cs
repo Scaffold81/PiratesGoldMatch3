@@ -8,12 +8,10 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    public LevelConfigSO levelConfig;
     private SceneDataProvider _sceneDataProvider;
     private CompositeDisposable _disposables = new();
-
-    // Start is called before the first frame update
-    void Start()
+    
+    private void Start()
     {
         _sceneDataProvider = SceneDataProvider.Instance;
 
@@ -24,30 +22,45 @@ public class LevelManager : MonoBehaviour
     }
     private void Subscribes()
     {
-        _sceneDataProvider.Receive<LevelConfig>(SaveSlotNames.LevelConfig).Subscribe(newValue =>
+        _sceneDataProvider.Receive<LevelConfigSO>(SaveSlotNames.LevelConfig).Subscribe(newValue =>
         {
-            if (newValue is LevelConfig)
+            if (newValue is LevelConfigSO)
             {
-                levelConfig = ScriptableObject.CreateInstance<LevelConfigSO>();
-                levelConfig.config = newValue;
                 CreateLevel(newValue);
             }
         }).AddTo(_disposables);
     }
 
-    private void CreateLevel(LevelConfig newValue)
+    private void CreateLevel(LevelConfigSO newValue)
     {
         var path = "Prefabs/Levels/" + newValue.levelName; // Путь к префабу
         GameObject levelPrefab = Resources.Load<GameObject>(path);
 
         if (levelPrefab != null)
         {
-            Instantiate(levelPrefab);// для создания экземпляра префаба
+           var lvl= Instantiate(levelPrefab);// для создания экземпляра префаба
+           lvl.transform.SetAsFirstSibling();
         }
         else
         {
             Debug.LogError("Failed to load level prefab: " + newValue.levelName);
         }
+    }
+    private void CreateUI(LevelConfigSO newValue)
+    {
+        var path = "Prefabs/UI/" + newValue.gameUIName; // Путь к префабу
+        GameObject levelPrefab = Resources.Load<GameObject>(path);
+
+        if (levelPrefab != null)
+        {
+            Instantiate(levelPrefab);// для создания экземпляра префаба
+            _sceneDataProvider.Publish(EventNames.UILoaded, true);
+        }
+        else
+        {
+            Debug.LogError("Failed to load level prefab: " + newValue.levelName);
+        }
+       
     }
 
     private void OnDestroy()

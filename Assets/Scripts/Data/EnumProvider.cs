@@ -18,6 +18,11 @@ public class EnumProvider : MonoBehaviour
     public EnumType SelectedEnumType { get => selectedEnumType; set => selectedEnumType = value; }
 
     public Enum SelectedEnumValue { get => selectedEnumValue; set => selectedEnumValue = value; }
+   
+    private void Awake()
+    {
+        EnumSelection(SelectedEnumType);
+    }
 
     private void OnValidate()
     {
@@ -42,6 +47,7 @@ public class EnumProvider : MonoBehaviour
     {
         enumNames = new List<string>(Enum.GetNames(type));
         selectedIndex = enumNames.IndexOf(_selectedEnumValueTemp);
+        
         if (selectedIndex < 0)
         {
             selectedIndex = 0;
@@ -55,5 +61,4 @@ public enum EnumType
 {
     EventNames,
     PlayerÑurrency,
-
 }

@@ -39,7 +39,10 @@
         RefreshForDoubloons = 30,
         DefaultValues = 31,
         AdmitDefeat = 32,
-        Refresh = 33
+        Refresh = 33,
+        UILoaded = 34,
+        Restart = 35,
+        NextLevel = 36
         #endregion  GameEventNames
     }
     public enum SaveSlotNames
@@ -49,6 +52,7 @@
         Doubloons,
         Hints,
         LevelsData,
-        LevelConfig
+        LevelConfig,
+        LevelsConfig
     }
 }

@@ -11,5 +11,7 @@ namespace Game.ScriptableObjects
         public float hintMarkDefault = 5;
         public float hintMarkCostDoubloons = 50;
         public float refreshCostForDoubloons = 50;
+        public LevelConfigSO levelConfig;
+        public LevelConfigRepositorySO levelConfigRepository;
     }
 }

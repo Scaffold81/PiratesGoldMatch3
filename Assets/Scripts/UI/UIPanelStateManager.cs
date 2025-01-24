@@ -39,6 +39,12 @@ namespace Game.UI
             {
                 SinglePanelStateChange(newValue);
 
+            }).AddTo(_disposables); 
+            
+            _sceneDataProvider.Receive<bool>(EventNames.UILoaded).Subscribe(newValue =>
+            {
+                GetControllers();
+
             }).AddTo(_disposables);
         }
 
@@ -59,6 +65,8 @@ namespace Game.UI
 
         private void GetControllers()
         {
+            _panelStateControllers.Clear();
+
             UIPanelStateController[] foundControllers = FindObjectsOfType<UIPanelStateController>();
 
             if (foundControllers != null && foundControllers.Length > 0)
@@ -70,10 +78,11 @@ namespace Game.UI
                         _panelStateControllers.Add(controller);
                     }
                 }
+               // Debug.Log("UIPanelStateController components found in the scene count ."+ foundControllers.Length);
             }
             else
             {
-                Debug.Log("No UIPanelStateController components found in the scene.");
+               // Debug.Log("No UIPanelStateController components found in the scene.");
             }
         }
 

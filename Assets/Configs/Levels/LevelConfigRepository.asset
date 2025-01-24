@@ -9,14 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dfcf4d94684b044a8758c36e4189430, type: 3}
-  m_Name: Level01
+  m_Script: {fileID: 11500000, guid: e542dcf3cbb87014784480cdc8aef6ec, type: 3}
+  m_Name: LevelConfigRepository
   m_EditorClassIdentifier: 
-  levelId: 1
-  isLevelPassed: 0
-  dialogueInLevelPassed: 0
-  dialogueInMapPassed: 0
-  dialogueInLevelName: 
-  dialogueInMapName: 
-  levelName: Level01
-  gameUIName: UIGameCanvas
+  levelConfigs:
+  - {fileID: 11400000, guid: d5a461bd53b10f842944f43c276d08e1, type: 2}

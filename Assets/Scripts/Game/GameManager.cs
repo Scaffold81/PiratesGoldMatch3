@@ -5,6 +5,8 @@ using System;
 using RxExtensions;
 using System.Reactive.Disposables;
 using Game.Enums;
+using Game.ScriptableObjects;
+using System.Linq;
 
 public class GameManagerBase : MonoBehaviour
 {
@@ -56,6 +58,7 @@ public class GameManagerBase : MonoBehaviour
 
         _sceneDataProvider.Receive<bool>(EventNames.NoVariants).Subscribe(newValue =>
         {
+            print("NoVariants");
             NoVariants();
         }).AddTo(_disposables);
 
@@ -63,8 +66,18 @@ public class GameManagerBase : MonoBehaviour
         {
             RefreshBoard();
         }).AddTo(_disposables);
-    }
 
+        _sceneDataProvider.Receive<bool>(EventNames.Restart).Subscribe(newValue =>
+        {
+            Restart();
+        }).AddTo(_disposables);
+
+        _sceneDataProvider.Receive<int>(EventNames.NextLevel).Subscribe(newValue =>
+        {
+            NextLevel();
+        }).AddTo(_disposables);
+    }
+    
     private void RefreshBoard()
     {
         _machTree.Refresh();
@@ -98,14 +111,61 @@ public class GameManagerBase : MonoBehaviour
 
     private void Win()
     {
-        _sceneDataProvider.Publish(EventNames.Win, true);
         _sceneDataProvider.Publish(EventNames.WinPanel, true);
         OpenLevel();
     }
 
     private void OpenLevel()
     {
+        var levels = (LevelConfigRepositorySO)_sceneDataProvider.GetValue(SaveSlotNames.LevelsConfig);
+        var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
 
+        if (levels == null || level == null)
+        {
+            Debug.LogError("Failed to open level: levels or current level is null.");
+            return;
+        }
+
+        var levelToOpen = levels.levelConfigs.FirstOrDefault(a => a.levelId == level.levelId + 1);
+
+        if (levelToOpen != null)
+        {
+            levelToOpen.isLevelOpen = true;
+            _sceneDataProvider.Publish(SaveSlotNames.LevelsConfig, levels);
+        }
+        else
+        {
+            Debug.LogWarning("Next level not found or already open.");
+        }
+    }
+
+    private void NextLevel()
+    {
+        var levels = (LevelConfigRepositorySO)_sceneDataProvider.GetValue(SaveSlotNames.LevelsConfig);
+        var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
+
+        if (levels == null || level == null)
+        {
+            Debug.LogError("Failed to transition to the next level: levels or current level is null.");
+            return;
+        }
+
+        var nextLevel = levels.levelConfigs.FirstOrDefault(a => a.levelId == level.levelId + 1);
+
+        if (nextLevel != null)
+        {
+            _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, nextLevel);
+            _sceneDataProvider.Publish(EventNames.LoadScene, 2);
+        }
+        else
+        {
+            Debug.LogWarning("Next level not found or already open.");
+        }
+    }
+
+    private void Restart()
+    {
+        _sceneDataProvider.Publish(EventNames.LoadScene, 2);
     }
 
     public void AddPiastres(NodeReward reward)

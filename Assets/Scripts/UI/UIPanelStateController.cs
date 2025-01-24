@@ -10,7 +10,8 @@ namespace Game.UI
         [SerializeField]
         private EventNames _uIPanelName;
         private CanvasGroup _canvasGroup;
-        private float _duration = 0.5f;
+        private float _showDuration = 0.1f;
+        private float _hideDuration = 0.05f;
 
         public EventNames UIPanelName { get => _uIPanelName; set => _uIPanelName = value; }
         public bool IsActive { get; set; }
@@ -25,7 +26,7 @@ namespace Game.UI
             var startValue = 0f;
             var endValue = 1f;
             IsActive = true;
-            DOTween.To(() => startValue, x => startValue = x, endValue, _duration)
+            DOTween.To(() => startValue, x => startValue = x, endValue, _showDuration)
                 .OnUpdate(() =>
                 {
                     _canvasGroup.alpha = startValue; // Обновление прозрачности в процессе анимации
@@ -44,7 +45,7 @@ namespace Game.UI
             var startValue = 1f;
             var endValue = 0f;
             IsActive = false;
-            DOTween.To(() => startValue, x => startValue = x, endValue, _duration)
+            DOTween.To(() => startValue, x => startValue = x, endValue, _hideDuration)
                .OnUpdate(() =>
                {
                    _canvasGroup.alpha = startValue;

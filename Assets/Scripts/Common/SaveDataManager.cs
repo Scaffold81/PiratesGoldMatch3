@@ -2,6 +2,7 @@ using Core.Data;
 using Game.Common;
 using Game.Enums;
 using Game.ScriptableObjects;
+using JetBrains.Annotations;
 using RxExtensions;
 using System;
 using System.Reactive.Disposables;
@@ -11,6 +12,8 @@ public class SaveDataManager : MonoBehaviour
 {
     [SerializeField]
     private DefaultValuesSO defaultValues;
+    [SerializeField]
+    private LevelConfigRepositorySO levelConfigRepository;
 
     private SceneDataProvider _sceneDataProvider;
 
@@ -51,16 +54,27 @@ public class SaveDataManager : MonoBehaviour
 
         }).AddTo(_disposables);
 
-        _sceneDataProvider.Receive<LevelConfig>(SaveSlotNames.LevelConfig).Subscribe(value =>
+        _sceneDataProvider.Receive<LevelConfigSO>(SaveSlotNames.LevelConfig).Subscribe(value =>
         {
             SaveLevelConfigJson(SaveSlotNames.LevelConfig, value);
+
+        }).AddTo(_disposables); 
+        
+        _sceneDataProvider.Receive<LevelConfigRepositorySO>(SaveSlotNames.LevelsConfig).Subscribe(value =>
+        {
+            SaveLevelsConfigJson(SaveSlotNames.LevelsConfig, value);
 
         }).AddTo(_disposables);
     }
 
-    private void SaveLevelConfigJson(SaveSlotNames key, LevelConfig levelConfig )
+    private void SaveLevelConfigJson(SaveSlotNames key, LevelConfigSO levelConfig )
     {
         _saveSystem.SaveJSON (key.ToString(), levelConfig);
+    }
+
+    private void SaveLevelsConfigJson(SaveSlotNames key, LevelConfigRepositorySO levelsConfig)
+    {
+        _saveSystem.SaveJSON(key.ToString(), levelsConfig);
     }
 
     private void Save(string key, string value)
@@ -79,8 +93,19 @@ public class SaveDataManager : MonoBehaviour
         var hintMark = GetNumericDataOrDefault(SaveSlotNames.Hints.ToString(), defaultValues.hintMarkDefault);
         _sceneDataProvider.Publish(Player—urrency.HintMark, hintMark);
 
-        var levelConfig = _saveSystem.LoadJSON<LevelConfig>(SaveSlotNames.LevelConfig.ToString());
+        var levelConfig = _saveSystem.LoadJSON<LevelConfigSO>(SaveSlotNames.LevelConfig.ToString());
+        if (levelConfig == null)
+        {
+            levelConfig = defaultValues.levelConfig;
+        }
         _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, levelConfig);
+
+        var levelsConfig = _saveSystem.LoadJSON<LevelConfigRepositorySO>(SaveSlotNames.LevelsConfig.ToString());
+        if (levelsConfig == null)
+        {
+            levelsConfig = defaultValues.levelConfigRepository;
+        }
+        _sceneDataProvider.Publish(SaveSlotNames.LevelsConfig, levelsConfig);
     }
 
     private float GetNumericDataOrDefault(string key, float defaultValue)

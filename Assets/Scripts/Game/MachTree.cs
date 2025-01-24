@@ -65,7 +65,7 @@ namespace Game.Gameplay.Nodes
 
         private void Start()
         {
-            _sceneDataProvider = new SceneDataProvider();
+            _sceneDataProvider = SceneDataProvider.Instance;
             Subscribes();
         }
 
@@ -476,6 +476,7 @@ namespace Game.Gameplay.Nodes
 
             if (_avalableNodeForMatches.Count() <= 0)
             {
+                print(_sceneDataProvider);
                 _sceneDataProvider.Publish(EventNames.NoVariants, true);
                 print("Avalable matches not found");
             }
