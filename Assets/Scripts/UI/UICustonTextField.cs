@@ -1,10 +1,10 @@
 using TMPro;
 using System;
 using Core.Data;
+using RxExtensions;
 
 public class UICustonTextField : EnumProvider
 {
-    private SceneDataProvider _sceneDataProvider;
     private TMP_Text _text;
 
     private void Awake()
@@ -16,19 +16,15 @@ public class UICustonTextField : EnumProvider
 
     private void Start()
     {
-        _sceneDataProvider = SceneDataProvider.Instance;
-        if (_sceneDataProvider != null)
-        {
-            Subscribes();
-        }
+        Init();
     }
 
-    private void Subscribes()
+    protected override void Subscribe()
     {
         _sceneDataProvider.Receive<float>(SelectedEnumValue).Subscribe(newValue =>
         {
             UpdateText(newValue.ToString());
-        });
+        }).AddTo(_disposables);
     }
 
     private void UpdateText<T>(T value)

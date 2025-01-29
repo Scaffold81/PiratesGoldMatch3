@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 namespace Game.Gameplay.Nodes
 {
-    public class MachTree : MonoBehaviour
+    public class MachTreeBase : MonoBehaviour
     {
         private NodesGenerator _nodesGenerator;
         private SceneDataProvider _sceneDataProvider;

@@ -9,19 +9,14 @@ namespace Game.UI
     public class UIHintPanel : UIPanelBase
     {
         private DoubloonsProcessor _doubloonsProcessor;
+
         private void Start()
         {
-            Init();
-        }
-
-        public override void Init()
-        {
-            _sceneDataProvider = SceneDataProvider.Instance;
+            Init(); 
             _doubloonsProcessor = new DoubloonsProcessor(_sceneDataProvider);
-            Subscribe();
         }
 
-        private void Subscribe()
+        protected override void Subscribe()
         {
             _sceneDataProvider.Receive<bool>(EventNames.GetHintForDoubloons).Subscribe(newValue =>
             {
@@ -56,6 +51,11 @@ namespace Game.UI
                 _sceneDataProvider.Publish(Player—urrency.HintMark, hitMark);
             }
             _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.HintPanel);
+        }
+
+        private void OnDestroy()
+        {
+            Unsubscribe();
         }
     }
 }

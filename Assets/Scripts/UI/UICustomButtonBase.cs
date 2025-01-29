@@ -13,8 +13,6 @@ namespace Game.UI
 
             if (_btn != null)
                 _btn.onClick.AddListener(OnClick);
-            else
-                Debug.LogError("Button not found. Check component Button in game object " + name);
         }
 
         protected virtual void OnClick() { }

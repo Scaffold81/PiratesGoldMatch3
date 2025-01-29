@@ -12,17 +12,11 @@ namespace Game.UI
 
         private void Start()
         {
-            Init();
-        }
-
-        public override void Init()
-        {
-            _sceneDataProvider = SceneDataProvider.Instance;
+            Init(); 
             _doubloonsProcessor = new DoubloonsProcessor(_sceneDataProvider);
-            Subscribes();
         }
 
-        private void Subscribes()
+        protected override void Subscribe()
         {
             _sceneDataProvider.Receive<bool>(EventNames.RefreshForAdv).Subscribe(newValue =>
             {
@@ -61,6 +55,10 @@ namespace Game.UI
         {
             _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.NoVariantsPanel);
             _sceneDataProvider.Publish(EventNames.Refresh, true);
+        }
+        private void OnDestroy()
+        {
+            Unsubscribe();
         }
     }
 }

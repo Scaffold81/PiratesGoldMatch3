@@ -236,7 +236,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e5354a962e084d44897c561c3ec7a192, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b21415c9b26c42840b28de4eff91b192, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7266,7 +7266,7 @@ GameObject:
   - component: {fileID: 8837030592654845913}
   - component: {fileID: 8895281066968063689}
   m_Layer: 5
-  m_Name: Level01
+  m_Name: Level001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7394,7 +7394,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 024d7cc08d242e340a73f665c1ae3af8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetPiastres: 10000
+  _gameState: 17
+  _targetForWinPiastres: 1000
 --- !u!114 &8895281066968063689
 MonoBehaviour:
   m_ObjectHideFlags: 0

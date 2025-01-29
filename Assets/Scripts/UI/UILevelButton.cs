@@ -1,10 +1,13 @@
 ﻿using Core.Data;
 using Game.Enums;
 using Game.ScriptableObjects;
-using System.Collections.Generic;
 using System.Linq;
+using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Reactive.Disposables;
+using RxExtensions;
 
 namespace Game.UI
 {
@@ -12,34 +15,62 @@ namespace Game.UI
     {
         [SerializeField]
         private LevelConfigSO _levelConfig;
-        private SceneDataProvider _sceneDataProvider;
-       
         [SerializeField]
         private Image _lockImage;
+        [SerializeField]
+        private TMP_Text _levelText;
+
+        public LevelConfigSO LevelConfig { get => _levelConfig; private set => _levelConfig = value; }
 
         private void Start()
         {
-            _sceneDataProvider = SceneDataProvider.Instance;
-            GetLevelConfig();
+            Init();
+            Subscribe();
+        }
+
+        protected override void Subscribe()
+        {
+            _sceneDataProvider.Receive<LevelConfigRepositorySO>(SaveSlotNames.LevelsConfig).Subscribe(newValue =>
+            {
+                GetLevelConfig(newValue);
+
+            }).AddTo(_disposables);
         }
 
         protected override void OnClick()
         {
-            _sceneDataProvider.Publish(SelectedEnumValue, _levelConfig);
-            _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, _levelConfig);
+            if (!LevelConfig.isLevelOpen) return;
+            _sceneDataProvider.Publish(EventNames.SetLevel, LevelConfig);
+            _sceneDataProvider.Publish(SaveSlotNames.PreviosLevelConfig, LevelConfig);//сохраням уровень как предидущий
+            _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, LevelConfig);
         }
 
-        private void GetLevelConfig()
+        private void GetLevelConfig(LevelConfigRepositorySO levelsConfig)
         {
-            var configs = (List<LevelConfigSO>)_sceneDataProvider.GetValue(SaveSlotNames.LevelsData) ?? new List<LevelConfigSO>();
-            if (configs.Count <= 0) return;
-            var config=configs.FirstOrDefault(c=>c.levelId==_levelConfig.levelId);
-            _levelConfig = config;
+            var config = levelsConfig.levelConfigs.FirstOrDefault(c => c.levelId == LevelConfig.levelId);
+
+            if (config != null)
+            {
+                LevelConfig = ScriptableObject.CreateInstance<LevelConfigSO>();
+                LevelConfig = config;
+
+                UpdateButton(config);
+            }
+            else
+            {
+                Debug.LogWarning("Level config not found for level ID: " + LevelConfig.levelId);
+            }
         }
-        
-        private void UpdateButton()
+
+        private void UpdateButton(LevelConfigSO levelConfig)
         {
-                _lockImage.enabled= !_levelConfig.isLevelOpen;
+            _levelText.text = levelConfig.levelId.ToString();
+            _lockImage.enabled = !levelConfig.isLevelOpen;
+        }
+
+        private void OnDestroy()
+        {
+            Unsubscribe();
         }
     }
 }

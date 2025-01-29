@@ -17,5 +17,8 @@ namespace Game.ScriptableObjects
         public string dialogueInMapName;
         public string levelName;
         public string gameUIName = "UIGameCanvas";
+
+        public float targetForWinPiastres = 100;
+
     }
 }

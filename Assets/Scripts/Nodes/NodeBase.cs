@@ -12,7 +12,7 @@ namespace Game.Gameplay.Nodes
 {
     public class NodeBase : MonoBehaviour, IPointerDownHandler
     {
-        private MachTree _machTreeView;
+        private MachTreeBase _machTreeView;
 
         [SerializeField]
         private NodeType _nodeType;
@@ -36,7 +36,7 @@ namespace Game.Gameplay.Nodes
         public Image ImageBackground { get => _imageBackground; set => _imageBackground = value; }
         public NodeReward NodeReward { get => _nodeReward; private set => _nodeReward = value; }
 
-        public void Init(NodeType type, MachTree machTreeView,NodeReward nodeReward)
+        public void Init(NodeType type, MachTreeBase machTreeView,NodeReward nodeReward)
         {
             _initialScale = transform.localScale.x;
             _nodeReward = nodeReward;

@@ -14,7 +14,7 @@
         WinPanel = 8,
         LosePanel = 9,
         NoVariantsPanel = 10,
-        Empty5 = 11,
+        PlayLevelPanel = 11,
         Empty6 = 12,
         Empty7 = 13,
         Empty8 = 14,
@@ -42,7 +42,8 @@
         Refresh = 33,
         UILoaded = 34,
         Restart = 35,
-        NextLevel = 36
+        NextLevel = 36,
+        SetLevel = 37
         #endregion  GameEventNames
     }
     public enum SaveSlotNames
@@ -53,6 +54,7 @@
         Hints,
         LevelsData,
         LevelConfig,
-        LevelsConfig
+        LevelsConfig,
+        PreviosLevelConfig
     }
 }

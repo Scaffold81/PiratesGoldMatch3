@@ -12,11 +12,13 @@ public class GameManagerBase : MonoBehaviour
 {
     private SceneDataProvider _sceneDataProvider;
     private CompositeDisposable _disposables = new();
-    private MachTree _machTree;
+    private MachTreeBase _machTree;
+    [SerializeField] private EventNames _gameState = EventNames.StartGame;
     [SerializeField]
-    private float _targetPiastres = 1000;
+    private float _targetForWinPiastres = 1000;
 
     private float _currentPiastres;
+
 
     public float CurrentPiastres
     {
@@ -24,14 +26,14 @@ public class GameManagerBase : MonoBehaviour
         set
         {
             _currentPiastres = value;
-            if (_currentPiastres >= _targetPiastres)
+            if (_currentPiastres >= _targetForWinPiastres && _gameState == EventNames.StartGame)
                 Win();
         }
     }
 
     private void Awake()
     {
-        _machTree = GetComponent<MachTree>();
+        _machTree = GetComponent<MachTreeBase>();
     }
 
     private void Start()
@@ -42,6 +44,7 @@ public class GameManagerBase : MonoBehaviour
             Subscribes();
         else
             Debug.LogError("SceneDataProvider provider not found. Please check SceneDataProvider in your scene");
+        GetLevel();
     }
 
     private void Subscribes()
@@ -58,7 +61,6 @@ public class GameManagerBase : MonoBehaviour
 
         _sceneDataProvider.Receive<bool>(EventNames.NoVariants).Subscribe(newValue =>
         {
-            print("NoVariants");
             NoVariants();
         }).AddTo(_disposables);
 
@@ -72,12 +74,12 @@ public class GameManagerBase : MonoBehaviour
             Restart();
         }).AddTo(_disposables);
 
-        _sceneDataProvider.Receive<int>(EventNames.NextLevel).Subscribe(newValue =>
+        _sceneDataProvider.Receive<bool>(EventNames.NextLevel).Subscribe(newValue =>
         {
             NextLevel();
         }).AddTo(_disposables);
     }
-    
+
     private void RefreshBoard()
     {
         _machTree.Refresh();
@@ -85,7 +87,8 @@ public class GameManagerBase : MonoBehaviour
 
     private void NoVariants()
     {
-        _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.NoVariantsPanel);
+        if (_gameState == EventNames.StartGame)
+            _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.NoVariantsPanel);
     }
 
     private void Hint()
@@ -106,13 +109,22 @@ public class GameManagerBase : MonoBehaviour
 
     private void Lose()
     {
-        _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.LosePanel);
+        if (_gameState == EventNames.StartGame)
+            _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.LosePanel);
     }
 
     private void Win()
     {
-        _sceneDataProvider.Publish(EventNames.WinPanel, true);
+        if (_gameState != EventNames.StartGame) return;
+        _gameState = EventNames.EndGame;
+        _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.WinPanel);
         OpenLevel();
+    }
+
+    private void GetLevel()
+    {
+        var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
+        _targetForWinPiastres = level.targetForWinPiastres;
     }
 
     private void OpenLevel()
@@ -141,6 +153,8 @@ public class GameManagerBase : MonoBehaviour
 
     private void NextLevel()
     {
+        if (_gameState == EventNames.StartGame)return;
+
         var levels = (LevelConfigRepositorySO)_sceneDataProvider.GetValue(SaveSlotNames.LevelsConfig);
         var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
 
@@ -155,7 +169,9 @@ public class GameManagerBase : MonoBehaviour
         if (nextLevel != null)
         {
             _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, nextLevel);
+            print(nextLevel.levelId);
             _sceneDataProvider.Publish(EventNames.LoadScene, 2);
+            _gameState = EventNames.EndGame;
         }
         else
         {
@@ -175,7 +191,7 @@ public class GameManagerBase : MonoBehaviour
         CurrentPiastres += reward.rewardValue;
         _sceneDataProvider.Publish(Player—urrency.Piastres, piastres);
     }
-    
+
     private void OnDestroy()
     {
         _disposables.Dispose();

@@ -17,7 +17,7 @@ namespace Game.Gameplay.Generators
             _repository = nodeRepository;
         }
 
-        public void GenerateNodes(NodeType[] nodeTypes, NodeType[] excludedNodeTypes, NodeBase[,] nodes, MachTree machTreeView)
+        public void GenerateNodes(NodeType[] nodeTypes, NodeType[] excludedNodeTypes, NodeBase[,] nodes, MachTreeBase machTreeView)
         {
             this.nodes = nodes;
             for (int x = 0; x < nodes.GetLength(0); x++)
@@ -113,7 +113,7 @@ namespace Game.Gameplay.Generators
             return false;
         }
 
-        public void CheckAndReplaceNodesForMatches(MachTree machTreeView)
+        public void CheckAndReplaceNodesForMatches(MachTreeBase machTreeView)
         {
             for (int x = 0; x < nodes.GetLength(0); x++)
             {
@@ -136,7 +136,7 @@ namespace Game.Gameplay.Generators
             }
         }
 
-        private void ReplaceNode(int x, int y, NodeType newNode, MachTree machTreeView)
+        private void ReplaceNode(int x, int y, NodeType newNode, MachTreeBase machTreeView)
         {
             var nodeConfig = GetNodeConfig(newNode);
             nodes[x, y].Init(newNode, machTreeView, nodeConfig.nodeReward); // Replace the node at position (x, y) with the new node

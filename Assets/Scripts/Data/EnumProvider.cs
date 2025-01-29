@@ -1,17 +1,18 @@
+using Core.Data;
 using Game.Enums;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class EnumProvider : MonoBehaviour
+public class EnumProvider : GetDataProvider
 {
     [SerializeField]
     private EnumType selectedEnumType;
     private Enum selectedEnumValue;
 
     [Dropdown("enumNames")]
-    public string _selectedEnumValueTemp;
+    public string EnumValue;
     private List<string> enumNames = new();
     private int selectedIndex;
 
@@ -46,7 +47,7 @@ public class EnumProvider : MonoBehaviour
     private void SelectEnumValue(Type type)
     {
         enumNames = new List<string>(Enum.GetNames(type));
-        selectedIndex = enumNames.IndexOf(_selectedEnumValueTemp);
+        selectedIndex = enumNames.IndexOf(EnumValue);
         
         if (selectedIndex < 0)
         {
