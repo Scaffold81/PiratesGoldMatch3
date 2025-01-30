@@ -13,6 +13,12 @@ public class GameManagerBase : MonoBehaviour
     private SceneDataProvider _sceneDataProvider;
     private CompositeDisposable _disposables = new();
     private MachTreeBase _machTree;
+    [SerializeField]
+    private NodesSO _nodeRepository; 
+    [SerializeField]
+    private NodeType[] _nodeTypes;
+    [SerializeField]
+    private NodeType[] _excludedNodeTypes = { NodeType.Hidden };
     [SerializeField] private EventNames _gameState = EventNames.StartGame;
     [SerializeField]
     private float _targetForWinPiastres = 1000;

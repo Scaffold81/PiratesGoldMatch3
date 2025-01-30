@@ -7,8 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering.LookDev;
-using UnityEngine.UI;
 
 namespace Game.Gameplay.Nodes
 {
@@ -18,18 +16,10 @@ namespace Game.Gameplay.Nodes
         private SceneDataProvider _sceneDataProvider;
 
         [SerializeField]
-        private GridLayoutGroup _layoutGroup;
-
-        [SerializeField]
         private GameManagerBase _gameManager;
 
         [SerializeField]
         private NodesSO _nodeRepository;
-
-        [SerializeField]
-        private int _rows = 10;
-        [SerializeField]
-        private int _columns = 7;
 
         [SerializeField]
         private NodeType[] _nodeTypes;
@@ -37,7 +27,7 @@ namespace Game.Gameplay.Nodes
         private NodeType[] _excludedNodeTypes = { NodeType.Hidden };
         public NodeBase[,] Nodes { get; private set; }
 
-        private List<AvalableNodeForMatch> _avalableNodeForMatches;
+        private List<AvalableNodeForMatch> _avalableNodeForMatches = new List<AvalableNodeForMatch>();
 
         private NodeBase _selectedNode01;
         private NodeBase _selectedNode02;
@@ -56,11 +46,9 @@ namespace Game.Gameplay.Nodes
 
         private void Awake()
         {
-            _nodesGenerator = new NodesGenerator(_nodeRepository);
-            _gameManager = GetComponent<GameManagerBase>();
-            AddNodes();
-            Invoke(nameof(GridLayoutGroupOff), 1);
-            _avalableNodeForMatches = new List<AvalableNodeForMatch>();
+
+            Init();
+
         }
 
         private void Start()
@@ -77,22 +65,48 @@ namespace Game.Gameplay.Nodes
             });
         }
 
-        private void GridLayoutGroupOff() => _layoutGroup.enabled = false;
-
-        private void AddNodes()
+        private void Init()
         {
-            Nodes = new NodeBase[_columns, _rows];
+            _nodesGenerator = new NodesGenerator(_nodeRepository);
+            _gameManager = GetComponent<GameManagerBase>();
 
-            var nodes = GetComponentsInChildren<NodeBase>().ToList();
+            List<NodeBase> nodes = SetFieldSyze();
+            SetField(nodes);
 
+            _nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, Nodes, this);
+
+            Invoke(nameof(FindAvailableMatchesHorizontal), 0.1f);
+        }
+
+        private void SetField(List<NodeBase> nodes)
+        {
             foreach (var node in nodes)
             {
                 Nodes[(int)node.Position.x, (int)node.Position.y] = node;
                 node.Show();
             }
-            
-            _nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, Nodes, this);
-            Invoke(nameof(FindAvailableMatchesHorizontal), 0.1f);
+        }
+
+        private List<NodeBase> SetFieldSyze()
+        {
+            var nodes = GetComponentsInChildren<NodeBase>().ToList();
+            var columns = float.MinValue;
+            var rows = float.MinValue;
+
+            // Пройти по всем элементам списка и найти максимальное значение координаты x
+            foreach (var node in nodes)
+            {
+                if (node.Position.x > columns)
+                {
+                    columns = node.Position.x;
+                }
+                if (node.Position.y > rows)
+                {
+                    rows = node.Position.y;
+                }
+            }
+            Nodes = new NodeBase[(int)columns + 1, (int)rows + 1];
+            return nodes;
         }
 
         public void SetSelectedNode(NodeBase nodeBase)
@@ -478,7 +492,6 @@ namespace Game.Gameplay.Nodes
             {
                 print(_sceneDataProvider);
                 _sceneDataProvider.Publish(EventNames.NoVariants, true);
-                print("Avalable matches not found");
             }
         }
 
@@ -644,7 +657,7 @@ namespace Game.Gameplay.Nodes
                     }
                 }
             }
-            AddNodes();
+            Init();
         }
     }
 }

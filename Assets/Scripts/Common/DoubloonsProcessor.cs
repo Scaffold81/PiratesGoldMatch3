@@ -1,7 +1,7 @@
 using Core.Data;
 using UnityEngine;
 
-public class DoubloonsProcessor : MonoBehaviour
+public class DoubloonsProcessor
 {
     private SceneDataProvider _sceneDataProvider;
 

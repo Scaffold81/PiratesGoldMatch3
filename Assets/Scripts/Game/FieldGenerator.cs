@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Game.Gameplay.Nodes.Generator
 {
@@ -10,25 +13,21 @@ namespace Game.Gameplay.Nodes.Generator
         private int _rows = 10;
         [SerializeField]
         private int _columns = 7;
-
+        [SerializeField]
+        private RectTransform _backGroundField;
 
         [SerializeField]
         private NodeBase _nodesPrefabs;
         [SerializeField]
         private Image _nodesBackgroundPrefabs;
+
+        private List<GameObject> _nodes = new List<GameObject>();
         [SerializeField]
         private bool _generate = false;
 
-        [SerializeField]
-        private GridLayoutGroup _gridLayoutGroup;
-        [SerializeField]
-        private GridLayoutGroup _gridLayoutGroupBackground;
         private void Awake()
         {
-            if (Application.isPlaying)
-            {
-                Destroy(this);
-            }
+            Destroy(this);
         }
 
         private void Update()
@@ -41,30 +40,45 @@ namespace Game.Gameplay.Nodes.Generator
 
         public void GenerateField()
         {
-            var panel = GetComponent<RectTransform>();
-            var cellSyze = panel.rect.width * 1.25f / _columns;
-            _gridLayoutGroup.constraintCount = _columns;
-            _gridLayoutGroup.cellSize = new Vector2(cellSyze, cellSyze);
-            _gridLayoutGroup.spacing = -Vector2.one * cellSyze / 3.7f;
+            if (_nodes.Count > 0)
+            {
+                foreach (var node in _nodes)
+                {
+                    DestroyImmediate(node.gameObject);
+                }
+                _nodes.Clear();
+            }
 
-            _gridLayoutGroupBackground.constraintCount = _gridLayoutGroup.constraintCount;
-            _gridLayoutGroupBackground.cellSize = _gridLayoutGroup.cellSize;
-            _gridLayoutGroupBackground.spacing = _gridLayoutGroup.spacing;
+
+            var panel = GetComponent<RectTransform>();
+            var cellSize = panel.rect.width / _columns; // Рассчитываем размер одной ячейки
+
+            float startX = -(panel.rect.width / 2) + (cellSize / 2); // Начальная позиция по оси X
+            float startY = panel.rect.height / 2 - (cellSize / 2); // Начальная позиция по оси Y
 
             for (int y = 0; y < _rows; y++)
             {
                 for (int x = 0; x < _columns; x++)
                 {
                     var newElement = Instantiate(_nodesPrefabs);
-                    newElement.transform.SetParent(transform); // Для организации поля в иерархии
+                    newElement.transform.SetParent(transform);
                     newElement.name = x.ToString() + "/" + y.ToString();
+
+                    // Рассчитываем позицию для текущей ячейки
+                    var posX = startX + x * cellSize;
+                    var posY = startY - y * cellSize;
                     newElement.Position = new Vector2(x, y);
-                    newElement.GetComponent<RectTransform>().localScale = Vector3.one * 0.8f;
+                    var rect = newElement.GetComponent<RectTransform>();
+                    rect.anchoredPosition = new Vector2(posX, posY);
+                    rect.transform.localScale = Vector3.one * cellSize * 2f / 100; // Устанавливаем размер ячейки
 
                     var background = Instantiate(_nodesBackgroundPrefabs);
                     newElement.ImageBackground = background;
-                    background.transform.SetParent(_gridLayoutGroupBackground.transform);
-                    background.transform.localScale = Vector3.one * 0.8f;
+                    background.transform.position = rect.transform.position;
+                    background.transform.SetParent(_backGroundField); // Убираем зависимость от GridLayoutGroup
+                    background.transform.localScale = Vector3.one * cellSize / 100; // Пример масштабирования заднего фона
+                    _nodes.Add(background.gameObject);
+                    _nodes.Add(newElement.gameObject);
                 }
             }
             _generate = false;
