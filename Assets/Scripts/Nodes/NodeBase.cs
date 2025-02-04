@@ -1,7 +1,6 @@
 ﻿using DG.Tweening;
-using System;
+using Game.Enums;
 using System.Collections;
-using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
@@ -16,7 +15,8 @@ namespace Game.Gameplay.Nodes
 
         [SerializeField]
         private NodeType _nodeType;
-
+        [SerializeField]
+        private NodeAbility _nodeAbility;
         [SerializeField]
         private NodeReward _nodeReward;
 
@@ -103,13 +103,31 @@ namespace Game.Gameplay.Nodes
             Addressables.Release(handle);
         }
 
-        public void DestroyNode()
+        public void SetNodeEmpty(NodeBase[,] nodes)
         {
-            NodeType = NodeType.Empty;
-            _machTreeView.Reward(this);
-            Image.enabled = false;
+            if (_nodeAbility != null)
+            {
+                _nodeAbility.ActivateAbility(nodes, Position,this);
+                _nodeAbility=null;
+            }
+                NodeType = NodeType.Empty;
+
+                if (Image.enabled == true)
+                    Image.enabled = false;
+
+            
         }
 
+        public void SetNodeAbility(NodeAbility ability)
+        {
+            _nodeAbility = ability;
+        }
+
+        public void SetNodeReaward() 
+        { 
+            _machTreeView.Reward(this); 
+        }
+        
         public void HightlightOn()
         {
             StartScaleAnimation();

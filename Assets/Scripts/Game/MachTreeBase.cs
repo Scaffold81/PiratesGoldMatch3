@@ -10,12 +10,16 @@ using UnityEngine;
 
 namespace Game.Gameplay.Nodes
 {
+    [System.Serializable]
+    public class Nodes
+    {
+        public List<NodeBase> nodes = new();
+    }
+
     public class MachTreeBase : MonoBehaviour
     {
         private NodesGenerator _nodesGenerator;
         private SceneDataProvider _sceneDataProvider;
-
-        [SerializeField]
         private GameManagerBase _gameManager;
 
         [SerializeField]
@@ -25,8 +29,12 @@ namespace Game.Gameplay.Nodes
         private NodeType[] _nodeTypes;
         [SerializeField]
         private NodeType[] _excludedNodeTypes = { NodeType.Hidden };
-        public NodeBase[,] Nodes { get; private set; }
 
+        public NodeBase[,] _nodes;
+        [SerializeField]
+        private List<Nodes> _matchesNodes = new();
+
+        [SerializeField]
         private List<AvalableNodeForMatch> _avalableNodeForMatches = new List<AvalableNodeForMatch>();
 
         private NodeBase _selectedNode01;
@@ -34,7 +42,8 @@ namespace Game.Gameplay.Nodes
         private NodeBase _emptyNode = null;
 
         private bool _isBlock = false;
-
+        [SerializeField]
+        private float _destroyNodeTime = 0.2f;
         [SerializeField]
         private float _moveNodeTime = 0.01f;
         [SerializeField]
@@ -46,9 +55,7 @@ namespace Game.Gameplay.Nodes
 
         private void Awake()
         {
-
             Init();
-
         }
 
         private void Start()
@@ -70,10 +77,10 @@ namespace Game.Gameplay.Nodes
             _nodesGenerator = new NodesGenerator(_nodeRepository);
             _gameManager = GetComponent<GameManagerBase>();
 
-            List<NodeBase> nodes = SetFieldSyze();
+            var nodes = SetFieldSyze();
             SetField(nodes);
 
-            _nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, Nodes, this);
+            _nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, _nodes, this);
 
             Invoke(nameof(FindAvailableMatchesHorizontal), 0.1f);
         }
@@ -82,7 +89,7 @@ namespace Game.Gameplay.Nodes
         {
             foreach (var node in nodes)
             {
-                Nodes[(int)node.Position.x, (int)node.Position.y] = node;
+                _nodes[(int)node.Position.x, (int)node.Position.y] = node;
                 node.Show();
             }
         }
@@ -105,7 +112,7 @@ namespace Game.Gameplay.Nodes
                     rows = node.Position.y;
                 }
             }
-            Nodes = new NodeBase[(int)columns + 1, (int)rows + 1];
+            _nodes = new NodeBase[(int)columns + 1, (int)rows + 1];
             return nodes;
         }
 
@@ -138,8 +145,6 @@ namespace Game.Gameplay.Nodes
         {
             _isBlock = true;
 
-            var matchNode01 = false;
-            var matchNode02 = false;
             var pos01 = selectedNode01.Position;
             var pos02 = selectedNode02.Position;
 
@@ -150,7 +155,7 @@ namespace Game.Gameplay.Nodes
             selectedNode01.transform.DOMove(selectedNode02.transform.position, _moveNodeTime)
                 .OnComplete(() =>
                 {
-                    Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
+                    _nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
                     selectedNode01.Position = pos02;
                     selectedNode01.Show();
                     selectedNode01.Rename();
@@ -168,25 +173,12 @@ namespace Game.Gameplay.Nodes
             selectedNode02.transform.DOMove(selectedNode01.transform.position, _moveNodeTime)
             .OnComplete(() =>
             {
-                Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
+                _nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
                 selectedNode02.Position = pos01;
                 selectedNode02.Show();
                 selectedNode02.Rename();
 
-                matchNode01 = !isReverse && CheckCloseNodesForMatches(selectedNode01);
-                matchNode02 = !isReverse && CheckCloseNodesForMatches(selectedNode02);
-
-                if (!matchNode01 && !matchNode02 && !isReverse)
-                {
-                    Reverse(selectedNode01, selectedNode02);
-                }
-                else
-                {
-                    FindEmptyNodes();
-                }
-
-                _selectedNode01 = null;
-                _selectedNode02 = null;
+                StartCoroutine(CheckCloseNodesForMatches());
             });
         }
 
@@ -200,7 +192,7 @@ namespace Game.Gameplay.Nodes
             selectedNode01.transform.DOMove(selectedNode02.transform.position, _moveNodeTime)
                 .OnComplete(() =>
                 {
-                    Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
+                    _nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
                     selectedNode01.Position = pos02;
                     selectedNode01.Show();
                     _selectedNode01 = null;
@@ -217,7 +209,7 @@ namespace Game.Gameplay.Nodes
             selectedNode02.transform.DOMove(selectedNode01.transform.position, _moveNodeTime)
                 .OnComplete(() =>
                 {
-                    Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
+                    _nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
                     selectedNode02.Position = pos01;
                     selectedNode02.Show();
                     _selectedNode02 = null;
@@ -236,306 +228,175 @@ namespace Game.Gameplay.Nodes
             return Mathf.Abs(x1 - x2) + Mathf.Abs(y1 - y2) == 1;
         }
 
-        public bool CheckCloseNodesForMatches(NodeBase movedNode)
+        #region CheckCloseNodesForMatches
+
+        private IEnumerator CheckCloseNodesForMatches()
         {
-            var matchesX = new List<NodeBase>();
+            var nodesIsMatch = false;
+            nodesIsMatch = CheckHorizontalAndVerticalMatches(_selectedNode01);
+            yield return new WaitForSeconds(_executionDelay);
+
+            if (!nodesIsMatch)
+                Reverse(_selectedNode01, _selectedNode02);
+
+            _selectedNode01 = null;
+            _selectedNode02 = null;
+            StartCoroutine(nameof(DestroyMatchesNodes));
+
+        }
+
+        private bool CheckHorizontalAndVerticalMatches(NodeBase selectedNode)
+        {
+            return CheckHorizontalMatches(selectedNode) || CheckVerticalMatches(selectedNode);
+        }
+
+        private bool CheckVerticalMatches(NodeBase selectedNode)
+        {
             var matchesY = new List<NodeBase>();
+            var returnValue = false;
 
-            var newX = (int)movedNode.Position.x;
-            var newY = (int)movedNode.Position.y;
-
-            var newNode = movedNode.NodeType;
-
-            for (int x = 0; x < Nodes.GetLength(0); x++)
+            for (int y = 0; y < _nodes.GetLength(1); y++)
             {
-                if (Nodes[x, newY].NodeType == newNode)
+                if (_nodes[(int)selectedNode.Position.x, y].NodeType == selectedNode.NodeType)
                 {
-                    matchesX.Add(Nodes[x, newY]);
+                    matchesY.Add(_nodes[(int)selectedNode.Position.x, y]);
                 }
                 else
                 {
-                    if (matchesX.Count < 3)
+                    if (matchesY.Count >= 3)
                     {
-                        matchesX.Clear();
+                        Nodes nodes = new Nodes();
+                        nodes.nodes.AddRange(matchesY);
+                        _matchesNodes.Add(nodes); 
+                        returnValue = true;
                     }
-                    else
-                    {
-                        foreach (NodeBase node in matchesX)
-                        {
-                            node.DestroyNode();
-                        }
-                        return true;
-                    }
-                }
-            }
-
-            if (matchesX.Count < 3)
-            {
-                matchesX.Clear();
-            }
-            else
-            {
-                foreach (NodeBase node in matchesX)
-                {
-                    node.DestroyNode();
-                }
-                return true;
-            }
-
-            for (int y = 0; y < Nodes.GetLength(1); y++)
-            {
-                if (Nodes[newX, y].NodeType == newNode)
-                {
-                    matchesY.Add(Nodes[newX, y]);
-                }
-                else
-                {
-                    if (matchesY.Count < 3)
-                    {
-                        matchesY.Clear();
-                    }
-                    else
-                    {
-                        foreach (NodeBase node in matchesY)
-                        {
-                            node.DestroyNode();
-                        }
-
-                        return true;
-                    }
+                    matchesY.Clear(); // Очищаем список после каждой итерации цикла
                 }
             }
 
             if (matchesY.Count >= 3)
             {
-                foreach (NodeBase node in matchesY)
-                {
-                    node.DestroyNode();
-                }
-                return true;
+                Nodes nodes = new Nodes();
+                nodes.nodes.AddRange(matchesY);
+                _matchesNodes.Add(nodes);
+                returnValue = true;
             }
 
-            return false; // No combinations of three identical nodes found
+            return returnValue;
         }
 
-        private bool CheckAllNodesForMatches()
+        private bool CheckHorizontalMatches(NodeBase selectedNode)
         {
-            var matchedNodes = new List<NodeBase>();
+            var returnValue = false;
+            var matchesX = new List<NodeBase>();
+            for (int x = 0; x < _nodes.GetLength(0); x++)
+            {
+                if (_nodes[x, (int)selectedNode.Position.y].NodeType == selectedNode.NodeType)
+                {
+                    matchesX.Add(_nodes[x, (int)selectedNode.Position.y]);
+                }
+                else
+                {
+                    if (matchesX.Count >= 3)
+                    {
+                        Nodes nodes = new Nodes();
+                        nodes.nodes.AddRange(matchesX);
+                        _matchesNodes.Add(nodes);
+                        returnValue = true;
+                    }
+                    matchesX.Clear();
+                }
+            }
+            if (matchesX.Count >= 3)
+            {
+                Nodes nodes = new Nodes();
+                nodes.nodes.AddRange(matchesX);
+                _matchesNodes.Add(nodes);
+                returnValue = true;
+            }
+            return returnValue;
+        }
+
+        #endregion CheckCloseNodesForMatches
+
+        private bool CheckForAllMatches()
+        {
             var foundMatch = false;
 
-            for (int y = 0; y < Nodes.GetLength(1); y++)
+            for (int y = 0; y < _nodes.GetLength(1); y++)
             {
-                int consecutiveCountX = 1;
+                var matchedNodesX = new List<NodeBase>();
+                var tempX = 0;
 
-                for (int x = 1; x < Nodes.GetLength(0); x++)
+                for (int x = 0; x < _nodes.GetLength(0); x++)
                 {
-                    if (Nodes[x, y] != null && Nodes[x - 1, y] != null && Nodes[x, y].NodeType == Nodes[x - 1, y].NodeType)
+                    if (x == _nodes.GetLength(0) - 1 || _nodes[tempX, y].NodeType != _nodes[x + 1, y].NodeType)
                     {
-                        consecutiveCountX++;
+                        matchedNodesX.Add(_nodes[x, y]);
+
+                        if (matchedNodesX.Count >= 3)
+                        {
+                            Nodes nodes = new Nodes();
+                            nodes.nodes.AddRange(matchedNodesX);
+                            _matchesNodes.Add(nodes);
+                            foundMatch = true;
+                        }
+                        matchedNodesX.Clear();
+                        tempX = x + 1;
                     }
                     else
                     {
-                        if (consecutiveCountX >= 3)
-                        {
-                            for (int i = 0; i < consecutiveCountX; i++)
-                            {
-                                matchedNodes.Add(Nodes[x - i - 1, y]);
-                            }
-                        }
-
-                        consecutiveCountX = 1; // Reset the consecutive count
-                    }
-                }
-
-                if (consecutiveCountX >= 3)
-                {
-                    for (int i = 0; i < consecutiveCountX; i++)
-                    {
-                        matchedNodes.Add(Nodes[Nodes.GetLength(0) - i - 1, y]);
+                        matchedNodesX.Add(_nodes[x, y]);
                     }
                 }
             }
 
-            for (int x = 0; x < Nodes.GetLength(0); x++)
+            for (int x = 0; x < _nodes.GetLength(0); x++)
             {
-                int consecutiveCountY = 1;
+                var matchedNodesY = new List<NodeBase>();
+                var tempY = 0;
 
-                for (int y = 1; y < Nodes.GetLength(1); y++)
+                for (int y = 0; y < _nodes.GetLength(1); y++)
                 {
-                    if (Nodes[x, y] != null && Nodes[x, y - 1] != null && Nodes[x, y].NodeType == Nodes[x, y - 1].NodeType)
+                    if (y == _nodes.GetLength(1) - 1 || _nodes[x, tempY].NodeType != _nodes[x, y + 1].NodeType)
                     {
-                        consecutiveCountY++;
+                        matchedNodesY.Add(_nodes[x, y]);
+
+                        if (matchedNodesY.Count >= 3)
+                        {
+                            Nodes nodes = new Nodes();
+                            nodes.nodes.AddRange(matchedNodesY);
+                            _matchesNodes.Add(nodes);
+                            foundMatch = true;
+                        }
+                        matchedNodesY.Clear();
+                        tempY = y + 1;
                     }
                     else
                     {
-                        if (consecutiveCountY >= 3)
-                        {
-                            for (int i = 0; i < consecutiveCountY; i++)
-                            {
-                                if (!matchedNodes.Contains(Nodes[x, y - i - 1]))
-                                {
-                                    matchedNodes.Add(Nodes[x, y - i - 1]);
-                                }
-                            }
-                        }
-
-                        consecutiveCountY = 1; // Reset the consecutive count
-                    }
-                }
-
-                if (consecutiveCountY >= 3)
-                {
-                    for (int i = 0; i < consecutiveCountY; i++)
-                    {
-                        if (!matchedNodes.Contains(Nodes[x, Nodes.GetLength(1) - i - 1]))
-                        {
-                            matchedNodes.Add(Nodes[x, Nodes.GetLength(1) - i - 1]);
-                        }
+                        matchedNodesY.Add(_nodes[x, y]);
                     }
                 }
             }
 
-            if (matchedNodes.Count > 0)
-            {
-                foundMatch = true;
-                foreach (var node in matchedNodes)
-                {
-                    node.DestroyNode();
-                }
-                FindEmptyNodes();
-            }
+            StartCoroutine(nameof(DestroyMatchesNodes));
 
             return foundMatch;
-        }
-
-        private bool CheckIfBoardIsFull()
-        {
-            foreach (NodeBase node in Nodes)
-            {
-                if (node.NodeType == NodeType.Empty)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        public void FindAvailableMatchesHorizontal()
-        {
-            var nodes = Nodes;
-            _avalableNodeForMatches.Clear();
-
-            for (int y = 0; y < nodes.GetLength(1); y++)
-            {
-                for (int x = 0; x < nodes.GetLength(0); x++)
-                {
-                    if (x < nodes.GetLength(0) - 2)
-                    {
-                        if (y < nodes.GetLength(1) - 1)
-                        {
-                            CheckHorizontalMatch(nodes, x, y, 0, 1, 2, 1);
-                            CheckHorizontalMatch(nodes, x, y, 0, 2, 1, 1);
-                            CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 1);
-                        }
-                        if (y > 0)
-                        {
-                            CheckHorizontalMatch(nodes, x, y, 0, 1, 2, -1);
-                            CheckHorizontalMatch(nodes, x, y, 0, 2, 1, -1);
-                            CheckHorizontalMatch(nodes, x, y, 1, 2, 0, -1);
-                        }
-                    }
-
-                    if (x < nodes.GetLength(0) - 3)
-                    {
-                        CheckHorizontalMatch(nodes, x, y, 0, 1, 3, 0);
-                        CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 0);
-                    }
-                }
-            }
-
-            FindAvailableMatchesVertical();
-        }
-
-        public void FindAvailableMatchesVertical()
-        {
-            var nodes = Nodes;
-            for (int x = 0; x < nodes.GetLength(0); x++)
-            {
-                for (int y = 0; y < nodes.GetLength(1); y++)
-                {
-                    if (y < nodes.GetLength(1) - 2)
-                    {
-                        if (x < nodes.GetLength(0) - 1)
-                        {
-                            CheckVerticalMatch(nodes, x, y, 0, 1, 2, 1);
-                            CheckVerticalMatch(nodes, x, y, 0, 2, 1, 1);
-                            CheckVerticalMatch(nodes, x, y, 1, 2, 0, 1);
-                        }
-                        if (x > 0)
-                        {
-                            CheckVerticalMatch(nodes, x, y, 0, 1, 2, -1);
-                            CheckVerticalMatch(nodes, x, y, 0, 2, 1, -1);
-                            CheckVerticalMatch(nodes, x, y, 1, 2, 0, -1);
-                        }
-                    }
-
-                    if (y < nodes.GetLength(1) - 3)
-                    {
-                        CheckVerticalMatch(nodes, x, y, 0, 1, 3, 0);
-                        CheckVerticalMatch(nodes, x, y, 1, 2, 0, 0);
-                    }
-                }
-            }
-
-            if (_avalableNodeForMatches.Count() <= 0)
-            {
-                print(_sceneDataProvider);
-                _sceneDataProvider.Publish(EventNames.NoVariants, true);
-            }
-        }
-
-        private void CheckHorizontalMatch(NodeBase[,] nodes, int x, int y, int offsetX1, int offsetX2, int targetOffsetX, int offsetY1)
-        {
-            if (nodes[x + offsetX1, y].NodeType == nodes[x + offsetX2, y].NodeType && nodes[x + offsetX1, y].NodeType == nodes[x + targetOffsetX, y + offsetY1].NodeType)
-            {
-
-                AvalableNodeForMatch avlableNodes = new AvalableNodeForMatch
-                {
-                    NodePosition01 = new Vector2(x + targetOffsetX, y),
-                    NodePosition02 = new Vector2(x + targetOffsetX, y + offsetY1)
-                };
-                _avalableNodeForMatches.Add(avlableNodes);
-            }
-        }
-
-        private void CheckVerticalMatch(NodeBase[,] nodes, int x, int y, int offset1, int offset2, int targetOffset, int offsetX1)
-        {
-            if (nodes[x, y + offset1].NodeType == nodes[x, y + offset2].NodeType && nodes[x, y + offset1].NodeType == nodes[x + offsetX1, y + targetOffset].NodeType)
-            {
-                AvalableNodeForMatch avlableNodes = new AvalableNodeForMatch
-                {
-                    NodePosition01 = new Vector2(x, y + targetOffset),
-                    NodePosition02 = new Vector2(x + offsetX1, y + targetOffset)
-                };
-                _avalableNodeForMatches.Add(avlableNodes);
-            }
-
         }
 
         private void FindEmptyNodes()
         {
             bool isEmptyNodeFound = false; // Flag to track if an empty node is found
 
-            for (int y = 0; y < Nodes.GetLength(1) && !isEmptyNodeFound; y++)
+            for (int y = 0; y < _nodes.GetLength(1) && !isEmptyNodeFound; y++)
             {
-                for (int x = 0; x < Nodes.GetLength(0); x++)
+                for (int x = 0; x < _nodes.GetLength(0); x++)
                 {
-                    if (y < Nodes.GetLength(1)) // Check if y is not the last line
+                    if (y < _nodes.GetLength(1)) // Check if y is not the last line
                     {
-                        if (Nodes[x, y].NodeType == NodeType.Empty)
+                        if (_nodes[x, y].NodeType == NodeType.Empty)
                         {
-                            _emptyNode = Nodes[x, y];
+                            _emptyNode = _nodes[x, y];
                             StartCoroutine(DescentNodeCoroutine());
                             isEmptyNodeFound = true; // Set the flag to true to stop both loops
                             break; // Exit the inner loop
@@ -543,6 +404,77 @@ namespace Game.Gameplay.Nodes
                     }
                 }
             }
+        }
+
+        private bool CheckIfBoardIsFull()
+        {
+            var returnValue = true;
+
+            foreach (NodeBase node in _nodes)
+            {
+                if (node.NodeType == NodeType.Empty)
+                {
+                    return false;
+                }
+            }
+
+            return returnValue;
+        }
+
+        private IEnumerator DestroyMatchesNodes()
+        {
+            _isBlock = true;
+            var verticalNodes = new List<NodeBase>();
+            var horizontalNodes = new List<NodeBase>();
+
+            for (int n = 0; n < _matchesNodes.Count; n++)
+            {
+                if (_matchesNodes[n].nodes.Count > 4)
+                {
+                    var middleNode = _matchesNodes[n].nodes[_matchesNodes[n].nodes.Count / 2];
+                }
+                else if (_matchesNodes[n].nodes.Count == 4)
+                {
+                    var middleNode = _matchesNodes[n].nodes[_matchesNodes[n].nodes.Count / 2];
+                    var isVerticalMatch = _matchesNodes[n].nodes[0].Position.y == _matchesNodes[n].nodes[1].Position.y;
+                    
+                    if (isVerticalMatch)
+                    {
+                        // Если узлы вертикальные, устанавливаем middleNode в вертикальное положение и добавляем в список вертикальных узлов
+                        verticalNodes.Add(middleNode);
+                        middleNode.SetNodeAbility(new NodeAbilityLightingVertical());
+                    }
+                    else
+                    {
+                        // Если узлы горизонтальные, устанавливаем middleNode в горизонтальное положение и добавляем в список горизонтальных узлов
+                        horizontalNodes.Add(middleNode);
+                        middleNode.SetNodeAbility(new NodeAbilityLightingHorisontall());
+                    }
+                }
+            }
+           
+            for (int n = 0; n < _matchesNodes.Count; n++)
+            {
+                foreach (var node in _matchesNodes[n].nodes)
+                {
+                    if (!verticalNodes.Contains(node) && !horizontalNodes.Contains(node))
+                    {
+                        // Проверяем, что узел не находится в списках verticalNodes и horizontalNodes
+
+                        
+                        node.SetNodeEmpty(_nodes);
+                        node.SetNodeReaward();
+                        yield return new WaitForSeconds(_destroyNodeTime);
+                    }
+                    else
+                    {
+                        node.transform.localScale= Vector3.one*2;
+                    }
+                }
+            }
+
+            _matchesNodes.Clear(); // Очистка списка _matchesNodes после уничтожения узлов
+            FindEmptyNodes();
         }
 
         private IEnumerator DescentNodeCoroutine()
@@ -553,13 +485,13 @@ namespace Game.Gameplay.Nodes
 
             if (emptyNode.Position.y != 0)
             {
-                var topNode = Nodes[(int)emptyNode.Position.x, (int)emptyNode.Position.y - 1];
+                var topNode = _nodes[(int)emptyNode.Position.x, (int)emptyNode.Position.y - 1];
 
                 // Store the positions before swapping
                 var pos01 = new Vector2Int((int)emptyNode.Position.x, (int)emptyNode.Position.y);
                 var pos02 = new Vector2Int((int)emptyNode.Position.x, (int)emptyNode.Position.y - 1);
 
-                var topNodeTransformPosition = Nodes[pos02.x, pos02.y].transform.position;
+                var topNodeTransformPosition = _nodes[pos02.x, pos02.y].transform.position;
                 // Animate the top node moving to the empty node's position
                 yield return topNode.transform.DOMove(emptyNode.transform.position, _nodeDescentTime).WaitForCompletion();
 
@@ -569,25 +501,25 @@ namespace Game.Gameplay.Nodes
                 emptyNode.Position = new Vector2(pos02.x, pos02.y);
                 emptyNode.Show();
                 emptyNode.Rename();
-                Nodes[(int)emptyNode.Position.x, (int)emptyNode.Position.y] = emptyNode;
+                _nodes[(int)emptyNode.Position.x, (int)emptyNode.Position.y] = emptyNode;
 
                 yield return new WaitForSeconds(_executionDelay);
 
                 topNode.Position = new Vector2(pos01.x, pos01.y);
                 topNode.Show();
                 topNode.Rename();
-                Nodes[(int)topNode.Position.x, (int)topNode.Position.y] = topNode;
+                _nodes[(int)topNode.Position.x, (int)topNode.Position.y] = topNode;
 
                 // Add a delay before the next node movement
                 yield return new WaitForSeconds(_executionDelay);
 
                 // Perform any actions after the swap
 
-                if ((int)topNode.Position.y + 1 < Nodes.GetLength(1))
+                if ((int)topNode.Position.y + 1 < _nodes.GetLength(1))
                 {
-                    if (Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType == NodeType.Empty && Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType != NodeType.Hidden)
+                    if (_nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType == NodeType.Empty && _nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType != NodeType.Hidden)
                     {
-                        _emptyNode = Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1];
+                        _emptyNode = _nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1];
                         StartCoroutine(DescentNodeCoroutine());
                     }
                     else
@@ -625,35 +557,138 @@ namespace Game.Gameplay.Nodes
 
             if (fully)
             {
-                var matches = CheckAllNodesForMatches();
+                var matches = CheckForAllMatches();
                 if (!matches)
                     FindAvailableMatchesHorizontal();
                 _isBlock = false;
             }
         }
 
+        #region Hint
+        public void Hint()
+        {
+            var randomValue = UnityEngine.Random.Range(0, _avalableNodeForMatches.Count);
+            var avalableNodes = _avalableNodeForMatches[randomValue];
+            _nodes[(int)avalableNodes.NodePosition01.x, (int)avalableNodes.NodePosition01.y].HightlightOn();
+            _nodes[(int)avalableNodes.NodePosition02.x, (int)avalableNodes.NodePosition02.y].HightlightOn();
+        }
+
+        public void FindAvailableMatchesHorizontal()
+        {
+            var nodes = _nodes;
+            _avalableNodeForMatches.Clear();
+
+            for (int y = 0; y < nodes.GetLength(1); y++)
+            {
+                for (int x = 0; x < nodes.GetLength(0); x++)
+                {
+                    if (x < nodes.GetLength(0) - 2)
+                    {
+                        if (y < nodes.GetLength(1) - 1)
+                        {
+                            CheckHorizontalMatch(nodes, x, y, 0, 1, 2, 1);
+                            CheckHorizontalMatch(nodes, x, y, 0, 2, 1, 1);
+                            CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 1);
+                        }
+                        if (y > 0)
+                        {
+                            CheckHorizontalMatch(nodes, x, y, 0, 1, 2, -1);
+                            CheckHorizontalMatch(nodes, x, y, 0, 2, 1, -1);
+                            CheckHorizontalMatch(nodes, x, y, 1, 2, 0, -1);
+                        }
+                    }
+
+                    if (x < nodes.GetLength(0) - 3)
+                    {
+                        CheckHorizontalMatch(nodes, x, y, 0, 1, 3, 0);
+                        CheckHorizontalMatch(nodes, x, y, 1, 2, 0, 0);
+                    }
+                }
+            }
+
+            FindAvailableMatchesVertical();
+        }
+
+        public void FindAvailableMatchesVertical()
+        {
+            var nodes = _nodes;
+            for (int x = 0; x < nodes.GetLength(0); x++)
+            {
+                for (int y = 0; y < nodes.GetLength(1); y++)
+                {
+                    if (y < nodes.GetLength(1) - 2)
+                    {
+                        if (x < nodes.GetLength(0) - 1)
+                        {
+                            CheckVerticalMatch(nodes, x, y, 0, 1, 2, 1);
+                            CheckVerticalMatch(nodes, x, y, 0, 2, 1, 1);
+                            CheckVerticalMatch(nodes, x, y, 1, 2, 0, 1);
+                        }
+                        if (x > 0)
+                        {
+                            CheckVerticalMatch(nodes, x, y, 0, 1, 2, -1);
+                            CheckVerticalMatch(nodes, x, y, 0, 2, 1, -1);
+                            CheckVerticalMatch(nodes, x, y, 1, 2, 0, -1);
+                        }
+                    }
+
+                    if (y < nodes.GetLength(1) - 3)
+                    {
+                        CheckVerticalMatch(nodes, x, y, 0, 1, 3, 0);
+                        CheckVerticalMatch(nodes, x, y, 1, 2, 0, 0);
+                    }
+                }
+            }
+
+            if (_avalableNodeForMatches.Count() <= 0)
+            {
+                _sceneDataProvider.Publish(EventNames.NoVariants, true);
+            }
+        }
+
+        private void CheckHorizontalMatch(NodeBase[,] nodes, int x, int y, int offsetX1, int offsetX2, int targetOffsetX, int offsetY1)
+        {
+            if (nodes[x + offsetX1, y].NodeType == nodes[x + offsetX2, y].NodeType && nodes[x + offsetX1, y].NodeType == nodes[x + targetOffsetX, y + offsetY1].NodeType)
+            {
+
+                AvalableNodeForMatch avlableNodes = new AvalableNodeForMatch
+                {
+                    NodePosition01 = new Vector2(x + targetOffsetX, y),
+                    NodePosition02 = new Vector2(x + targetOffsetX, y + offsetY1)
+                };
+                _avalableNodeForMatches.Add(avlableNodes);
+            }
+        }
+
+        private void CheckVerticalMatch(NodeBase[,] nodes, int x, int y, int offset1, int offset2, int targetOffset, int offsetX1)
+        {
+            if (nodes[x, y + offset1].NodeType == nodes[x, y + offset2].NodeType && nodes[x, y + offset1].NodeType == nodes[x + offsetX1, y + targetOffset].NodeType)
+            {
+                AvalableNodeForMatch avlableNodes = new AvalableNodeForMatch
+                {
+                    NodePosition01 = new Vector2(x, y + targetOffset),
+                    NodePosition02 = new Vector2(x + offsetX1, y + targetOffset)
+                };
+                _avalableNodeForMatches.Add(avlableNodes);
+            }
+
+        }
+        #endregion Hint
+
         public void Reward(NodeBase node)
         {
             _gameManager.AddPiastres(node.NodeReward);
         }
 
-        public void Hint()
-        {
-            var randomValue = UnityEngine.Random.Range(0, _avalableNodeForMatches.Count);
-            var avalableNodes = _avalableNodeForMatches[randomValue];
-            Nodes[(int)avalableNodes.NodePosition01.x, (int)avalableNodes.NodePosition01.y].HightlightOn();
-            Nodes[(int)avalableNodes.NodePosition02.x, (int)avalableNodes.NodePosition02.y].HightlightOn();
-        }
-
         public void Refresh()
         {
-            for (int x = 0; x < Nodes.GetLength(0); x++)
+            for (int x = 0; x < _nodes.GetLength(0); x++)
             {
-                for (int y = 0; y < Nodes.GetLength(1); y++)
+                for (int y = 0; y < _nodes.GetLength(1); y++)
                 {
-                    if (!_excludedNodeTypes.Contains(Nodes[x, y].NodeType))
+                    if (!_excludedNodeTypes.Contains(_nodes[x, y].NodeType))
                     {
-                        Nodes[x, y].NodeType = NodeType.Empty;
+                        _nodes[x, y].NodeType = NodeType.Empty;
                     }
                 }
             }

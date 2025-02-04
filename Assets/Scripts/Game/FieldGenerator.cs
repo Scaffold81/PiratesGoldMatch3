@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Game.Gameplay.Nodes.Generator

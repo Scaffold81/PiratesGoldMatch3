@@ -175,7 +175,6 @@ public class GameManagerBase : MonoBehaviour
         if (nextLevel != null)
         {
             _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, nextLevel);
-            print(nextLevel.levelId);
             _sceneDataProvider.Publish(EventNames.LoadScene, 2);
             _gameState = EventNames.EndGame;
         }
