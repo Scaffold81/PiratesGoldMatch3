@@ -16,7 +16,6 @@ namespace Game.UI
         [SerializeField] private RectTransform _content;
         [SerializeField] private RectTransform _ship;
         private List<UILevelButton> _levelButtons;
-        private LevelConfigSO _targetLevel;
 
 
         private Vector2 _levelButtonPositionOffset=new Vector2(0,200);
@@ -28,25 +27,18 @@ namespace Game.UI
         private void Start()
         {
             Init();
-            MoveLevelPosition(_targetLevel);
+            
         }
         private void FindLevelButtons()
         {
-            _levelButtons = new List<UILevelButton>(FindObjectsOfType<UILevelButton>());
+            _levelButtons = new List<UILevelButton>(GetComponentsInChildren<UILevelButton>());
         }
 
         protected override void Subscribe()
         {
-            _sceneDataProvider.Receive<LevelConfigSO>(EventNames.SetLevel).Subscribe(newValue =>
-            {
-                MoveLevelPosition(newValue);
-
-            }).AddTo(_disposables);
-
             _sceneDataProvider.Receive<LevelConfigSO>(SaveSlotNames.LevelConfig).Subscribe(newValue =>
             {
-                _targetLevel = newValue;
-
+                MoveLevelPosition(newValue);
             }).AddTo(_disposables);
         }
 
@@ -75,10 +67,10 @@ namespace Game.UI
             DOTween.To(() => _ship.anchoredPosition,
                 pos => _ship.anchoredPosition = pos,
                 targetPosition+_levelButtonPositionOffset,
-                0.5f)
+                0.05f)
                 .OnComplete(() =>
                 {
-                    _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.PlayLevelPanel);
+                   // _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.PlayLevelPanel);
                     Debug.Log("Animation completed!");
                 });
         }

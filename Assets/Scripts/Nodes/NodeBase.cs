@@ -16,7 +16,7 @@ namespace Game.Gameplay.Nodes
         [SerializeField]
         private NodeType _nodeType;
         [SerializeField]
-        private NodeAbility _nodeAbility;
+        public NodeAbility _nodeAbility;
         [SerializeField]
         private NodeReward _nodeReward;
 
@@ -103,11 +103,11 @@ namespace Game.Gameplay.Nodes
             Addressables.Release(handle);
         }
 
-        public void SetNodeEmpty(NodeBase[,] nodes)
+        public void SetNodeEmpty()
         {
             if (_nodeAbility != null)
             {
-                _nodeAbility.ActivateAbility(nodes, Position,this);
+                _nodeAbility.ActivateAbility(this);
                 _nodeAbility=null;
             }
                 NodeType = NodeType.Empty;

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Level002
   m_EditorClassIdentifier: 
   levelId: 2
-  isLevelOpen: 0
+  isLevelOpen: 1
   dialogueInLevelPassed: 0
   dialogueInMapPassed: 0
   dialogueInLevelName: 
   dialogueInMapName: 
-  levelName: Level001
+  levelName: Level002
   gameUIName: UIGameCanvas
-  targetForWinPiastres: 100
+  targetForWinPiastres: 200

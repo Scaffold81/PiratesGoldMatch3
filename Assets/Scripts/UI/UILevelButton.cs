@@ -43,6 +43,7 @@ namespace Game.UI
             _sceneDataProvider.Publish(EventNames.SetLevel, LevelConfig);
             _sceneDataProvider.Publish(SaveSlotNames.PreviosLevelConfig, LevelConfig);//сохраням уровень как предидущий
             _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, LevelConfig);
+            _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.PlayLevelPanel);
         }
 
         private void GetLevelConfig(LevelConfigRepositorySO levelsConfig)

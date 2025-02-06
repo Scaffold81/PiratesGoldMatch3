@@ -1,22 +1,33 @@
-﻿using UnityEngine;
-
-namespace Game.Gameplay.Nodes
+﻿namespace Game.Gameplay.Nodes
 {
     public class NodeAbility
     {
-        public virtual void ActivateAbility(NodeBase[,] nodes, Vector2 position, NodeBase node) { }
+        public NodeBase[,] nodes;
+
+        public NodeAbility(NodeBase[,] nodes)
+        {
+            this.nodes = nodes;
+        }
+
+        public virtual void ActivateAbility(NodeBase node) { }
     }
 
     public class NodeAbilityLightingHorisontall: NodeAbility
     {
-        public override void ActivateAbility(NodeBase[,] nodes, Vector2 position,NodeBase node) 
+        public NodeAbilityLightingHorisontall(NodeBase[,] nodes) : base(nodes)
+        {
+        }
+
+        public override void ActivateAbility(NodeBase node) 
         { 
             for(int x=0;x< nodes.GetLength(0); x++)
             {
-                if (nodes[x, (int)position.y] != node)
+                if (nodes[x, (int)node.Position.y] != node)
                 {
-                    nodes[x, (int)position.y].transform.localScale = Vector3.one * 2;
-                    nodes[x, (int)position.y].SetNodeEmpty(nodes);
+                    if (nodes[x,(int)node.Position.y]._nodeAbility == null)
+                        nodes[x,(int)node.Position.y].SetNodeEmpty();
+                   /* else
+                        nodes[x,(int)node.Position.y]._nodeAbility.ActivateAbility(nodes[x, (int)node.Position.y]);*/
                 }
             }
         }
@@ -24,14 +35,69 @@ namespace Game.Gameplay.Nodes
 
     public class NodeAbilityLightingVertical : NodeAbility
     {
-        public override void ActivateAbility(NodeBase[,] nodes, Vector2 position, NodeBase node)
+        public NodeAbilityLightingVertical(NodeBase[,] nodes) : base(nodes)
+        {
+        }
+
+        public override void ActivateAbility( NodeBase node)
         {
             for (int y = 0; y < nodes.GetLength(1); y++)
             {
-                if (nodes[(int)position.x, y] != node)
+                if (nodes[(int)node.Position.x, y] != node)
                 {
-                    nodes[(int)position.x, y].transform.localScale = Vector3.one*2;
-                    nodes[(int)position.x, y].SetNodeEmpty(nodes);
+                    if (nodes[(int)node.Position.x, y]._nodeAbility == null)
+                        nodes[(int)node.Position.x, y].SetNodeEmpty();
+                  /*  else 
+                        nodes[(int)node.Position.x, y]._nodeAbility.ActivateAbility(nodes[(int)node.Position.x, y]);*/
+                   
+                }
+            }
+        }
+    }
+    public class NodeAbilityLightingNodeType : NodeAbility
+    {
+        public NodeAbilityLightingNodeType(NodeBase[,] nodes) : base(nodes)
+        {
+        }
+
+        public override void ActivateAbility(NodeBase node)
+        {
+            for (int x = 0; x < nodes.GetLength(0); x++)
+            {
+                for (int y = 0; y < nodes.GetLength(1); y++)
+                { 
+                    if(nodes[x, y].NodeType == node.NodeType&& nodes[x, y]!=node)
+                    {
+                        if(nodes[x, y]._nodeAbility==null)
+                            nodes[x, y].SetNodeEmpty();
+                       // else nodes[x, y]._nodeAbility.ActivateAbility(nodes[x, y]);
+                    }
+                }
+            }
+        }
+    }
+
+    public class NodeAbilityCrossMatch : NodeAbility
+    {
+        public NodeAbilityCrossMatch(NodeBase[,] nodes) : base(nodes)
+        {
+        }
+
+        public override void ActivateAbility(NodeBase node)
+        {
+            for (int x = 0; x < nodes.GetLength(0); x++)
+            {
+                if (nodes[x, (int)node.Position.y] != node)
+                {
+                    nodes[x, (int)node.Position.y].SetNodeEmpty();
+                }
+            }
+
+            for (int y = 0; y < nodes.GetLength(1); y++)
+            {
+                if (nodes[(int)node.Position.x, y] != node)
+                {
+                    nodes[(int)node.Position.x, y].SetNodeEmpty();
                 }
             }
         }

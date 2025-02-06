@@ -20,4 +20,4 @@ MonoBehaviour:
   dialogueInMapName: 
   levelName: Level001
   gameUIName: UIGameCanvas
-  targetForWinPiastres: 250
+  targetForWinPiastres: 200

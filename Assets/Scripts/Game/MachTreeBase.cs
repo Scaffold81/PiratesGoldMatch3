@@ -424,14 +424,15 @@ namespace Game.Gameplay.Nodes
         private IEnumerator DestroyMatchesNodes()
         {
             _isBlock = true;
-            var verticalNodes = new List<NodeBase>();
-            var horizontalNodes = new List<NodeBase>();
+            var abiltyNodes = new List<NodeBase>();
 
             for (int n = 0; n < _matchesNodes.Count; n++)
             {
                 if (_matchesNodes[n].nodes.Count > 4)
                 {
                     var middleNode = _matchesNodes[n].nodes[_matchesNodes[n].nodes.Count / 2];
+                    middleNode.SetNodeAbility(new NodeAbilityLightingNodeType(_nodes));
+                    abiltyNodes.Add(middleNode);
                 }
                 else if (_matchesNodes[n].nodes.Count == 4)
                 {
@@ -441,14 +442,31 @@ namespace Game.Gameplay.Nodes
                     if (isVerticalMatch)
                     {
                         // Если узлы вертикальные, устанавливаем middleNode в вертикальное положение и добавляем в список вертикальных узлов
-                        verticalNodes.Add(middleNode);
-                        middleNode.SetNodeAbility(new NodeAbilityLightingVertical());
+                        abiltyNodes.Add(middleNode);
+                        middleNode.SetNodeAbility(new NodeAbilityLightingVertical(_nodes));
                     }
                     else
                     {
                         // Если узлы горизонтальные, устанавливаем middleNode в горизонтальное положение и добавляем в список горизонтальных узлов
-                        horizontalNodes.Add(middleNode);
-                        middleNode.SetNodeAbility(new NodeAbilityLightingHorisontall());
+                        abiltyNodes.Add(middleNode);
+                        middleNode.SetNodeAbility(new NodeAbilityLightingHorisontall(_nodes));
+                    }
+                }
+                else if (_matchesNodes[n].nodes.Count == 3)
+                {
+                    var centerNode = _matchesNodes[n].nodes[2]; // Получаем центральную ноду
+
+                    // Проверяем центральную ноду на перекрестие по осям Y и X
+                    var isCrossMatchY = _matchesNodes[n].nodes[0].Position.y == centerNode.Position.y  // Проверяем горизонтальные узлы
+                        && _matchesNodes[n].nodes[1].Position.y == centerNode.Position.y;  // Проверяем горизонтальные узлы
+
+                    var isCrossMatchX = _matchesNodes[n].nodes[1].Position.x == centerNode.Position.x  // Проверяем вертикальные узлы
+                        && _matchesNodes[n].nodes[2].Position.x == centerNode.Position.x;  // Проверяем вертикальные узлы
+
+                    if (isCrossMatchY && isCrossMatchX)
+                    {
+                        abiltyNodes.Add(centerNode);
+                        centerNode.SetNodeAbility(new NodeAbilityCrossMatch(_nodes));
                     }
                 }
             }
@@ -457,12 +475,12 @@ namespace Game.Gameplay.Nodes
             {
                 foreach (var node in _matchesNodes[n].nodes)
                 {
-                    if (!verticalNodes.Contains(node) && !horizontalNodes.Contains(node))
+                    if (!abiltyNodes.Contains(node))
                     {
                         // Проверяем, что узел не находится в списках verticalNodes и horizontalNodes
 
                         
-                        node.SetNodeEmpty(_nodes);
+                        node.SetNodeEmpty();
                         node.SetNodeReaward();
                         yield return new WaitForSeconds(_destroyNodeTime);
                     }

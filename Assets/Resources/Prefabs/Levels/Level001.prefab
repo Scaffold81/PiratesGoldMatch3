@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6898d10846ebcf438fdb8b85946d61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeType: 0
+  _nodeType: 3
   _nodeReward:
     rewardValue: 0
   _image: {fileID: 385786110731704839}
@@ -691,7 +691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6898d10846ebcf438fdb8b85946d61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeType: 0
+  _nodeType: 2
   _nodeReward:
     rewardValue: 0
   _image: {fileID: 5884467180351964538}
@@ -2269,7 +2269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6898d10846ebcf438fdb8b85946d61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeType: 0
+  _nodeType: 2
   _nodeReward:
     rewardValue: 0
   _image: {fileID: 5221317910164461365}
@@ -4053,7 +4053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6898d10846ebcf438fdb8b85946d61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeType: 0
+  _nodeType: 4
   _nodeReward:
     rewardValue: 0
   _image: {fileID: 7950305865432333240}
@@ -5292,7 +5292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6898d10846ebcf438fdb8b85946d61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeType: 0
+  _nodeType: 2
   _nodeReward:
     rewardValue: 0
   _image: {fileID: 462320426673696788}
@@ -5463,15 +5463,11 @@ MonoBehaviour:
   _nodeRepository: {fileID: 11400000, guid: d9b5bfd3e183c1446bf7cfd345ca03bc, type: 2}
   _nodeTypes: 0200000003000000040000000500000009000000
   _excludedNodeTypes: 01000000
-  _matchesX: []
-  _matchesY: []
-  _nodesMatches:
-  - nodes: []
-  - nodes: []
+  _matchesNodes: []
   _avalableNodeForMatches: []
-  _destroyNodeTime: 0.5
-  _moveNodeTime: 0.5
-  _nodeDescentTime: 0.2
+  _destroyNodeTime: 0.1
+  _moveNodeTime: 0.3
+  _nodeDescentTime: 0.1
   _executionDelay: 0.01
   _scaleMultiplier: 1.05
 --- !u!1 &6246331294483519604
@@ -8003,7 +7999,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6898d10846ebcf438fdb8b85946d61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeType: 0
+  _nodeType: 3
   _nodeReward:
     rewardValue: 0
   _image: {fileID: 5418003572584663706}
@@ -8660,7 +8656,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6898d10846ebcf438fdb8b85946d61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeType: 0
+  _nodeType: 11
   _nodeReward:
     rewardValue: 0
   _image: {fileID: 1186629131269108411}
