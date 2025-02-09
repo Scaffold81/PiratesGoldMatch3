@@ -227,11 +227,12 @@ namespace Game.Gameplay.Nodes
 
         private IEnumerator CheckCloseNodesForMatches()
         {
-            var nodesIsMatch = false;
-            nodesIsMatch = CheckHorizontalAndVerticalMatches(_selectedNode01);
+           
+            var nodesIsMatchNode1 = CheckHorizontalAndVerticalMatches(_selectedNode01);
             yield return new WaitForSeconds(_executionDelay);
-
-            if (!nodesIsMatch)
+            var nodesIsMatchNode2 = CheckHorizontalAndVerticalMatches(_selectedNode02);
+            yield return new WaitForSeconds(_executionDelay);
+            if (!nodesIsMatchNode1&& !nodesIsMatchNode2)
                 Reverse(_selectedNode01, _selectedNode02);
 
             _selectedNode01 = null;

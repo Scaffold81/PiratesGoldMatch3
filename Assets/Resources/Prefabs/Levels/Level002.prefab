@@ -3958,9 +3958,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 024d7cc08d242e340a73f665c1ae3af8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeRepository: {fileID: 11400000, guid: d9b5bfd3e183c1446bf7cfd345ca03bc, type: 2}
-  _nodeTypes: 02000000030000000400000005000000
-  _excludedNodeTypes: 01000000
   _gameState: 17
   _targetForWinPiastres: 1000
 --- !u!114 &2370971253904752774
@@ -3978,8 +3975,6 @@ MonoBehaviour:
   _nodeRepository: {fileID: 11400000, guid: d9b5bfd3e183c1446bf7cfd345ca03bc, type: 2}
   _nodeTypes: 0200000003000000040000000500000009000000
   _excludedNodeTypes: 01000000
-  _matchesNodes: []
-  _avalableNodeForMatches: []
   _destroyNodeTime: 0.1
   _moveNodeTime: 0.3
   _nodeDescentTime: 0.1
@@ -5604,7 +5599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6898d10846ebcf438fdb8b85946d61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeType: 1
+  _nodeType: 0
   _nodeReward:
     rewardValue: 0
   _image: {fileID: 8704945318235777134}
@@ -5698,7 +5693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6898d10846ebcf438fdb8b85946d61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeType: 1
+  _nodeType: 0
   _nodeReward:
     rewardValue: 0
   _image: {fileID: 724830023908639546}
@@ -6487,7 +6482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6898d10846ebcf438fdb8b85946d61f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _nodeType: 1
+  _nodeType: 0
   _nodeReward:
     rewardValue: 0
   _image: {fileID: 8268087786443753924}

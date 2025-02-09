@@ -26,8 +26,6 @@
                 {
                     if (nodes[x,(int)node.Position.y]._nodeAbility == null)
                         nodes[x,(int)node.Position.y].SetNodeEmpty();
-                   /* else
-                        nodes[x,(int)node.Position.y]._nodeAbility.ActivateAbility(nodes[x, (int)node.Position.y]);*/
                 }
             }
         }
@@ -47,9 +45,6 @@
                 {
                     if (nodes[(int)node.Position.x, y]._nodeAbility == null)
                         nodes[(int)node.Position.x, y].SetNodeEmpty();
-                  /*  else 
-                        nodes[(int)node.Position.x, y]._nodeAbility.ActivateAbility(nodes[(int)node.Position.x, y]);*/
-                   
                 }
             }
         }

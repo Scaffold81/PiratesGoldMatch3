@@ -18,7 +18,6 @@ namespace Game.Gameplay
 
         public void StartHintTimer(List<AvalableNodeForMatch> avalableNodeForMatches)
         {
-            
             if (_hintTimerActive) return;
             _hintTimerActive = true;
             _avalableNodeForMatches = avalableNodeForMatches;
@@ -27,7 +26,6 @@ namespace Game.Gameplay
 
         private async void HintTimer()
         {
-            UnityEngine.Debug.Log("StartHintTimer+"+ _timeToHint);
             await Task.Delay(TimeSpan.FromSeconds(_timeToHint));
             _hintTimerActive =false;
             SetHint();
@@ -46,7 +44,6 @@ namespace Game.Gameplay
             _currentHint = _avalableNodeForMatches[randomValue];
             _currentHint.FirstNode.HightlightOn();
             _currentHint.SecondNode.HightlightOn();
-            UnityEngine.Debug.Log("SetHint+" + _currentHint.FirstNode.Position);
         }
 
     }
