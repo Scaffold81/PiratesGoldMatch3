@@ -42,12 +42,6 @@ public class SaveDataManager : MonoBehaviour
 
         }).AddTo(_disposables);
 
-        _sceneDataProvider.Receive<float>(Player—urrency.HintMark).Subscribe(value =>
-        {
-            Save(SaveSlotNames.Hints.ToString(), value.ToString());
-
-        }).AddTo(_disposables);
-
         _sceneDataProvider.Receive<float>(Player—urrency.Doubloons).Subscribe(value =>
         {
             Save(Player—urrency.Doubloons.ToString(), value.ToString());
@@ -89,9 +83,6 @@ public class SaveDataManager : MonoBehaviour
        
         var doubloons = GetNumericDataOrDefault(SaveSlotNames.Doubloons.ToString(), defaultValues.doubloonsDefault);
         _sceneDataProvider.Publish(Player—urrency.Doubloons, doubloons);
-
-        var hintMark = GetNumericDataOrDefault(SaveSlotNames.Hints.ToString(), defaultValues.hintMarkDefault);
-        _sceneDataProvider.Publish(Player—urrency.HintMark, hintMark);
 
         var levelConfig = _saveSystem.LoadJSON<LevelConfigSO>(SaveSlotNames.LevelConfig.ToString());
         if (levelConfig == null)
