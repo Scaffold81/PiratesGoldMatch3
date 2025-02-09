@@ -227,17 +227,18 @@ namespace Game.Gameplay.Nodes
 
         private IEnumerator CheckCloseNodesForMatches()
         {
-           
             var nodesIsMatchNode1 = CheckHorizontalAndVerticalMatches(_selectedNode01);
             yield return new WaitForSeconds(_executionDelay);
             var nodesIsMatchNode2 = CheckHorizontalAndVerticalMatches(_selectedNode02);
             yield return new WaitForSeconds(_executionDelay);
+
             if (!nodesIsMatchNode1&& !nodesIsMatchNode2)
                 Reverse(_selectedNode01, _selectedNode02);
 
             _selectedNode01 = null;
             _selectedNode02 = null;
-            StartCoroutine(nameof(DestroyMatchesNodes));
+            CheckForAllMatches();
+            //StartCoroutine(nameof(DestroyMatchesNodes));
 
         }
 
@@ -334,8 +335,11 @@ namespace Game.Gameplay.Nodes
                         {
                             Nodes nodes = new Nodes();
                             nodes.nodes.AddRange(matchedNodesX);
-                            _matchesNodes.Add(nodes);
-                            foundMatch = true;
+                            if (!ContainsMatchedNodes(nodes))
+                            {
+                                _matchesNodes.Add(nodes);
+                                foundMatch = true;
+                            }
                         }
                         matchedNodesX.Clear();
                         tempX = x + 1;
@@ -362,8 +366,11 @@ namespace Game.Gameplay.Nodes
                         {
                             Nodes nodes = new Nodes();
                             nodes.nodes.AddRange(matchedNodesY);
-                            _matchesNodes.Add(nodes);
-                            foundMatch = true;
+                            if (!ContainsMatchedNodes(nodes))
+                            {
+                                _matchesNodes.Add(nodes);
+                                foundMatch = true;
+                            }
                         }
                         matchedNodesY.Clear();
                         tempY = y + 1;
@@ -378,6 +385,17 @@ namespace Game.Gameplay.Nodes
             StartCoroutine(nameof(DestroyMatchesNodes));
 
             return foundMatch;
+        }
+        private bool ContainsMatchedNodes(Nodes nodes)
+        {
+            foreach (Nodes existingNodes in _matchesNodes)
+            {
+                if (existingNodes.nodes.All(node => nodes.nodes.Contains(node)))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void FindEmptyNodes()
