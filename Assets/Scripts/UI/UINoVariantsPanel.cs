@@ -18,16 +18,6 @@ namespace Game.UI
 
         protected override void Subscribe()
         {
-            _sceneDataProvider.Receive<bool>(EventNames.RefreshForAdv).Subscribe(newValue =>
-            {
-                RefreshForAdv();
-            }).AddTo(_disposables);
-
-            _sceneDataProvider.Receive<bool>(EventNames.RefreshForDoubloons).Subscribe(newValue =>
-            {
-                RefreshForDoubloons();
-            }).AddTo(_disposables);
-
             _sceneDataProvider.Receive<bool>(EventNames.AdmitDefeat).Subscribe(newValue =>
             {
                 AdmitDefeat();
@@ -40,22 +30,6 @@ namespace Game.UI
             _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.LosePanel);
         }
 
-        private void RefreshForDoubloons()
-        {
-            var defaultValues = (DefaultValuesSO)_sceneDataProvider.GetValue(EventNames.DefaultValues);
-
-            if (_doubloonsProcessor.ProcessForDoubloons(defaultValues.refreshCostForDoubloons))
-            {
-                _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.NoVariantsPanel);
-                _sceneDataProvider.Publish(EventNames.Refresh, true);
-            }
-        }
-
-        private void RefreshForAdv()
-        {
-            _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.NoVariantsPanel);
-            _sceneDataProvider.Publish(EventNames.Refresh, true);
-        }
         private void OnDestroy()
         {
             Unsubscribe();

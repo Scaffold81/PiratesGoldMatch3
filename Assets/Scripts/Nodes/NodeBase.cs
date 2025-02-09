@@ -133,6 +133,10 @@ namespace Game.Gameplay.Nodes
             StartScaleAnimation();
             _isActive = true;
         }
+        public void HightlightOff()
+        {
+            StopScaleAnimation();
+        }
 
         private void StartScaleAnimation()
         {

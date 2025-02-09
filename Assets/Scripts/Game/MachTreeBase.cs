@@ -2,6 +2,7 @@
 using DG.Tweening;
 using Game.Enums;
 using Game.Gameplay.Generators;
+using Game.ScriptableObjects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,17 +11,13 @@ using UnityEngine;
 
 namespace Game.Gameplay.Nodes
 {
-    [System.Serializable]
-    public class Nodes
-    {
-        public List<NodeBase> nodes = new();
-    }
-
     public class MachTreeBase : MonoBehaviour
     {
         private NodesGenerator _nodesGenerator;
         private SceneDataProvider _sceneDataProvider;
         private GameManagerBase _gameManager;
+        private DefaultValuesSO _defaultValues;
+        private Hint _hint;
 
         [SerializeField]
         private NodesSO _nodeRepository;
@@ -30,11 +27,8 @@ namespace Game.Gameplay.Nodes
         [SerializeField]
         private NodeType[] _excludedNodeTypes = { NodeType.Hidden };
 
-        public NodeBase[,] _nodes;
-        [SerializeField]
+        private NodeBase[,] _nodes;
         private List<Nodes> _matchesNodes = new();
-
-        [SerializeField]
         private List<AvalableNodeForMatch> _avalableNodeForMatches = new List<AvalableNodeForMatch>();
 
         private NodeBase _selectedNode01;
@@ -52,16 +46,12 @@ namespace Game.Gameplay.Nodes
         private float _executionDelay = 0.01f;
         [SerializeField]
         private float _scaleMultiplier = 1.05f;
-
-        private void Awake()
-        {
-            Init();
-        }
-
+        
         private void Start()
         {
-            _sceneDataProvider = SceneDataProvider.Instance;
-            Subscribes();
+            Init();
+            
+           
         }
 
         private void Subscribes()
@@ -74,8 +64,12 @@ namespace Game.Gameplay.Nodes
 
         private void Init()
         {
+            _sceneDataProvider = SceneDataProvider.Instance;
             _nodesGenerator = new NodesGenerator(_nodeRepository);
             _gameManager = GetComponent<GameManagerBase>();
+           
+            _defaultValues = (DefaultValuesSO)_sceneDataProvider.GetValue(EventNames.DefaultValues);
+            _hint = new Hint(_defaultValues._timeToHint);
 
             var nodes = SetFieldSyze();
             SetField(nodes);
@@ -83,6 +77,7 @@ namespace Game.Gameplay.Nodes
             _nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, _nodes, this);
 
             Invoke(nameof(FindAvailableMatchesHorizontal), 0.1f);
+            Subscribes();
         }
 
         private void SetField(List<NodeBase> nodes)
@@ -581,16 +576,7 @@ namespace Game.Gameplay.Nodes
                 _isBlock = false;
             }
         }
-
-        #region Hint
-        public void Hint()
-        {
-            var randomValue = UnityEngine.Random.Range(0, _avalableNodeForMatches.Count);
-            var avalableNodes = _avalableNodeForMatches[randomValue];
-            _nodes[(int)avalableNodes.NodePosition01.x, (int)avalableNodes.NodePosition01.y].HightlightOn();
-            _nodes[(int)avalableNodes.NodePosition02.x, (int)avalableNodes.NodePosition02.y].HightlightOn();
-        }
-
+        
         public void FindAvailableMatchesHorizontal()
         {
             var nodes = _nodes;
@@ -662,6 +648,10 @@ namespace Game.Gameplay.Nodes
             {
                 _sceneDataProvider.Publish(EventNames.NoVariants, true);
             }
+            else
+            {
+                _hint.StartHintTimer(_avalableNodeForMatches);
+            }
         }
 
         private void CheckHorizontalMatch(NodeBase[,] nodes, int x, int y, int offsetX1, int offsetX2, int targetOffsetX, int offsetY1)
@@ -671,8 +661,8 @@ namespace Game.Gameplay.Nodes
 
                 AvalableNodeForMatch avlableNodes = new AvalableNodeForMatch
                 {
-                    NodePosition01 = new Vector2(x + targetOffsetX, y),
-                    NodePosition02 = new Vector2(x + targetOffsetX, y + offsetY1)
+                    FirstNode =nodes[x + targetOffsetX, y],
+                    SecondNode = nodes[x + targetOffsetX, y + offsetY1]
                 };
                 _avalableNodeForMatches.Add(avlableNodes);
             }
@@ -684,14 +674,13 @@ namespace Game.Gameplay.Nodes
             {
                 AvalableNodeForMatch avlableNodes = new AvalableNodeForMatch
                 {
-                    NodePosition01 = new Vector2(x, y + targetOffset),
-                    NodePosition02 = new Vector2(x + offsetX1, y + targetOffset)
+                    FirstNode = nodes[x, y + targetOffset],
+                    SecondNode = nodes[x + offsetX1, y + targetOffset]
                 };
                 _avalableNodeForMatches.Add(avlableNodes);
             }
 
         }
-        #endregion Hint
 
         public void Reward(NodeBase node)
         {
