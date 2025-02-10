@@ -7,6 +7,7 @@ using System.Reactive.Disposables;
 using Game.Enums;
 using Game.ScriptableObjects;
 using System.Linq;
+using System.Collections.Generic;
 namespace Game.Gameplay
 {
     public class GameManagerBase : MonoBehaviour
@@ -14,34 +15,20 @@ namespace Game.Gameplay
         private SceneDataProvider _sceneDataProvider;
         private CompositeDisposable _disposables = new();
         private MachTreeBase _machTree;
-        [SerializeField] private EventNames _gameState = EventNames.StartGame;
-       
-        [SerializeField] 
-        private float _currentPiastres;
-        private float _targetForWinPiastres = 1000;
+        private EventNames _gameState = EventNames.StartGame;
         private int _numberOfMoves;
-       
 
-
-        public float CurrentPiastres
+        public int NumberOfMoves
         {
-            get { return _currentPiastres; }
-            set
+            get
             {
-                _currentPiastres = value;
+                return _numberOfMoves;
             }
-        }
-
-        public int NumberOfMoves { 
-            get 
-            { 
-                return _numberOfMoves; 
-            } 
             set
             {
                 _numberOfMoves = value;
-               
-                var outOfMoves=false;
+
+                var outOfMoves = false;
                 if (_numberOfMoves <= 0 && _gameState == EventNames.StartGame)
                 {
                     Lose();
@@ -49,9 +36,9 @@ namespace Game.Gameplay
                 }
                 else
                     outOfMoves = false;
-                
+
                 _sceneDataProvider.Publish(EventNames.OutOfMoves, outOfMoves);
-            } 
+            }
         }
 
         private void Awake()
@@ -124,8 +111,8 @@ namespace Game.Gameplay
         private void GetLevel()
         {
             var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
-            _targetForWinPiastres = level.targetForWinPiastres;
-            NumberOfMoves=level.NumberOfMoves;
+            NumberOfMoves = level.NumberOfMoves;
+            _sceneDataProvider.Publish(EventNames.LevelTasks, level.levelTasks);
         }
 
         private void OpenLevel()
@@ -188,8 +175,33 @@ namespace Game.Gameplay
         {
             var piastres = (float?)_sceneDataProvider.GetValue(PlayerÑurrency.Piastres) ?? 0;
             piastres += reward.rewardValue;
-            CurrentPiastres += reward.rewardValue;
             _sceneDataProvider.Publish(PlayerÑurrency.Piastres, piastres);
+        }
+
+        public void AddTargetNode(NodeType type)
+        {
+            var levelTasks = (List<LevelTasks>)_sceneDataProvider.GetValue(EventNames.LevelTasks);
+           
+            var nodeTarget = levelTasks.Find(a => a.nodeType == type);
+            
+            if (nodeTarget == null)return;
+                nodeTarget.count -= 1;
+
+            CheckWin(levelTasks);
+        }
+
+        private void CheckWin(List<LevelTasks> levelTasks)
+        {
+            var win =false;
+            foreach (var levelTask in levelTasks) 
+            { 
+                if(levelTask.count!= 0)
+                    win = false;
+                else 
+                    win = true;
+                
+            }
+            if (win) Win();
         }
 
         private void OnDestroy()

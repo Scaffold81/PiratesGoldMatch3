@@ -44,7 +44,8 @@
         Restart = 35,
         NextLevel = 36,
         SetLevel = 37,
-        OutOfMoves = 38
+        OutOfMoves = 38,
+        LevelTasks = 39
         #endregion  GameEventNames
     }
     public enum SaveSlotNames

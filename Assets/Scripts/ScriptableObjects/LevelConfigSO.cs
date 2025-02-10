@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using Game.Gameplay.Nodes;
 using System.Collections.Generic;
-using System;
+using UnityEngine;
 
 namespace Game.ScriptableObjects
 {
@@ -10,6 +10,9 @@ namespace Game.ScriptableObjects
         public int levelId;
 
         public bool isLevelOpen = false;
+
+        public List<LevelTasks> levelTasks;
+
         public bool dialogueInLevelPassed = false;
         public bool dialogueInMapPassed = false;
         
@@ -17,8 +20,6 @@ namespace Game.ScriptableObjects
         public string dialogueInMapName;
         public string levelName;
         public string gameUIName = "UIGameCanvas";
-
-        public float targetForWinPiastres = 100;
         public int NumberOfMoves = 30;
 
     }

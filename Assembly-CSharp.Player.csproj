@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\UI\UILevelButton.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\TMPExtenstions.cs" />
     <Compile Include="Assets\Scripts\Nodes\NodeAbility.cs" />
+    <Compile Include="Assets\Scripts\Structures\LevelTasks.cs" />
     <Compile Include="Assets\Scripts\Common\StartUpScene.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\AddToRxExtension.cs" />
     <Compile Include="Assets\Scripts\Enums\PlayerСurrency.cs" />

@@ -500,9 +500,9 @@ namespace Game.Gameplay.Nodes
                     {
                         // Проверяем, что узел не находится в списках verticalNodes и horizontalNodes
 
-                        
-                        node.SetNodeEmpty();
+
                         node.SetNodeReaward();
+                        node.SetNodeEmpty();
                         yield return new WaitForSeconds(_destroyNodeTime);
                     }
                     else
@@ -711,6 +711,7 @@ namespace Game.Gameplay.Nodes
         public void Reward(NodeBase node)
         {
             _gameManager.AddPiastres(node.NodeReward);
+            _gameManager.AddTargetNode(node.NodeType);
         }
 
         public void Refresh()
