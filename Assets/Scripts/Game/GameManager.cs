@@ -15,10 +15,12 @@ namespace Game.Gameplay
         private CompositeDisposable _disposables = new();
         private MachTreeBase _machTree;
         [SerializeField] private EventNames _gameState = EventNames.StartGame;
-        [SerializeField]
-        private float _targetForWinPiastres = 1000;
-
+       
+        [SerializeField] 
         private float _currentPiastres;
+        private float _targetForWinPiastres = 1000;
+        private int _numberOfMoves;
+       
 
 
         public float CurrentPiastres
@@ -27,9 +29,29 @@ namespace Game.Gameplay
             set
             {
                 _currentPiastres = value;
-                if (_currentPiastres >= _targetForWinPiastres && _gameState == EventNames.StartGame)
-                    Win();
             }
+        }
+
+        public int NumberOfMoves { 
+            get 
+            { 
+                return _numberOfMoves; 
+            } 
+            set
+            {
+                _numberOfMoves = value;
+               
+                var outOfMoves=false;
+                if (_numberOfMoves <= 0 && _gameState == EventNames.StartGame)
+                {
+                    Lose();
+                    outOfMoves = true;
+                }
+                else
+                    outOfMoves = false;
+                
+                _sceneDataProvider.Publish(EventNames.OutOfMoves, outOfMoves);
+            } 
         }
 
         private void Awake()
@@ -43,8 +65,6 @@ namespace Game.Gameplay
 
             if (SceneDataProvider.Instance != null)
                 Subscribes();
-            else
-                Debug.LogError("SceneDataProvider provider not found. Please check SceneDataProvider in your scene");
             GetLevel();
         }
 
@@ -105,6 +125,7 @@ namespace Game.Gameplay
         {
             var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
             _targetForWinPiastres = level.targetForWinPiastres;
+            NumberOfMoves=level.NumberOfMoves;
         }
 
         private void OpenLevel()

@@ -43,7 +43,8 @@
         UILoaded = 34,
         Restart = 35,
         NextLevel = 36,
-        SetLevel = 37
+        SetLevel = 37,
+        OutOfMoves = 38
         #endregion  GameEventNames
     }
     public enum SaveSlotNames

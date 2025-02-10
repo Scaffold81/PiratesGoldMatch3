@@ -36,6 +36,7 @@ namespace Game.Gameplay.Nodes
         private NodeBase _emptyNode = null;
 
         private bool _isBlock = false;
+        private bool _outOfMoves;
         [SerializeField]
         private float _destroyNodeTime = 0.2f;
         [SerializeField]
@@ -47,6 +48,7 @@ namespace Game.Gameplay.Nodes
         [SerializeField]
         private float _scaleMultiplier = 1.05f;
         
+
         private void Start()
         {
             Init();
@@ -59,6 +61,11 @@ namespace Game.Gameplay.Nodes
             _sceneDataProvider.Receive<bool>(EventNames.Pause).Subscribe(newValue =>
             {
                 _isBlock = newValue;
+            });
+
+            _sceneDataProvider.Receive<bool>(EventNames.OutOfMoves).Subscribe(newValue =>
+            {
+                _outOfMoves = newValue;
             });
         }
 
@@ -113,7 +120,7 @@ namespace Game.Gameplay.Nodes
 
         public void SetSelectedNode(NodeBase nodeBase)
         {
-            if (_isBlock) return;
+            if (_isBlock|| _outOfMoves) return;
 
             if (_selectedNode01 == null)
             {
@@ -234,11 +241,11 @@ namespace Game.Gameplay.Nodes
 
             if (!nodesIsMatchNode1&& !nodesIsMatchNode2)
                 Reverse(_selectedNode01, _selectedNode02);
-
+           
+            _gameManager.NumberOfMoves -= 1;
             _selectedNode01 = null;
             _selectedNode02 = null;
             CheckForAllMatches();
-            //StartCoroutine(nameof(DestroyMatchesNodes));
 
         }
 

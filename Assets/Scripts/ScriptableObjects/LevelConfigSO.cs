@@ -19,6 +19,7 @@ namespace Game.ScriptableObjects
         public string gameUIName = "UIGameCanvas";
 
         public float targetForWinPiastres = 100;
+        public int NumberOfMoves = 30;
 
     }
 }
