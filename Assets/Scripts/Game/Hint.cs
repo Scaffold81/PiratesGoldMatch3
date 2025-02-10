@@ -6,7 +6,7 @@ namespace Game.Gameplay
 {
     public class Hint
     {
-        private float _timeToHint=1; 
+        private float _timeToHint = 1;
         private bool _hintTimerActive;
         private AvalableNodeForMatch _currentHint;
         private List<AvalableNodeForMatch> _avalableNodeForMatches = new List<AvalableNodeForMatch>();
@@ -27,7 +27,7 @@ namespace Game.Gameplay
         private async void HintTimer()
         {
             await Task.Delay(TimeSpan.FromSeconds(_timeToHint));
-            _hintTimerActive =false;
+            _hintTimerActive = false;
             SetHint();
         }
 
@@ -40,10 +40,18 @@ namespace Game.Gameplay
             }
 
             var randomValue = UnityEngine.Random.Range(0, _avalableNodeForMatches.Count);
-           
+
             _currentHint = _avalableNodeForMatches[randomValue];
             _currentHint.FirstNode.HightlightOn();
             _currentHint.SecondNode.HightlightOn();
+        }
+
+        public void OffHint()
+        {if (_currentHint.FirstNode == null|| _currentHint.SecondNode==null) return;
+            _currentHint.FirstNode.HightlightOff();
+            _currentHint.SecondNode.HightlightOff();
+            _currentHint.FirstNode = null;
+            _currentHint.SecondNode = null;
         }
 
     }

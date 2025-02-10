@@ -52,8 +52,6 @@ namespace Game.Gameplay.Nodes
         private void Start()
         {
             Init();
-            
-           
         }
 
         private void Subscribes()
@@ -241,6 +239,8 @@ namespace Game.Gameplay.Nodes
 
             if (!nodesIsMatchNode1&& !nodesIsMatchNode2)
                 Reverse(_selectedNode01, _selectedNode02);
+            else 
+                _hint.OffHint();
            
             _gameManager.NumberOfMoves -= 1;
             _selectedNode01 = null;

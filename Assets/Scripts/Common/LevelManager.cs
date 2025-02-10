@@ -46,6 +46,7 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("Failed to load level prefab: " + newValue.levelName);
         }
     }
+
     private void CreateUI(LevelConfigSO newValue)
     {
         var path = "Prefabs/UI/" + newValue.gameUIName; // Путь к префабу
