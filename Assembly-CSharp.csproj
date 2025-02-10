@@ -69,6 +69,7 @@
     <Compile Include="Assets\Scripts\Structures\LevelTasks.cs" />
     <Compile Include="Assets\Scripts\Common\StartUpScene.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\AddToRxExtension.cs" />
+    <Compile Include="Assets\Scripts\Structures\Sublevel.cs" />
     <Compile Include="Assets\Scripts\Enums\PlayerСurrency.cs" />
     <Compile Include="Assets\Scripts\Common\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Nodes\NodesGenerator.cs" />
@@ -76,7 +77,6 @@
     <Compile Include="Assets\Scripts\UI\UISceneTransitionButton.cs" />
     <Compile Include="Assets\Scripts\UI\UIButtonPanelState.cs" />
     <Compile Include="Assets\Scripts\UI\UICustomButton.cs" />
-    <Compile Include="Assets\Scripts\Structures\Nodes.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionItem.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\LevelConfigRepositorySO.cs" />
     <Compile Include="Assets\Scripts\Game\FieldGenerator.cs" />
@@ -94,6 +94,7 @@
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Common\NumericParser.cs" />
     <Compile Include="Assets\Scripts\Enums\EventNames.cs" />
+    <Compile Include="Assets\Scripts\Structures\MatchetNodes.cs" />
     <Compile Include="Assets\Scripts\UI\UICustomButtonBase.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\SerializedPropertyExtensions.cs" />
     <Compile Include="Assets\Scripts\Game\GameManager.cs" />
@@ -118,7 +119,6 @@
     <Compile Include="Assets\Scripts\Game\Hint.cs" />
     <Compile Include="Assets\Scripts\Structures\AvalableNodeForMatch.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\DropdownAttribute.cs" />
-    <Compile Include="Assets\Scripts\Nodes\NodeSuperType.cs" />
     <Compile Include="Assets\Scripts\Common\SaveDataManager.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionItemType.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\DestroyTrigger.cs" />

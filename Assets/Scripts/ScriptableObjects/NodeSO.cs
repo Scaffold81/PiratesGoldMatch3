@@ -1,4 +1,5 @@
 using Game.Enums;
+using Game.Structures;
 using UnityEngine;
 
 namespace Game.Gameplay.Nodes

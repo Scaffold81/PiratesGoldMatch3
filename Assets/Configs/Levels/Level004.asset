@@ -14,15 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelId: 4
   isLevelOpen: 0
-  levelTasks:
-  - nodeType: 2
-    count: 10000
-  - nodeType: 3
-    count: 10000
-  dialogueInLevelPassed: 0
-  dialogueInMapPassed: 0
-  dialogueInLevelName: 
-  dialogueInMapName: 
-  levelName: Level001
-  gameUIName: UIGameCanvas
-  NumberOfMoves: 50
+  currentSublevelIndex: 0
+  sublevels:
+  - levelName: Level001-01
+    numberOfMoves: 20
+    levelTasks:
+    - nodeType: 2
+      count: 10
+  - levelName: Level001-02
+    numberOfMoves: 20
+    levelTasks:
+    - nodeType: 2
+      count: 10
+  - levelName: Level001-03
+    numberOfMoves: 20
+    levelTasks:
+    - nodeType: 2
+      count: 10
+  levelStartDialogue: 

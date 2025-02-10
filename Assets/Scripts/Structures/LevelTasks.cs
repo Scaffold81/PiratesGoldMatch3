@@ -1,6 +1,6 @@
 ﻿using Game.Enums;
 
-namespace Game.Gameplay.Nodes
+namespace Game.Structures
 {
     [System.Serializable]
     public class LevelTasks

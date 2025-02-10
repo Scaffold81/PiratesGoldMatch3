@@ -3,6 +3,7 @@ using DG.Tweening;
 using Game.Enums;
 using Game.Gameplay.Generators;
 using Game.ScriptableObjects;
+using Game.Structures;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace Game.Gameplay.Nodes
         private NodeType[] _excludedNodeTypes = { NodeType.Hidden };
 
         private NodeBase[,] _nodes;
-        private List<Nodes> _matchesNodes = new();
+        private List<MatchetNodes> _matchesNodes = new();
         private List<AvalableNodeForMatch> _avalableNodeForMatches = new List<AvalableNodeForMatch>();
 
         private NodeBase _selectedNode01;
@@ -269,7 +270,7 @@ namespace Game.Gameplay.Nodes
                 {
                     if (matchesY.Count >= 3)
                     {
-                        Nodes nodes = new Nodes();
+                        var nodes = new MatchetNodes();
                         nodes.nodes.AddRange(matchesY);
                         _matchesNodes.Add(nodes); 
                         returnValue = true;
@@ -280,7 +281,7 @@ namespace Game.Gameplay.Nodes
 
             if (matchesY.Count >= 3)
             {
-                Nodes nodes = new Nodes();
+                var nodes = new MatchetNodes();
                 nodes.nodes.AddRange(matchesY);
                 _matchesNodes.Add(nodes);
                 returnValue = true;
@@ -303,7 +304,7 @@ namespace Game.Gameplay.Nodes
                 {
                     if (matchesX.Count >= 3)
                     {
-                        Nodes nodes = new Nodes();
+                        var nodes = new MatchetNodes();
                         nodes.nodes.AddRange(matchesX);
                         _matchesNodes.Add(nodes);
                         returnValue = true;
@@ -313,7 +314,7 @@ namespace Game.Gameplay.Nodes
             }
             if (matchesX.Count >= 3)
             {
-                Nodes nodes = new Nodes();
+                var nodes = new MatchetNodes();
                 nodes.nodes.AddRange(matchesX);
                 _matchesNodes.Add(nodes);
                 returnValue = true;
@@ -340,7 +341,7 @@ namespace Game.Gameplay.Nodes
 
                         if (matchedNodesX.Count >= 3)
                         {
-                            Nodes nodes = new Nodes();
+                            var nodes = new MatchetNodes();
                             nodes.nodes.AddRange(matchedNodesX);
                             if (!ContainsMatchedNodes(nodes))
                             {
@@ -371,7 +372,7 @@ namespace Game.Gameplay.Nodes
 
                         if (matchedNodesY.Count >= 3)
                         {
-                            Nodes nodes = new Nodes();
+                            var nodes = new MatchetNodes();
                             nodes.nodes.AddRange(matchedNodesY);
                             if (!ContainsMatchedNodes(nodes))
                             {
@@ -392,9 +393,9 @@ namespace Game.Gameplay.Nodes
 
             return foundMatch;
         }
-        private bool ContainsMatchedNodes(Nodes nodes)
+        private bool ContainsMatchedNodes(MatchetNodes nodes)
         {
-            foreach (Nodes existingNodes in _matchesNodes)
+            foreach (MatchetNodes existingNodes in _matchesNodes)
             {
                 if (existingNodes.nodes.All(node => nodes.nodes.Contains(node)))
                 {

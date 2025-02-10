@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using Game.Enums;
+using Game.Structures;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
