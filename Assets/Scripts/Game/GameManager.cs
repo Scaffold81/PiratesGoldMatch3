@@ -27,7 +27,7 @@ namespace Game.Gameplay
             set
             {
                 _numberOfMoves = value;
-
+                _sceneDataProvider.Publish(EventNames.NumberOfMoves, (float)_numberOfMoves);
                 var outOfMoves = false;
                 if (_numberOfMoves <= 0 && _gameState == EventNames.StartGame)
                 {

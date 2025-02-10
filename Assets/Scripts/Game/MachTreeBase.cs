@@ -388,7 +388,6 @@ namespace Game.Gameplay.Nodes
                     }
                 }
             }
-
             StartCoroutine(nameof(DestroyMatchesNodes));
 
             return foundMatch;
@@ -444,7 +443,8 @@ namespace Game.Gameplay.Nodes
 
         private IEnumerator DestroyMatchesNodes()
         {
-            _isBlock = true;
+            _isBlock = true; 
+            
             var abiltyNodes = new List<NodeBase>();
 
             for (int n = 0; n < _matchesNodes.Count; n++)
@@ -491,27 +491,20 @@ namespace Game.Gameplay.Nodes
                     }
                 }
             }
-           
+
             for (int n = 0; n < _matchesNodes.Count; n++)
             {
                 foreach (var node in _matchesNodes[n].nodes)
                 {
                     if (!abiltyNodes.Contains(node))
                     {
-                        // Проверяем, что узел не находится в списках verticalNodes и horizontalNodes
-
-
                         node.SetNodeReaward();
                         node.SetNodeEmpty();
                         yield return new WaitForSeconds(_destroyNodeTime);
                     }
-                    else
-                    {
-                        node.transform.localScale= Vector3.one*2;
-                    }
                 }
             }
-
+            
             _matchesNodes.Clear(); // Очистка списка _matchesNodes после уничтожения узлов
             FindEmptyNodes();
         }
@@ -671,13 +664,9 @@ namespace Game.Gameplay.Nodes
             }
 
             if (_avalableNodeForMatches.Count() <= 0)
-            {
                 _sceneDataProvider.Publish(EventNames.NoVariants, true);
-            }
-            else
-            {
-                _hint.StartHintTimer(_avalableNodeForMatches);
-            }
+            else 
+                _hint.StartHintTimer(_avalableNodeForMatches); 
         }
 
         private void CheckHorizontalMatch(NodeBase[,] nodes, int x, int y, int offsetX1, int offsetX2, int targetOffsetX, int offsetY1)

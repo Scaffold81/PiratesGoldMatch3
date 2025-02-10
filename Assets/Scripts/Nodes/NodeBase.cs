@@ -15,10 +15,12 @@ namespace Game.Gameplay.Nodes
 
         [SerializeField]
         private NodeType _nodeType;
+       
+        [SerializeField]
+        private NodeReward _nodeReward; 
+        
         [SerializeField]
         public NodeAbility _nodeAbility;
-        [SerializeField]
-        private NodeReward _nodeReward;
 
         [SerializeField]
         private Image _image;
@@ -112,18 +114,26 @@ namespace Game.Gameplay.Nodes
             if (_nodeAbility != null)
             {
                 _nodeAbility.ActivateAbility(this);
-                _nodeAbility=null;
+                transform.localScale = Vector3.one;
+                ClearNodeAbylity();
             }
+            else
+            {
                 NodeType = NodeType.Empty;
 
                 if (Image.enabled == true)
                     Image.enabled = false;
+            }
+        }
 
-            
+        public void ClearNodeAbylity()
+        {
+            _nodeAbility = null;
         }
 
         public void SetNodeAbility(NodeAbility ability)
         {
+            transform.localScale = Vector3.one*2;
             _nodeAbility = ability;
         }
 
@@ -144,7 +154,7 @@ namespace Game.Gameplay.Nodes
 
         private void StartScaleAnimation()
         {
-            transform.DOScale(_initialScale+0.1f, _duration)
+            transform.DOScale(_initialScale+0.2f, _duration)
             .SetEase(Ease.InOutSine)
             .OnComplete(() =>
             {

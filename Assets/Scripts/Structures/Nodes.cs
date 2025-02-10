@@ -1,5 +1,4 @@
-﻿using Game.Enums;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Game.Gameplay.Nodes
 {

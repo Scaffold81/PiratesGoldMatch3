@@ -142,7 +142,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b21415c9b26c42840b28de4eff91b192, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 670ed5acc70bbc44493b6ebe677dd0b4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -242,6 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 6029013274460788775}
   _imageBackground: {fileID: 4590250491350984877}
@@ -636,6 +637,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 5808727101603521524}
   _imageBackground: {fileID: 3528868027715075845}
@@ -730,6 +732,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 8393070178571029150}
   _imageBackground: {fileID: 3442984661662407259}
@@ -824,6 +827,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 6080653759042765898}
   _imageBackground: {fileID: 6471410697956444587}
@@ -918,6 +922,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 3997757460689231356}
   _imageBackground: {fileID: 4422291536257488384}
@@ -1012,6 +1017,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 2
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 5930389121834950174}
   _imageBackground: {fileID: 8078129179699396918}
@@ -1106,6 +1112,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 5296077171672165458}
   _imageBackground: {fileID: 8087998275093879203}
@@ -1425,6 +1432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 282336235514917630}
   _imageBackground: {fileID: 3687709547155760005}
@@ -1519,6 +1527,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 466213750855104482}
   _imageBackground: {fileID: 1947549915685354880}
@@ -1838,6 +1847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 1010266657909122414}
   _imageBackground: {fileID: 4150707506634357461}
@@ -1932,6 +1942,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 7257257616691681550}
   _imageBackground: {fileID: 2061219725731330411}
@@ -2026,6 +2037,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 8728745402762331344}
   _imageBackground: {fileID: 5612939250357211871}
@@ -2195,6 +2207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 8530336091954702477}
   _imageBackground: {fileID: 6281169597763158422}
@@ -2364,6 +2377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 4408823930685616293}
   _imageBackground: {fileID: 1217300685820419247}
@@ -2608,6 +2622,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 6051786003740597414}
   _imageBackground: {fileID: 284359602050279995}
@@ -2852,6 +2867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 5
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 2770246897500923719}
   _imageBackground: {fileID: 5221154669524488954}
@@ -3546,6 +3562,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 5787903761300257742}
   _imageBackground: {fileID: 4621538842971022091}
@@ -3640,6 +3657,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 1399046583451822259}
   _imageBackground: {fileID: 3948376304801950991}
@@ -3734,6 +3752,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 6199622318010311789}
   _imageBackground: {fileID: 725050668064092095}
@@ -3958,8 +3977,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 024d7cc08d242e340a73f665c1ae3af8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameState: 17
-  _targetForWinPiastres: 1000
 --- !u!114 &2370971253904752774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4324,6 +4341,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 8643395012196056074}
   _imageBackground: {fileID: 569675049013675728}
@@ -4418,6 +4436,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 3898509903343424688}
   _imageBackground: {fileID: 5086737530741874960}
@@ -4512,6 +4531,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 555021400096434055}
   _imageBackground: {fileID: 82196054245130735}
@@ -4681,6 +4701,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 1975161567817414457}
   _imageBackground: {fileID: 7752941213773911916}
@@ -4850,6 +4871,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 10
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 8120646274138804873}
   _imageBackground: {fileID: 5691168815716118158}
@@ -4944,6 +4966,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 2711622842648963870}
   _imageBackground: {fileID: 8241401690596580314}
@@ -5038,6 +5061,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 6249841561057099362}
   _imageBackground: {fileID: 8925060015519375547}
@@ -5207,6 +5231,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 5897393396734690659}
   _imageBackground: {fileID: 940348924462712979}
@@ -5601,6 +5626,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 8704945318235777134}
   _imageBackground: {fileID: 5485660290337296876}
@@ -5695,6 +5721,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 724830023908639546}
   _imageBackground: {fileID: 3861609357127369158}
@@ -5789,6 +5816,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 1557289246960700756}
   _imageBackground: {fileID: 4455881308147245110}
@@ -5883,6 +5911,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 196295117207826856}
   _imageBackground: {fileID: 6080805834468152766}
@@ -5977,6 +6006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 8465721481922587901}
   _imageBackground: {fileID: 7127175269602441614}
@@ -6071,6 +6101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 7500293084708804067}
   _imageBackground: {fileID: 4617582364562586030}
@@ -6165,6 +6196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 6087790615599112418}
   _imageBackground: {fileID: 36600276095062136}
@@ -6484,6 +6516,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _nodeType: 0
   _nodeReward:
+    nodeType: 0
     rewardValue: 0
   _image: {fileID: 8268087786443753924}
   _imageBackground: {fileID: 3315507440234715342}

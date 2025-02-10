@@ -24,8 +24,11 @@
             {
                 if (nodes[x, (int)node.Position.y] != node)
                 {
-                    if (nodes[x,(int)node.Position.y]._nodeAbility == null)
-                        nodes[x,(int)node.Position.y].SetNodeEmpty();
+                    nodes[x,(int)node.Position.y].SetNodeEmpty();
+                }
+                else
+                {
+                    nodes[x, (int)node.Position.y].ClearNodeAbylity();
                 }
             }
         }
@@ -43,8 +46,11 @@
             {
                 if (nodes[(int)node.Position.x, y] != node)
                 {
-                    if (nodes[(int)node.Position.x, y]._nodeAbility == null)
-                        nodes[(int)node.Position.x, y].SetNodeEmpty();
+                    nodes[(int)node.Position.x, y].SetNodeEmpty();
+                }
+                else
+                {
+                    nodes[(int)node.Position.x, y].ClearNodeAbylity();
                 }
             }
         }
