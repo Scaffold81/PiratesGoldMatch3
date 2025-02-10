@@ -47,7 +47,8 @@ namespace Game.Gameplay
         }
 
         public void OffHint()
-        {if (_currentHint.FirstNode == null|| _currentHint.SecondNode==null) return;
+        {
+            if (_currentHint.FirstNode == null || _currentHint.SecondNode==null) return;
             _currentHint.FirstNode.HightlightOff();
             _currentHint.SecondNode.HightlightOff();
             _currentHint.FirstNode = null;

@@ -35,7 +35,11 @@ namespace Game.Gameplay.Nodes
         public Image Image { get => _image; set => _image = value; }
         public Image ImageBackground { get => _imageBackground; set => _imageBackground = value; }
         public NodeReward NodeReward { get => _nodeReward; private set => _nodeReward = value; }
-
+        private void Awake()
+        {
+            if(_image == null)
+                Image=GetComponent<Image>();
+        }
         public void Init(NodeType type, MachTreeBase machTreeView,NodeReward nodeReward)
         {
             _initialScale = transform.localScale.x;
