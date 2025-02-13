@@ -622,12 +622,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!224 &2084123942 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2140711383868397543, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-    type: 3}
-  m_PrefabInstance: {fileID: 2888968272106408946}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2888968272106408946
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -679,62 +673,6 @@ PrefabInstance:
     - target: {fileID: 1734234787167313928, guid: d9d69f897aec0294d8fca72a3d35d0ad,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1755618638518096921, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: m_Color.a
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2140711383868397543, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 19.429688
-      objectReference: {fileID: 0}
-    - target: {fileID: 4914677758686739899, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: m_Spacing.x
-      value: -50
-      objectReference: {fileID: 0}
-    - target: {fileID: 4914677758686739899, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: m_Spacing.y
-      value: -50
-      objectReference: {fileID: 0}
-    - target: {fileID: 4914677758686739899, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: m_CellSize.x
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 4914677758686739899, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: m_CellSize.y
-      value: 150
-      objectReference: {fileID: 0}
-    - target: {fileID: 4914677758686739899, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: m_Constraint
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4914677758686739899, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: m_ConstraintCount
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5730567406816346975, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: _taskPanel
-      value: 
-      objectReference: {fileID: 7139349160889188549, guid: 124bacf4711c93347b6acdec3ab14b2d,
-        type: 3}
-    - target: {fileID: 5730567406816346975, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: _leveltaskPanel
-      value: 
-      objectReference: {fileID: 2084123942}
-    - target: {fileID: 6293380954269762240, guid: d9d69f897aec0294d8fca72a3d35d0ad,
-        type: 3}
-      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6986940415497983997, guid: d9d69f897aec0294d8fca72a3d35d0ad,

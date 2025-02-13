@@ -219,21 +219,31 @@ namespace Game.Gameplay
 
         public void AddTargetNode(NodeType type)
         {
-            var nodeTarget = _levelTasks.Find(a => a.nodeType == type);
+            var task = _levelTasks.Find(a => a.nodeType == type);
 
-            if (nodeTarget == null) return;
-            nodeTarget.count -= 1;
+            if (task == null) return;
+            task.count -= 1;
+
+            _sceneDataProvider.Publish(EventNames.LevelTasks, _levelTasks);
             CheckWin(_levelTasks);
         }
 
         private void CheckWin(List<LevelTasks> levelTasks)
         {
-            var win = false;
+            bool win = true; // Предполагаем, что победа достигнута, если все таски равны 0
             foreach (var levelTask in levelTasks)
             {
-                win = levelTask.count < 1;
+                if (levelTask.count > 0)
+                {
+                    win = false; // Если хоть одна таска не равна 0, победа не достигнута
+                    break; // Можно выйти из цикла, так как уже известно, что нет победы
+                }
             }
-            if (win) Win();
+
+            if (win)
+            {
+                Win(); // Вызываем метод победы, если все таски равны 0
+            }
         }
 
         private void OnDestroy()

@@ -77,6 +77,7 @@
     <Compile Include="Assets\Scripts\UI\UICustonTextField.cs" />
     <Compile Include="Assets\Scripts\UI\UISceneTransitionButton.cs" />
     <Compile Include="Assets\Scripts\UI\UIButtonPanelState.cs" />
+    <Compile Include="Assets\Scripts\UI\UITasksPanel.cs" />
     <Compile Include="Assets\Scripts\UI\UICustomButton.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionItem.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\LevelConfigRepositorySO.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Assets\Scripts\UI\UIMapController.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Common\NumericParser.cs" />
+    <Compile Include="Assets\Scripts\UI\UICurrentTaskPanel.cs" />
     <Compile Include="Assets\Scripts\Enums\EventNames.cs" />
     <Compile Include="Assets\Scripts\Structures\MatchetNodes.cs" />
     <Compile Include="Assets\Scripts\UI\UICustomButtonBase.cs" />

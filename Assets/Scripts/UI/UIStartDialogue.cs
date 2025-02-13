@@ -17,10 +17,6 @@ namespace Game.UI
 
         [SerializeField]
         private TMP_Text _dialogueText;
-        [SerializeField]
-        private RectTransform _leveltaskPanel;
-        [SerializeField]
-        private UITaskPanel _taskPanel;
 
 
         private void Start()
@@ -35,19 +31,6 @@ namespace Game.UI
             _currentSubLevel = _currentLevel.subLevels[_currentLevel.currentSublevelIndex];
 
             _dialogueText.text = _currentSubLevel.levelStartDialogue;
-            CreateTargetslevel();
         }
-
-        private void CreateTargetslevel()
-        {
-            for (int i = 0; i < _currentSubLevel.levelTasks.Count; i++)
-            {
-                var targetLevel = Instantiate(_taskPanel);
-                targetLevel.transform.SetParent(_leveltaskPanel);
-                targetLevel.Init(_currentSubLevel.levelTasks[i].nodeType, _currentSubLevel.levelTasks[i].count.ToString());
-            }
-        }
-
-
     }
 }
