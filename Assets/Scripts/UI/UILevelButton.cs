@@ -40,6 +40,8 @@ namespace Game.UI
         protected override void OnClick()
         {
             if (!LevelConfig.isLevelOpen) return;
+
+            LevelConfig.currentSublevelIndex = 0;
             _sceneDataProvider.Publish(EventNames.SetLevel, LevelConfig);
             _sceneDataProvider.Publish(SaveSlotNames.PreviosLevelConfig, LevelConfig);//сохраням уровень как предидущий
             _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, LevelConfig);

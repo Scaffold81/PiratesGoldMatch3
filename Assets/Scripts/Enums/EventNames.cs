@@ -15,7 +15,7 @@
         LosePanel = 9,
         NoVariantsPanel = 10,
         PlayLevelPanel = 11,
-        Empty6 = 12,
+        StartDialoguePanel = 12,
         Empty7 = 13,
         Empty8 = 14,
         Empty9 = 15,

@@ -10,7 +10,7 @@ public class LevelManager : MonoBehaviour
 {
     private SceneDataProvider _sceneDataProvider;
     private CompositeDisposable _disposables = new();
-    
+    private LevelConfigSO _configSO;
     private void Start()
     {
         _sceneDataProvider = SceneDataProvider.Instance;
@@ -19,22 +19,21 @@ public class LevelManager : MonoBehaviour
             Subscribes();
         else
             Debug.LogError("SceneDataProvider provider not found. Please check SceneDataProvider in your scene");
+        CreateLevel(_configSO);
     }
     private void Subscribes()
     {
         _sceneDataProvider.Receive<LevelConfigSO>(SaveSlotNames.LevelConfig).Subscribe(newValue =>
         {
-            if (newValue is LevelConfigSO)
-            {
-                CreateLevel(newValue);
-            }
+            _configSO=newValue;
+
         }).AddTo(_disposables);
     }
 
     private void CreateLevel(LevelConfigSO newValue)
     {
         var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
-        var currentLevel = level.sublevels[level.currentSublevelIndex];
+        var currentLevel = level.subLevels[level.currentSublevelIndex];
        
         var path = "Prefabs/Levels/" + currentLevel.levelName; // Путь к префабу
         GameObject levelPrefab = Resources.Load<GameObject>(path);

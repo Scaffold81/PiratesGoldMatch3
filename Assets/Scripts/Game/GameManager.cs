@@ -9,6 +9,7 @@ using Game.ScriptableObjects;
 using System.Linq;
 using System.Collections.Generic;
 using Game.Structures;
+using TMPro;
 namespace Game.Gameplay
 {
     public class GameManagerBase : MonoBehaviour
@@ -16,9 +17,13 @@ namespace Game.Gameplay
         private SceneDataProvider _sceneDataProvider;
         private CompositeDisposable _disposables = new();
         private MachTreeBase _machTree;
+
         private EventNames _gameState = EventNames.StartGame;
+
+        private List<LevelTasks> _levelTasks;
+
         private int _numberOfMoves;
-        private LevelConfigSO level;
+        private LevelConfigSO _currentLevel;
 
         public int NumberOfMoves
         {
@@ -81,9 +86,100 @@ namespace Game.Gameplay
 
             _sceneDataProvider.Receive<bool>(EventNames.NextLevel).Subscribe(newValue =>
             {
-                BackToMap();
+                NextLevel();
             }).AddTo(_disposables);
         }
+        
+        #region Level Management
+
+        private void GetLevel()
+        {
+            _currentLevel = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
+            var currentSubLevel = GetCurrentSublevel(_currentLevel);
+
+            if (_currentLevel.currentSublevelIndex == 0)
+                _sceneDataProvider.Publish(EventNames.UIPanelsStateChange,EventNames.StartDialoguePanel);
+
+            NumberOfMoves = currentSubLevel.numberOfMoves;
+            _levelTasks = currentSubLevel.levelTasks;
+           
+            _sceneDataProvider.Publish(EventNames.LevelTasks, currentSubLevel.levelTasks);
+        }
+
+        private Sublevel GetCurrentSublevel(LevelConfigSO currentLevel)
+        {
+            var currentSubLevel = currentLevel.subLevels[currentLevel.currentSublevelIndex];
+            return currentSubLevel;
+        }
+
+        private void OpenSubLevel()
+        {
+            _currentLevel.currentSublevelIndex += 1;
+            _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, _currentLevel);
+            
+            if (_currentLevel.currentSublevelIndex >= _currentLevel.subLevels.Count)
+            {
+                OpenLevel();
+            }
+        }
+
+        private void OpenLevel()
+        {
+            var levels = (LevelConfigRepositorySO)_sceneDataProvider.GetValue(SaveSlotNames.LevelsConfig);
+            var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
+            if (levels == null || level == null)
+            {
+                Debug.LogError("Failed to open level: levels or current level is null.");
+                return;
+            }
+
+            var levelToOpen = levels.levelConfigs.FirstOrDefault(a => a.levelId == level.levelId + 1);
+
+            if (levelToOpen != null)
+            {
+               
+                levelToOpen.isLevelOpen = true;
+                _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, levelToOpen);
+                _sceneDataProvider.Publish(SaveSlotNames.LevelsConfig, levels);
+            }
+            else
+            {
+                Debug.LogWarning("Next level not found or already open.");
+            }
+        }
+
+        private void NextLevel()
+        {
+            var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
+            if (level!= _currentLevel)
+            {
+                _sceneDataProvider.Publish(EventNames.LoadScene, 1);
+            }
+            else
+            {
+                _sceneDataProvider.Publish(EventNames.LoadScene, 2);
+            }
+        }
+
+        private void Restart()
+        {
+            var currentLevel = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
+            currentLevel.currentSublevelIndex = 0;
+            _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, currentLevel);
+
+            _sceneDataProvider.Publish(EventNames.LoadScene, 2);
+        }
+
+        private void Exit()
+        {
+            var currentLevel = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
+            currentLevel.currentSublevelIndex = 0;
+            _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, currentLevel);
+
+            _sceneDataProvider.Publish(EventNames.LoadScene, 1);
+        }
+
+        #endregion Level Management
 
         private void RefreshBoard()
         {
@@ -98,94 +194,22 @@ namespace Game.Gameplay
 
         private void Lose()
         {
-            if (_gameState == EventNames.StartGame)
-                _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.LosePanel);
-            level.currentSublevelIndex = 0;
+           /* if (_gameState != EventNames.StartGame) return;
+            var currentLevel = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
+            _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.LosePanel);
+            currentLevel.currentSublevelIndex = 0;
+            _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, currentLevel);*/
         }
 
         private void Win()
         {
             if (_gameState != EventNames.StartGame) return;
+           
             _gameState = EventNames.EndGame;
             _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.WinPanel);
+
             OpenSubLevel();
         }
-
-        private void GetLevel()
-        {
-            level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
-            var currentLevel = level.sublevels[level.currentSublevelIndex];
-            NumberOfMoves = currentLevel.numberOfMoves;
-            _sceneDataProvider.Publish(EventNames.LevelTasks, currentLevel.levelTasks);
-        }
-        
-        private void OpenSubLevel()
-        {
-            if(level.sublevels.Count < level.currentSublevelIndex)
-                level.currentSublevelIndex += 1;
-            else
-            {
-                level.currentSublevelIndex = 0;
-                OpenLevel();
-            }
-        }
-
-        private void OpenLevel()
-        {
-            var levels = (LevelConfigRepositorySO)_sceneDataProvider.GetValue(SaveSlotNames.LevelsConfig);
-            var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
-
-            if (levels == null || level == null)
-            {
-                Debug.LogError("Failed to open level: levels or current level is null.");
-                return;
-            }
-            
-            var levelToOpen = levels.levelConfigs.FirstOrDefault(a => a.levelId == level.levelId + 1);
-
-            if (levelToOpen != null)
-            {
-                levelToOpen.isLevelOpen = true;
-                _sceneDataProvider.Publish(SaveSlotNames.LevelsConfig, levels);
-            }
-            else
-            {
-                Debug.LogWarning("Next level not found or already open.");
-            }
-        }
-
-        private void BackToMap()
-        {
-            if (_gameState == EventNames.StartGame) return;
-
-            var levels = (LevelConfigRepositorySO)_sceneDataProvider.GetValue(SaveSlotNames.LevelsConfig);
-            var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
-
-            if (levels == null || level == null)
-            {
-                Debug.LogError("Failed to transition to the next level: levels or current level is null.");
-                return;
-            }
-
-            var nextLevel = levels.levelConfigs.FirstOrDefault(a => a.levelId == level.levelId + 1);
-
-            if (nextLevel != null)
-            {
-                _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, nextLevel);
-                _sceneDataProvider.Publish(EventNames.LoadScene, 1);
-                _gameState = EventNames.EndGame;
-            }
-            else
-            {
-                Debug.LogWarning("Next level not found or already open.");
-            }
-        }
-
-        private void Restart()
-        {
-            _sceneDataProvider.Publish(EventNames.LoadScene, 2);
-        }
-
         public void AddPiastres(NodeReward reward)
         {
             var piastres = (float?)_sceneDataProvider.GetValue(Player—urrency.Piastres) ?? 0;
@@ -195,26 +219,19 @@ namespace Game.Gameplay
 
         public void AddTargetNode(NodeType type)
         {
-            var levelTasks = (List<LevelTasks>)_sceneDataProvider.GetValue(EventNames.LevelTasks);
-           
-            var nodeTarget = levelTasks.Find(a => a.nodeType == type);
-            
-            if (nodeTarget == null)return;
-                nodeTarget.count -= 1;
+            var nodeTarget = _levelTasks.Find(a => a.nodeType == type);
 
-            CheckWin(levelTasks);
+            if (nodeTarget == null) return;
+            nodeTarget.count -= 1;
+            CheckWin(_levelTasks);
         }
 
         private void CheckWin(List<LevelTasks> levelTasks)
         {
-            var win =false;
-            foreach (var levelTask in levelTasks) 
-            { 
-                if(levelTask.count!= 0)
-                    win = false;
-                else 
-                    win = true;
-                
+            var win = false;
+            foreach (var levelTask in levelTasks)
+            {
+                win = levelTask.count < 1;
             }
             if (win) Win();
         }

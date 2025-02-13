@@ -14,6 +14,7 @@ namespace Game.UI
         private float _hideDuration = 0.05f;
 
         public EventNames UIPanelName { get => _uIPanelName; set => _uIPanelName = value; }
+
         public bool IsActive { get; set; }
 
         private void Awake()

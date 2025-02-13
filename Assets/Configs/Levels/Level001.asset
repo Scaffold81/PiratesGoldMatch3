@@ -14,21 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelId: 1
   isLevelOpen: 1
-  currentSublevelIndex: 0
-  sublevels:
+  currentSublevelIndex: 3
+  subLevels:
   - levelName: Level001-01
-    numberOfMoves: 20
+    numberOfMoves: 100
     levelTasks:
     - nodeType: 2
-      count: 6
+      count: 0
   - levelName: Level001-02
-    numberOfMoves: 20
+    numberOfMoves: 100
     levelTasks:
     - nodeType: 2
-      count: 10
+      count: 0
   - levelName: Level001-03
-    numberOfMoves: 20
+    numberOfMoves: 100
     levelTasks:
     - nodeType: 2
-      count: 10
+      count: -3
   levelStartDialogue: 
