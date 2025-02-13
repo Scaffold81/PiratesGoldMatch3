@@ -11,9 +11,5 @@ namespace Game.ScriptableObjects
         public bool isLevelOpen = false;
         public int currentSublevelIndex;
         public List<Sublevel> subLevels = new List<Sublevel>();
-
-        [Multiline]
-        public string levelStartDialogue;
-        
     }
 }

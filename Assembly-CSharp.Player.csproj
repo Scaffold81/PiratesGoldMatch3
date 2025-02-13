@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Data\SceneDataProvider.cs" />
+    <Compile Include="Assets\Scripts\UI\UITaskPanel.cs" />
     <Compile Include="Assets\Scripts\Common\LoadAddressables.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\DefaultValuesSO.cs" />
     <Compile Include="Assets\Scripts\UI\UILevelButton.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Assets\Scripts\ScriptableObjects\NodesSO.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\NodeSO.cs" />
     <Compile Include="Assets\Scripts\Common\LoadLevelSceneController.cs" />
+    <Compile Include="Assets\Scripts\UI\UIStartDialogue.cs" />
     <Compile Include="Assets\Scripts\Data\GetEnumBase.cs" />
     <Compile Include="Assets\Scripts\Nodes\NodeBase.cs" />
     <Compile Include="Assets\Scripts\UI\UIPanelStateController.cs" />
@@ -119,6 +121,7 @@
     <Compile Include="Assets\Scripts\Game\Hint.cs" />
     <Compile Include="Assets\Scripts\Structures\AvalableNodeForMatch.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\DropdownAttribute.cs" />
+    <Compile Include="Assets\Scripts\Common\AdressablesLoader.cs" />
     <Compile Include="Assets\Scripts\Common\SaveDataManager.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionItemType.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\DestroyTrigger.cs" />

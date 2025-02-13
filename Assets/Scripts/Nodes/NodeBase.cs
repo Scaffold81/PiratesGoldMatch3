@@ -1,7 +1,9 @@
 ﻿using DG.Tweening;
+using Game.Common;
 using Game.Enums;
 using Game.Structures;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
@@ -38,11 +40,13 @@ namespace Game.Gameplay.Nodes
         public Image Image { get => _image; set => _image = value; }
         public Image ImageBackground { get => _imageBackground; set => _imageBackground = value; }
         public NodeReward NodeReward { get => _nodeReward; private set => _nodeReward = value; }
+        
         private void Awake()
         {
             if(_image == null)
                 Image=GetComponent<Image>();
         }
+        
         public void Init(NodeType type, MachTreeBase machTreeView,NodeReward nodeReward)
         {
             _initialScale = transform.localScale.x;
@@ -52,7 +56,7 @@ namespace Game.Gameplay.Nodes
             if (_nodeType != NodeType.Hidden)
             {
                 _nodeType = type;
-                StartCoroutine(LoadSprite());
+                LoadNewSprite();
             }
             else
             {
@@ -86,30 +90,15 @@ namespace Game.Gameplay.Nodes
                 Image.enabled = true;
         }
 
-        public void LoadNewSprite()
+        public async void LoadNewSprite()
         {
-            StartCoroutine(LoadSprite());
+            var sprite = await AdressablesLoader.LoadSpriteAsync(_nodeType.ToString());
+            if(sprite == null)return;
+           
+            Image.sprite = sprite;
+            Image.enabled = true;
         }
-
-        private IEnumerator LoadSprite()
-        {
-            var handle = Addressables.LoadAssetAsync<Sprite>("cut/" + _nodeType.ToString() + ".png");
-            yield return handle;
-
-            if (handle.Status == AsyncOperationStatus.Succeeded)
-            {
-                var sprite = handle.Result;
-                Image.sprite = sprite;
-                Image.enabled = true;
-            }
-            else
-            {
-                Debug.LogError("Failed to load Addressable: " + handle.DebugName);
-            }
-
-            Addressables.Release(handle);
-        }
-
+        
         public void SetNodeEmpty()
         {
             if (_nodeAbility != null)

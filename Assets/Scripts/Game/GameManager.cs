@@ -57,8 +57,9 @@ namespace Game.Gameplay
         {
             _sceneDataProvider = SceneDataProvider.Instance;
 
-            if (SceneDataProvider.Instance != null)
-                Subscribes();
+            if (SceneDataProvider.Instance == null)return;
+
+            Subscribes();
             GetLevel();
         }
 
@@ -96,9 +97,8 @@ namespace Game.Gameplay
         {
             _currentLevel = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
             var currentSubLevel = GetCurrentSublevel(_currentLevel);
-
-            if (_currentLevel.currentSublevelIndex == 0)
-                _sceneDataProvider.Publish(EventNames.UIPanelsStateChange,EventNames.StartDialoguePanel);
+            
+            _sceneDataProvider.Publish(EventNames.UIPanelsStateChange,EventNames.StartDialoguePanel);
 
             NumberOfMoves = currentSubLevel.numberOfMoves;
             _levelTasks = currentSubLevel.levelTasks;
