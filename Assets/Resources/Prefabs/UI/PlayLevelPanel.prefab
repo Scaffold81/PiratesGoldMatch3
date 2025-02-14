@@ -684,6 +684,7 @@ GameObject:
   - component: {fileID: 5298549874986326690}
   - component: {fileID: 7209660687723288180}
   - component: {fileID: 5267198386770518291}
+  - component: {fileID: 878972173944575582}
   m_Layer: 5
   m_Name: TasksPanel
   m_TagString: Untagged
@@ -763,6 +764,30 @@ MonoBehaviour:
   _leveltaskPanel: {fileID: 5858293466092492162}
   _taskPanel: {fileID: 7139349160889188549, guid: 124bacf4711c93347b6acdec3ab14b2d,
     type: 3}
+--- !u!114 &878972173944575582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6417516939543149280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 150, y: 150}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 1
+  m_ConstraintCount: 4
 --- !u!1 &7272367827896613781
 GameObject:
   m_ObjectHideFlags: 0

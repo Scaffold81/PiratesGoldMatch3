@@ -16,8 +16,6 @@ namespace Game.UI
         [SerializeField]
         private LevelConfigSO _levelConfig;
         [SerializeField]
-        private Image _lockImage;
-        [SerializeField]
         private TMP_Text _levelText;
 
         public LevelConfigSO LevelConfig { get => _levelConfig; private set => _levelConfig = value; }
@@ -68,7 +66,7 @@ namespace Game.UI
         private void UpdateButton(LevelConfigSO levelConfig)
         {
             _levelText.text = levelConfig.levelId.ToString();
-            _lockImage.enabled = !levelConfig.isLevelOpen;
+            _btn.interactable = levelConfig.isLevelOpen;
         }
 
         private void OnDestroy()
