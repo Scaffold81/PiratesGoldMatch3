@@ -14,16 +14,17 @@ namespace Game.Gameplay
 {
     public class GameManagerBase : MonoBehaviour
     {
+
         private SceneDataProvider _sceneDataProvider;
         private CompositeDisposable _disposables = new();
         private MachTreeBase _machTree;
 
         private EventNames _gameState = EventNames.StartGame;
 
-        private List<LevelTasks> _levelTasks;
-
-        private int _numberOfMoves;
+        private List<LevelTasks> _levelTasks = new List<LevelTasks>();
         private LevelConfigSO _currentLevel;
+
+        private int _numberOfMoves = 0;
 
         public int NumberOfMoves
         {
@@ -57,7 +58,7 @@ namespace Game.Gameplay
         {
             _sceneDataProvider = SceneDataProvider.Instance;
 
-            if (SceneDataProvider.Instance == null)return;
+            if (SceneDataProvider.Instance == null) return;
 
             Subscribes();
             GetLevel();
@@ -90,19 +91,19 @@ namespace Game.Gameplay
                 NextLevel();
             }).AddTo(_disposables);
         }
-        
+
         #region Level Management
 
         private void GetLevel()
         {
             _currentLevel = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
             var currentSubLevel = GetCurrentSublevel(_currentLevel);
-            
-            _sceneDataProvider.Publish(EventNames.UIPanelsStateChange,EventNames.StartDialoguePanel);
+
+            _sceneDataProvider.Publish(EventNames.UIPanelsStateChange, EventNames.StartDialoguePanel);
 
             NumberOfMoves = currentSubLevel.numberOfMoves;
-            _levelTasks = currentSubLevel.levelTasks;
-           
+            _levelTasks.AddRange(currentSubLevel.levelTasks);
+
             _sceneDataProvider.Publish(EventNames.LevelTasks, currentSubLevel.levelTasks);
         }
 
@@ -116,7 +117,7 @@ namespace Game.Gameplay
         {
             _currentLevel.currentSublevelIndex += 1;
             _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, _currentLevel);
-            
+
             if (_currentLevel.currentSublevelIndex >= _currentLevel.subLevels.Count)
             {
                 OpenLevel();
@@ -137,7 +138,7 @@ namespace Game.Gameplay
 
             if (levelToOpen != null)
             {
-               
+
                 levelToOpen.isLevelOpen = true;
                 _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, levelToOpen);
                 _sceneDataProvider.Publish(SaveSlotNames.LevelsConfig, levels);
@@ -151,7 +152,7 @@ namespace Game.Gameplay
         private void NextLevel()
         {
             var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
-            if (level!= _currentLevel)
+            if (level != _currentLevel)
             {
                 _sceneDataProvider.Publish(EventNames.LoadScene, 1);
             }
@@ -194,17 +195,17 @@ namespace Game.Gameplay
 
         private void Lose()
         {
-           /* if (_gameState != EventNames.StartGame) return;
-            var currentLevel = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
-            _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.LosePanel);
-            currentLevel.currentSublevelIndex = 0;
-            _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, currentLevel);*/
+            /* if (_gameState != EventNames.StartGame) return;
+             var currentLevel = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
+             _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.LosePanel);
+             currentLevel.currentSublevelIndex = 0;
+             _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, currentLevel);*/
         }
 
         private void Win()
         {
             if (_gameState != EventNames.StartGame) return;
-           
+
             _gameState = EventNames.EndGame;
             _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.WinPanel);
 
@@ -220,8 +221,9 @@ namespace Game.Gameplay
         public void AddTargetNode(NodeType type)
         {
             var task = _levelTasks.Find(a => a.nodeType == type);
-
             if (task == null) return;
+            if (task.count <= 0) return;
+
             task.count -= 1;
 
             _sceneDataProvider.Publish(EventNames.LevelTasks, _levelTasks);

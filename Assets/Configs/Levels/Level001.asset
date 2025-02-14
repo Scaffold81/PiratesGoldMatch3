@@ -20,9 +20,9 @@ MonoBehaviour:
     numberOfMoves: 100
     levelTasks:
     - nodeType: 2
-      count: 3
+      count: 6
     - nodeType: 3
-      count: 3
+      count: 6
     levelStartDialogue: "\u0417\u0430\u0434\u0430\u043D\u0438\u0435 \u0434\u043B\u044F
       \u043F\u043E\u0434\u0443\u0440\u043E\u0432\u043D\u044F 1"
   - levelName: Level001-02
@@ -40,6 +40,6 @@ MonoBehaviour:
     numberOfMoves: 100
     levelTasks:
     - nodeType: 2
-      count: 40
+      count: 10
     levelStartDialogue: "\u0417\u0430\u0434\u0430\u043D\u0438\u0435 \u0434\u043B\u044F
       \u043F\u043E\u0434\u0443\u0440\u043E\u0432\u043D\u044F 3"
