@@ -35,6 +35,9 @@ namespace Game.Gameplay.Nodes
         private float _duration=0.5f;
         private bool _isActive;
 
+        public bool addnodeabilityhorisontal;
+        public bool addnodeabilityvertical;
+
         public NodeType NodeType { get => _nodeType; set => _nodeType = value; }
         public Vector2 Position { get => _position; set => _position = value; }
         public Image Image { get => _image; set => _image = value; }
@@ -107,13 +110,9 @@ namespace Game.Gameplay.Nodes
                 transform.localScale = Vector3.one;
                 ClearNodeAbylity();
             }
-            else
-            {
-                NodeType = NodeType.Empty;
-
-                if (Image.enabled == true)
-                    Image.enabled = false;
-            }
+            NodeType = NodeType.Empty;
+            if (Image.enabled == true)
+                Image.enabled = false;
         }
 
         public void ClearNodeAbylity()
@@ -163,6 +162,11 @@ namespace Game.Gameplay.Nodes
             _isActive=false;
             transform.DOScale(_initialScale, _duration); // Возвращаемся к начальному масштабу
            
+        }
+        private void Update()
+        {
+            if (addnodeabilityhorisontal == true) { SetNodeAbility(new NodeAbilityLightingHorisontall(_machTreeView.Nodes)); addnodeabilityhorisontal = false; }
+            if (addnodeabilityvertical == true) { SetNodeAbility(new NodeAbilityLightingVertical(_machTreeView.Nodes)); addnodeabilityvertical = false; }
         }
     }
 }

@@ -38,6 +38,7 @@ namespace Game.Gameplay.Nodes
 
         private bool _isBlock = false;
         private bool _outOfMoves;
+
         [SerializeField]
         private float _destroyNodeTime = 0.2f;
         [SerializeField]
@@ -48,7 +49,8 @@ namespace Game.Gameplay.Nodes
         private float _executionDelay = 0.01f;
         [SerializeField]
         private float _scaleMultiplier = 1.05f;
-        
+
+        public NodeBase[,] Nodes { get => _nodes; set => _nodes = value; }
 
         private void Start()
         {
@@ -80,7 +82,7 @@ namespace Game.Gameplay.Nodes
             var nodes = SetFieldSyze();
             SetField(nodes);
 
-            _nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, _nodes, this);
+            _nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, Nodes, this);
 
             Invoke(nameof(FindAvailableMatchesHorizontal), 0.1f);
             Subscribes();
@@ -90,7 +92,7 @@ namespace Game.Gameplay.Nodes
         {
             foreach (var node in nodes)
             {
-                _nodes[(int)node.Position.x, (int)node.Position.y] = node;
+                Nodes[(int)node.Position.x, (int)node.Position.y] = node;
                 node.Show();
             }
         }
@@ -113,7 +115,7 @@ namespace Game.Gameplay.Nodes
                     rows = node.Position.y;
                 }
             }
-            _nodes = new NodeBase[(int)columns + 1, (int)rows + 1];
+            Nodes = new NodeBase[(int)columns + 1, (int)rows + 1];
             return nodes;
         }
 
@@ -156,7 +158,7 @@ namespace Game.Gameplay.Nodes
             selectedNode01.transform.DOMove(selectedNode02.transform.position, _moveNodeTime)
                 .OnComplete(() =>
                 {
-                    _nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
+                    Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
                     selectedNode01.Position = pos02;
                     selectedNode01.Show();
                     selectedNode01.Rename();
@@ -174,7 +176,7 @@ namespace Game.Gameplay.Nodes
             selectedNode02.transform.DOMove(selectedNode01.transform.position, _moveNodeTime)
             .OnComplete(() =>
             {
-                _nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
+                Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
                 selectedNode02.Position = pos01;
                 selectedNode02.Show();
                 selectedNode02.Rename();
@@ -193,7 +195,7 @@ namespace Game.Gameplay.Nodes
             selectedNode01.transform.DOMove(selectedNode02.transform.position, _moveNodeTime)
                 .OnComplete(() =>
                 {
-                    _nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
+                    Nodes[(int)pos02.x, (int)pos02.y] = selectedNode01;
                     selectedNode01.Position = pos02;
                     selectedNode01.Show();
                     _selectedNode01 = null;
@@ -210,7 +212,7 @@ namespace Game.Gameplay.Nodes
             selectedNode02.transform.DOMove(selectedNode01.transform.position, _moveNodeTime)
                 .OnComplete(() =>
                 {
-                    _nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
+                    Nodes[(int)pos01.x, (int)pos01.y] = selectedNode02;
                     selectedNode02.Position = pos01;
                     selectedNode02.Show();
                     _selectedNode02 = null;
@@ -260,11 +262,11 @@ namespace Game.Gameplay.Nodes
             var matchesY = new List<NodeBase>();
             var returnValue = false;
 
-            for (int y = 0; y < _nodes.GetLength(1); y++)
+            for (int y = 0; y < Nodes.GetLength(1); y++)
             {
-                if (_nodes[(int)selectedNode.Position.x, y].NodeType == selectedNode.NodeType)
+                if (Nodes[(int)selectedNode.Position.x, y].NodeType == selectedNode.NodeType)
                 {
-                    matchesY.Add(_nodes[(int)selectedNode.Position.x, y]);
+                    matchesY.Add(Nodes[(int)selectedNode.Position.x, y]);
                 }
                 else
                 {
@@ -294,11 +296,11 @@ namespace Game.Gameplay.Nodes
         {
             var returnValue = false;
             var matchesX = new List<NodeBase>();
-            for (int x = 0; x < _nodes.GetLength(0); x++)
+            for (int x = 0; x < Nodes.GetLength(0); x++)
             {
-                if (_nodes[x, (int)selectedNode.Position.y].NodeType == selectedNode.NodeType)
+                if (Nodes[x, (int)selectedNode.Position.y].NodeType == selectedNode.NodeType)
                 {
-                    matchesX.Add(_nodes[x, (int)selectedNode.Position.y]);
+                    matchesX.Add(Nodes[x, (int)selectedNode.Position.y]);
                 }
                 else
                 {
@@ -328,16 +330,16 @@ namespace Game.Gameplay.Nodes
         {
             var foundMatch = false;
 
-            for (int y = 0; y < _nodes.GetLength(1); y++)
+            for (int y = 0; y < Nodes.GetLength(1); y++)
             {
                 var matchedNodesX = new List<NodeBase>();
                 var tempX = 0;
 
-                for (int x = 0; x < _nodes.GetLength(0); x++)
+                for (int x = 0; x < Nodes.GetLength(0); x++)
                 {
-                    if (x == _nodes.GetLength(0) - 1 || _nodes[tempX, y].NodeType != _nodes[x + 1, y].NodeType)
+                    if (x == Nodes.GetLength(0) - 1 || Nodes[tempX, y].NodeType != Nodes[x + 1, y].NodeType)
                     {
-                        matchedNodesX.Add(_nodes[x, y]);
+                        matchedNodesX.Add(Nodes[x, y]);
 
                         if (matchedNodesX.Count >= 3)
                         {
@@ -354,21 +356,21 @@ namespace Game.Gameplay.Nodes
                     }
                     else
                     {
-                        matchedNodesX.Add(_nodes[x, y]);
+                        matchedNodesX.Add(Nodes[x, y]);
                     }
                 }
             }
 
-            for (int x = 0; x < _nodes.GetLength(0); x++)
+            for (int x = 0; x < Nodes.GetLength(0); x++)
             {
                 var matchedNodesY = new List<NodeBase>();
                 var tempY = 0;
 
-                for (int y = 0; y < _nodes.GetLength(1); y++)
+                for (int y = 0; y < Nodes.GetLength(1); y++)
                 {
-                    if (y == _nodes.GetLength(1) - 1 || _nodes[x, tempY].NodeType != _nodes[x, y + 1].NodeType)
+                    if (y == Nodes.GetLength(1) - 1 || Nodes[x, tempY].NodeType != Nodes[x, y + 1].NodeType)
                     {
-                        matchedNodesY.Add(_nodes[x, y]);
+                        matchedNodesY.Add(Nodes[x, y]);
 
                         if (matchedNodesY.Count >= 3)
                         {
@@ -385,7 +387,7 @@ namespace Game.Gameplay.Nodes
                     }
                     else
                     {
-                        matchedNodesY.Add(_nodes[x, y]);
+                        matchedNodesY.Add(Nodes[x, y]);
                     }
                 }
             }
@@ -409,15 +411,15 @@ namespace Game.Gameplay.Nodes
         {
             bool isEmptyNodeFound = false; // Flag to track if an empty node is found
 
-            for (int y = 0; y < _nodes.GetLength(1) && !isEmptyNodeFound; y++)
+            for (int y = 0; y < Nodes.GetLength(1) && !isEmptyNodeFound; y++)
             {
-                for (int x = 0; x < _nodes.GetLength(0); x++)
+                for (int x = 0; x < Nodes.GetLength(0); x++)
                 {
-                    if (y < _nodes.GetLength(1)) // Check if y is not the last line
+                    if (y < Nodes.GetLength(1)) // Check if y is not the last line
                     {
-                        if (_nodes[x, y].NodeType == NodeType.Empty)
+                        if (Nodes[x, y].NodeType == NodeType.Empty)
                         {
-                            _emptyNode = _nodes[x, y];
+                            _emptyNode = Nodes[x, y];
                             StartCoroutine(DescentNodeCoroutine());
                             isEmptyNodeFound = true; // Set the flag to true to stop both loops
                             break; // Exit the inner loop
@@ -431,7 +433,7 @@ namespace Game.Gameplay.Nodes
         {
             var returnValue = true;
 
-            foreach (NodeBase node in _nodes)
+            foreach (NodeBase node in Nodes)
             {
                 if (node.NodeType == NodeType.Empty)
                 {
@@ -453,7 +455,7 @@ namespace Game.Gameplay.Nodes
                 if (_matchesNodes[n].nodes.Count > 4)
                 {
                     var middleNode = _matchesNodes[n].nodes[_matchesNodes[n].nodes.Count / 2];
-                    middleNode.SetNodeAbility(new NodeAbilityLightingNodeType(_nodes));
+                    middleNode.SetNodeAbility(new NodeAbilityLightingNodeType(Nodes));
                     abiltyNodes.Add(middleNode);
                 }
                 else if (_matchesNodes[n].nodes.Count == 4)
@@ -465,13 +467,13 @@ namespace Game.Gameplay.Nodes
                     {
                         // Если узлы вертикальные, устанавливаем middleNode в вертикальное положение и добавляем в список вертикальных узлов
                         abiltyNodes.Add(middleNode);
-                        middleNode.SetNodeAbility(new NodeAbilityLightingVertical(_nodes));
+                        middleNode.SetNodeAbility(new NodeAbilityLightingVertical(Nodes));
                     }
                     else
                     {
                         // Если узлы горизонтальные, устанавливаем middleNode в горизонтальное положение и добавляем в список горизонтальных узлов
                         abiltyNodes.Add(middleNode);
-                        middleNode.SetNodeAbility(new NodeAbilityLightingHorisontall(_nodes));
+                        middleNode.SetNodeAbility(new NodeAbilityLightingHorisontall(Nodes));
                     }
                 }
                 else if (_matchesNodes[n].nodes.Count == 3)
@@ -488,7 +490,7 @@ namespace Game.Gameplay.Nodes
                     if (isCrossMatchY && isCrossMatchX)
                     {
                         abiltyNodes.Add(centerNode);
-                        centerNode.SetNodeAbility(new NodeAbilityCrossMatch(_nodes));
+                        centerNode.SetNodeAbility(new NodeAbilityCrossMatch(Nodes));
                     }
                 }
             }
@@ -518,13 +520,13 @@ namespace Game.Gameplay.Nodes
 
             if (emptyNode.Position.y != 0)
             {
-                var topNode = _nodes[(int)emptyNode.Position.x, (int)emptyNode.Position.y - 1];
+                var topNode = Nodes[(int)emptyNode.Position.x, (int)emptyNode.Position.y - 1];
 
                 // Store the positions before swapping
                 var pos01 = new Vector2Int((int)emptyNode.Position.x, (int)emptyNode.Position.y);
                 var pos02 = new Vector2Int((int)emptyNode.Position.x, (int)emptyNode.Position.y - 1);
 
-                var topNodeTransformPosition = _nodes[pos02.x, pos02.y].transform.position;
+                var topNodeTransformPosition = Nodes[pos02.x, pos02.y].transform.position;
                 // Animate the top node moving to the empty node's position
                 yield return topNode.transform.DOMove(emptyNode.transform.position, _nodeDescentTime).WaitForCompletion();
 
@@ -534,25 +536,25 @@ namespace Game.Gameplay.Nodes
                 emptyNode.Position = new Vector2(pos02.x, pos02.y);
                 emptyNode.Show();
                 emptyNode.Rename();
-                _nodes[(int)emptyNode.Position.x, (int)emptyNode.Position.y] = emptyNode;
+                Nodes[(int)emptyNode.Position.x, (int)emptyNode.Position.y] = emptyNode;
 
                 yield return new WaitForSeconds(_executionDelay);
 
                 topNode.Position = new Vector2(pos01.x, pos01.y);
                 topNode.Show();
                 topNode.Rename();
-                _nodes[(int)topNode.Position.x, (int)topNode.Position.y] = topNode;
+                Nodes[(int)topNode.Position.x, (int)topNode.Position.y] = topNode;
 
                 // Add a delay before the next node movement
                 yield return new WaitForSeconds(_executionDelay);
 
                 // Perform any actions after the swap
 
-                if ((int)topNode.Position.y + 1 < _nodes.GetLength(1))
+                if ((int)topNode.Position.y + 1 < Nodes.GetLength(1))
                 {
-                    if (_nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType == NodeType.Empty && _nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType != NodeType.Hidden)
+                    if (Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType == NodeType.Empty && Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1].NodeType != NodeType.Hidden)
                     {
-                        _emptyNode = _nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1];
+                        _emptyNode = Nodes[(int)topNode.Position.x, (int)topNode.Position.y + 1];
                         StartCoroutine(DescentNodeCoroutine());
                     }
                     else
@@ -599,7 +601,7 @@ namespace Game.Gameplay.Nodes
         
         public void FindAvailableMatchesHorizontal()
         {
-            var nodes = _nodes;
+            var nodes = Nodes;
             _avalableNodeForMatches.Clear();
 
             for (int y = 0; y < nodes.GetLength(1); y++)
@@ -635,7 +637,7 @@ namespace Game.Gameplay.Nodes
 
         public void FindAvailableMatchesVertical()
         {
-            var nodes = _nodes;
+            var nodes = Nodes;
             for (int x = 0; x < nodes.GetLength(0); x++)
             {
                 for (int y = 0; y < nodes.GetLength(1); y++)
@@ -706,13 +708,13 @@ namespace Game.Gameplay.Nodes
 
         public void Refresh()
         {
-            for (int x = 0; x < _nodes.GetLength(0); x++)
+            for (int x = 0; x < Nodes.GetLength(0); x++)
             {
-                for (int y = 0; y < _nodes.GetLength(1); y++)
+                for (int y = 0; y < Nodes.GetLength(1); y++)
                 {
-                    if (!_excludedNodeTypes.Contains(_nodes[x, y].NodeType))
+                    if (!_excludedNodeTypes.Contains(Nodes[x, y].NodeType))
                     {
-                        _nodes[x, y].NodeType = NodeType.Empty;
+                        Nodes[x, y].NodeType = NodeType.Empty;
                     }
                 }
             }

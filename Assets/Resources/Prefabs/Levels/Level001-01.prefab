@@ -95,6 +95,8 @@ MonoBehaviour:
   _image: {fileID: 5754893819380859732}
   _imageBackground: {fileID: 2949491144767265551}
   _position: {x: 4, y: 1}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &57888291836502902
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,6 +342,8 @@ MonoBehaviour:
   _image: {fileID: 989689347730865118}
   _imageBackground: {fileID: 668956607924010717}
   _position: {x: 2, y: 0}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &230840468082319808
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,6 +666,8 @@ MonoBehaviour:
   _image: {fileID: 8958218710968649701}
   _imageBackground: {fileID: 5424921435130114203}
   _position: {x: 1, y: 3}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &968153695705536705
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,6 +763,8 @@ MonoBehaviour:
   _image: {fileID: 1998073407454989840}
   _imageBackground: {fileID: 7484273583359001680}
   _position: {x: 2, y: 1}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &1104697234015369584
 GameObject:
   m_ObjectHideFlags: 0
@@ -927,6 +935,8 @@ MonoBehaviour:
   _image: {fileID: 4031576459842292066}
   _imageBackground: {fileID: 5465982440737092860}
   _position: {x: 0, y: 3}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &1491083911429715480
 GameObject:
   m_ObjectHideFlags: 0
@@ -1097,6 +1107,8 @@ MonoBehaviour:
   _image: {fileID: 6430239732204279887}
   _imageBackground: {fileID: 2941782427404827813}
   _position: {x: 4, y: 0}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &1656043235860666323
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,6 +1204,8 @@ MonoBehaviour:
   _image: {fileID: 6324314309085625781}
   _imageBackground: {fileID: 7149700580887424387}
   _position: {x: 1, y: 0}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &1694538877754301583
 GameObject:
   m_ObjectHideFlags: 0
@@ -1287,6 +1301,8 @@ MonoBehaviour:
   _image: {fileID: 2140187332626303970}
   _imageBackground: {fileID: 6409543983204607428}
   _position: {x: 1, y: 4}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &1795541947470350807
 GameObject:
   m_ObjectHideFlags: 0
@@ -1457,6 +1473,8 @@ MonoBehaviour:
   _image: {fileID: 4793090759168439811}
   _imageBackground: {fileID: 7861370228673730666}
   _position: {x: 3, y: 2}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &1916561685157150653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1627,6 +1645,8 @@ MonoBehaviour:
   _image: {fileID: 7134216702778635943}
   _imageBackground: {fileID: 6152943754321917960}
   _position: {x: 4, y: 3}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &2437984298898251491
 GameObject:
   m_ObjectHideFlags: 0
@@ -1722,6 +1742,8 @@ MonoBehaviour:
   _image: {fileID: 7153250516736794508}
   _imageBackground: {fileID: 442916222064464985}
   _position: {x: 2, y: 2}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &2718902266905437753
 GameObject:
   m_ObjectHideFlags: 0
@@ -1817,6 +1839,8 @@ MonoBehaviour:
   _image: {fileID: 5451547300426534245}
   _imageBackground: {fileID: 8046498534895699593}
   _position: {x: 0, y: 0}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &2770210042256468675
 GameObject:
   m_ObjectHideFlags: 0
@@ -1912,6 +1936,8 @@ MonoBehaviour:
   _image: {fileID: 3663967164555085843}
   _imageBackground: {fileID: 1160151357276587374}
   _position: {x: 3, y: 3}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &3003696598617588437
 GameObject:
   m_ObjectHideFlags: 0
@@ -2097,6 +2123,8 @@ MonoBehaviour:
   _image: {fileID: 1145246272952391885}
   _imageBackground: {fileID: 2789643199439856756}
   _position: {x: 0, y: 2}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &3394226841236504266
 GameObject:
   m_ObjectHideFlags: 0
@@ -2192,6 +2220,8 @@ MonoBehaviour:
   _image: {fileID: 3515578983911566215}
   _imageBackground: {fileID: 9029719330759088878}
   _position: {x: 1, y: 2}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &3474312283029617227
 GameObject:
   m_ObjectHideFlags: 0
@@ -2287,6 +2317,8 @@ MonoBehaviour:
   _image: {fileID: 7309563505900303119}
   _imageBackground: {fileID: 3400381769506346381}
   _position: {x: 1, y: 1}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &3512082355360623252
 GameObject:
   m_ObjectHideFlags: 0
@@ -2607,6 +2639,8 @@ MonoBehaviour:
   _image: {fileID: 5695657492308514044}
   _imageBackground: {fileID: 7434500236019401584}
   _position: {x: 4, y: 2}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &4431847667770378691
 GameObject:
   m_ObjectHideFlags: 0
@@ -2702,6 +2736,8 @@ MonoBehaviour:
   _image: {fileID: 7860063134386833703}
   _imageBackground: {fileID: 1641686599403409278}
   _position: {x: 2, y: 3}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &4845012684623209848
 GameObject:
   m_ObjectHideFlags: 0
@@ -3166,6 +3202,8 @@ MonoBehaviour:
   _image: {fileID: 6220503978677316509}
   _imageBackground: {fileID: 1041913449390290514}
   _position: {x: 0, y: 4}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &5327019794211209881
 GameObject:
   m_ObjectHideFlags: 0
@@ -3486,6 +3524,8 @@ MonoBehaviour:
   _image: {fileID: 6786051070620892108}
   _imageBackground: {fileID: 163165841910278878}
   _position: {x: 2, y: 4}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &6192423058086635785
 GameObject:
   m_ObjectHideFlags: 0
@@ -3644,7 +3684,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nodeRepository: {fileID: 11400000, guid: d9b5bfd3e183c1446bf7cfd345ca03bc, type: 2}
-  _nodeTypes: 0200000003000000040000000500000009000000
+  _nodeTypes: 020000000300000004000000050000000b0000000a0000000600000009000000
   _excludedNodeTypes: 01000000
   _destroyNodeTime: 0.1
   _moveNodeTime: 0.3
@@ -3746,6 +3786,8 @@ MonoBehaviour:
   _image: {fileID: 2073310634294682496}
   _imageBackground: {fileID: 1399204161757505970}
   _position: {x: 3, y: 4}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &6706033006659932556
 GameObject:
   m_ObjectHideFlags: 0
@@ -3916,6 +3958,8 @@ MonoBehaviour:
   _image: {fileID: 88164107886926362}
   _imageBackground: {fileID: 4828668715202297697}
   _position: {x: 0, y: 1}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &7557310091800654270
 GameObject:
   m_ObjectHideFlags: 0
@@ -4236,6 +4280,8 @@ MonoBehaviour:
   _image: {fileID: 2196306374484630601}
   _imageBackground: {fileID: 5222308431476369461}
   _position: {x: 3, y: 0}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &8018171468505008828
 GameObject:
   m_ObjectHideFlags: 0
@@ -4331,6 +4377,8 @@ MonoBehaviour:
   _image: {fileID: 9201406176911101773}
   _imageBackground: {fileID: 7696207140812110530}
   _position: {x: 4, y: 4}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &8251819700454455243
 GameObject:
   m_ObjectHideFlags: 0
@@ -4651,6 +4699,8 @@ MonoBehaviour:
   _image: {fileID: 1840353545283212055}
   _imageBackground: {fileID: 5845472505519148593}
   _position: {x: 3, y: 1}
+  addnodeabilityhorisontal: 0
+  addnodeabilityvertical: 0
 --- !u!1 &8966347289884465553
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,6 @@ using Game.ScriptableObjects;
 using System.Linq;
 using System.Collections.Generic;
 using Game.Structures;
-using TMPro;
 namespace Game.Gameplay
 {
     public class GameManagerBase : MonoBehaviour
@@ -182,6 +181,7 @@ namespace Game.Gameplay
 
         #endregion Level Management
 
+        #region Game state Management
         private void RefreshBoard()
         {
             _machTree.Refresh();
@@ -189,17 +189,19 @@ namespace Game.Gameplay
 
         private void NoVariants()
         {
-            if (_gameState == EventNames.StartGame)
-                _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.NoVariantsPanel);
+            if (_gameState != EventNames.StartGame)return;
+            _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.NoVariantsPanel); 
+            RefreshBoard();
         }
 
         private void Lose()
         {
-            /* if (_gameState != EventNames.StartGame) return;
-             var currentLevel = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
-             _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.LosePanel);
-             currentLevel.currentSublevelIndex = 0;
-             _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, currentLevel);*/
+             if (_gameState != EventNames.StartGame) return;
+            
+            var currentLevel = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
+            currentLevel.currentSublevelIndex = 0;
+            _sceneDataProvider.Publish(SaveSlotNames.LevelConfig, currentLevel); 
+            _sceneDataProvider.Publish(EventNames.UIPanelStateChange, EventNames.LosePanel);
         }
 
         private void Win()
@@ -211,25 +213,6 @@ namespace Game.Gameplay
 
             OpenSubLevel();
         }
-        public void AddPiastres(NodeReward reward)
-        {
-            var piastres = (float?)_sceneDataProvider.GetValue(PlayerÑurrency.Piastres) ?? 0;
-            piastres += reward.rewardValue;
-            _sceneDataProvider.Publish(PlayerÑurrency.Piastres, piastres);
-        }
-
-        public void AddTargetNode(NodeType type)
-        {
-            var task = _levelTasks.Find(a => a.nodeType == type);
-            if (task == null) return;
-            if (task.count <= 0) return;
-
-            task.count -= 1;
-
-            _sceneDataProvider.Publish(EventNames.LevelTasks, _levelTasks);
-            CheckWin(_levelTasks);
-        }
-
         private void CheckWin(List<LevelTasks> levelTasks)
         {
             bool win = true; // Ïðåäïîëàãàåì, ÷òî ïîáåäà äîñòèãíóòà, åñëè âñå òàñêè ðàâíû 0
@@ -248,6 +231,27 @@ namespace Game.Gameplay
             }
         }
 
+        #endregion Game state Management
+
+        public void AddPiastres(NodeReward reward)
+        {
+            var piastres = (float?)_sceneDataProvider.GetValue(PlayerÑurrency.Piastres) ?? 0;
+            piastres += reward.rewardValue;
+            _sceneDataProvider.Publish(PlayerÑurrency.Piastres, piastres);
+        }
+
+        public void AddTargetNode(NodeType type)
+        {
+            var task = _levelTasks.Find(a => a.nodeType == type);
+            if (task == null) return;
+            if (task.count <= 0) return;
+
+            task.count -= 1;
+
+            _sceneDataProvider.Publish(EventNames.LevelTasks, _levelTasks);
+            CheckWin(_levelTasks);
+        }
+        
         private void OnDestroy()
         {
             _disposables.Dispose();

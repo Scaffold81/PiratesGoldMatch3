@@ -104,6 +104,7 @@
     <Compile Include="Assets\Scripts\Data\DataProviderBase.cs" />
     <Compile Include="Assets\Scripts\Enums\DataProvidersNames.cs" />
     <Compile Include="Assets\Scripts\Game\MachTreeBase.cs" />
+    <Compile Include="Assets\Scripts\UI\UIShowTimePanel.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionSystem.cs" />
     <Compile Include="Assets\Scripts\UI\UIPanelStateManager.cs" />
     <Compile Include="Assets\Scripts\Common\SaveSystem.cs" />
