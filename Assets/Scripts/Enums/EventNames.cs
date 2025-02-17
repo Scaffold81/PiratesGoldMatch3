@@ -15,7 +15,7 @@
         LosePanel = 9,
         NoVariantsPanel = 10,
         PlayLevelPanel = 11,
-        Empty6 = 12,
+        StartDialoguePanel = 12,
         Empty7 = 13,
         Empty8 = 14,
         Empty9 = 15,
@@ -43,7 +43,10 @@
         UILoaded = 34,
         Restart = 35,
         NextLevel = 36,
-        SetLevel = 37
+        SetLevel = 37,
+        OutOfMoves = 38,
+        LevelTasks = 39,
+        NumberOfMoves = 40
         #endregion  GameEventNames
     }
     public enum SaveSlotNames

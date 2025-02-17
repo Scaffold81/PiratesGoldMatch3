@@ -61,21 +61,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Data\SceneDataProvider.cs" />
+    <Compile Include="Assets\Scripts\UI\UITaskPanel.cs" />
     <Compile Include="Assets\Scripts\Common\LoadAddressables.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\DefaultValuesSO.cs" />
     <Compile Include="Assets\Scripts\UI\UILevelButton.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\TMPExtenstions.cs" />
     <Compile Include="Assets\Scripts\Nodes\NodeAbility.cs" />
+    <Compile Include="Assets\Scripts\Structures\LevelTasks.cs" />
     <Compile Include="Assets\Scripts\Common\StartUpScene.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\AddToRxExtension.cs" />
+    <Compile Include="Assets\Scripts\Structures\Sublevel.cs" />
     <Compile Include="Assets\Scripts\Enums\PlayerСurrency.cs" />
     <Compile Include="Assets\Scripts\Common\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Nodes\NodesGenerator.cs" />
     <Compile Include="Assets\Scripts\UI\UICustonTextField.cs" />
     <Compile Include="Assets\Scripts\UI\UISceneTransitionButton.cs" />
     <Compile Include="Assets\Scripts\UI\UIButtonPanelState.cs" />
+    <Compile Include="Assets\Scripts\UI\UITasksPanel.cs" />
     <Compile Include="Assets\Scripts\UI\UICustomButton.cs" />
-    <Compile Include="Assets\Scripts\Structures\Nodes.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionItem.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\LevelConfigRepositorySO.cs" />
     <Compile Include="Assets\Scripts\Game\FieldGenerator.cs" />
@@ -92,13 +95,16 @@
     <Compile Include="Assets\Scripts\UI\UIMapController.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Common\NumericParser.cs" />
+    <Compile Include="Assets\Scripts\UI\UICurrentTaskPanel.cs" />
     <Compile Include="Assets\Scripts\Enums\EventNames.cs" />
+    <Compile Include="Assets\Scripts\Structures\MatchetNodes.cs" />
     <Compile Include="Assets\Scripts\UI\UICustomButtonBase.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\SerializedPropertyExtensions.cs" />
     <Compile Include="Assets\Scripts\Game\GameManager.cs" />
     <Compile Include="Assets\Scripts\Data\DataProviderBase.cs" />
     <Compile Include="Assets\Scripts\Enums\DataProvidersNames.cs" />
     <Compile Include="Assets\Scripts\Game\MachTreeBase.cs" />
+    <Compile Include="Assets\Scripts\UI\UIShowTimePanel.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionSystem.cs" />
     <Compile Include="Assets\Scripts\UI\UIPanelStateManager.cs" />
     <Compile Include="Assets\Scripts\Common\SaveSystem.cs" />
@@ -108,6 +114,7 @@
     <Compile Include="Assets\Scripts\ScriptableObjects\NodesSO.cs" />
     <Compile Include="Assets\Scripts\ScriptableObjects\NodeSO.cs" />
     <Compile Include="Assets\Scripts\Common\LoadLevelSceneController.cs" />
+    <Compile Include="Assets\Scripts\UI\UIStartDialogue.cs" />
     <Compile Include="Assets\Scripts\Data\GetEnumBase.cs" />
     <Compile Include="Assets\Scripts\Nodes\NodeBase.cs" />
     <Compile Include="Assets\Scripts\UI\UIPanelStateController.cs" />
@@ -117,7 +124,7 @@
     <Compile Include="Assets\Scripts\Game\Hint.cs" />
     <Compile Include="Assets\Scripts\Structures\AvalableNodeForMatch.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\DropdownAttribute.cs" />
-    <Compile Include="Assets\Scripts\Nodes\NodeSuperType.cs" />
+    <Compile Include="Assets\Scripts\Common\AdressablesLoader.cs" />
     <Compile Include="Assets\Scripts\Common\SaveDataManager.cs" />
     <Compile Include="Assets\DropdownAttributes\Core\Scripts\AdvancedReflection\ReflectionItemType.cs" />
     <Compile Include="Assets\Scripts\Extensions\RxExtensions\DestroyTrigger.cs" />

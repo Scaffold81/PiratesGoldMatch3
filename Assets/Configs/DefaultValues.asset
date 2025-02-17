@@ -12,12 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bbaa8ebbfc390c469c4e5915579999a, type: 3}
   m_Name: DefaultValues
   m_EditorClassIdentifier: 
-  currentPiastresDefault: 0
   piastresDefault: 0
   doubloonsDefault: 1000
-  hintMarkDefault: 5
-  hintMarkCostDoubloons: 50
-  refreshCostForDoubloons: 150
+  _timeToHint: 1
   levelConfig: {fileID: 11400000, guid: d5a461bd53b10f842944f43c276d08e1, type: 2}
   levelConfigRepository: {fileID: 11400000, guid: 7b589869115d239498c20fe238a89460,
     type: 2}

@@ -1,8 +1,11 @@
 using Game.Gameplay.Nodes;
 
-[System.Serializable]
-public struct AvalableNodeForMatch
+namespace Game.Structures
 {
-   public NodeBase FirstNode;
-   public NodeBase SecondNode;
+    [System.Serializable]
+    public struct AvalableNodeForMatch
+    {
+        public NodeBase FirstNode;
+        public NodeBase SecondNode;
+    }
 }

@@ -1,6 +1,5 @@
 using UnityEngine;
 using Newtonsoft.Json;
-using Unity.VisualScripting.FullSerializer;
 
 namespace Game.Common
 {
@@ -30,7 +29,7 @@ namespace Game.Common
             }
             else
             {
-                Debug.LogError(saveSlot + " " + "PlayerPrefs.HasKey value is not valid");
+               // Debug.LogError(saveSlot + " " + "PlayerPrefs.HasKey value is not valid");
                 return null;
             }
         }
@@ -62,7 +61,7 @@ namespace Game.Common
             }
             else
             {
-                Debug.LogError(saveSlot + " data not found in PlayerPrefs");
+               // Debug.LogError(saveSlot + " data not found in PlayerPrefs");
                 return default(T);
             }
         }

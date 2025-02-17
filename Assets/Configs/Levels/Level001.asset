@@ -14,10 +14,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelId: 1
   isLevelOpen: 1
-  dialogueInLevelPassed: 0
-  dialogueInMapPassed: 0
-  dialogueInLevelName: 
-  dialogueInMapName: 
-  levelName: Level001
-  gameUIName: UIGameCanvas
-  targetForWinPiastres: 200
+  currentSublevelIndex: 0
+  subLevels:
+  - levelName: Level001-01
+    numberOfMoves: 100
+    levelTasks:
+    - nodeType: 2
+      count: 3
+    - nodeType: 3
+      count: 3
+    levelStartDialogue: "\u0417\u0430\u0434\u0430\u043D\u0438\u0435 \u0434\u043B\u044F
+      \u043F\u043E\u0434\u0443\u0440\u043E\u0432\u043D\u044F 1"
+  - levelName: Level001-02
+    numberOfMoves: 100
+    levelTasks:
+    - nodeType: 2
+      count: 3
+    - nodeType: 4
+      count: 3
+    - nodeType: 5
+      count: 3
+    levelStartDialogue: "\u0417\u0430\u0434\u0430\u043D\u0438\u0435 \u0434\u043B\u044F
+      \u043F\u043E\u0434\u0443\u0440\u043E\u0432\u043D\u044F 2"
+  - levelName: Level001-03
+    numberOfMoves: 100
+    levelTasks:
+    - nodeType: 2
+      count: 3
+    levelStartDialogue: "\u0417\u0430\u0434\u0430\u043D\u0438\u0435 \u0434\u043B\u044F
+      \u043F\u043E\u0434\u0443\u0440\u043E\u0432\u043D\u044F 3"

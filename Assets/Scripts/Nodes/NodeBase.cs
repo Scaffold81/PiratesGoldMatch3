@@ -1,6 +1,9 @@
 ﻿using DG.Tweening;
+using Game.Common;
 using Game.Enums;
+using Game.Structures;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
@@ -15,10 +18,12 @@ namespace Game.Gameplay.Nodes
 
         [SerializeField]
         private NodeType _nodeType;
+       
+        [SerializeField]
+        private NodeReward _nodeReward; 
+        
         [SerializeField]
         public NodeAbility _nodeAbility;
-        [SerializeField]
-        private NodeReward _nodeReward;
 
         [SerializeField]
         private Image _image;
@@ -30,12 +35,21 @@ namespace Game.Gameplay.Nodes
         private float _duration=0.5f;
         private bool _isActive;
 
+        public bool addnodeabilityhorisontal;
+        public bool addnodeabilityvertical;
+
         public NodeType NodeType { get => _nodeType; set => _nodeType = value; }
         public Vector2 Position { get => _position; set => _position = value; }
         public Image Image { get => _image; set => _image = value; }
         public Image ImageBackground { get => _imageBackground; set => _imageBackground = value; }
         public NodeReward NodeReward { get => _nodeReward; private set => _nodeReward = value; }
-
+        
+        private void Awake()
+        {
+            if(_image == null)
+                Image=GetComponent<Image>();
+        }
+        
         public void Init(NodeType type, MachTreeBase machTreeView,NodeReward nodeReward)
         {
             _initialScale = transform.localScale.x;
@@ -45,7 +59,7 @@ namespace Game.Gameplay.Nodes
             if (_nodeType != NodeType.Hidden)
             {
                 _nodeType = type;
-                StartCoroutine(LoadSprite());
+                LoadNewSprite();
             }
             else
             {
@@ -79,47 +93,36 @@ namespace Game.Gameplay.Nodes
                 Image.enabled = true;
         }
 
-        public void LoadNewSprite()
+        public async void LoadNewSprite()
         {
-            StartCoroutine(LoadSprite());
+            var sprite = await AdressablesLoader.LoadSpriteAsync(_nodeType.ToString());
+            if(sprite == null)return;
+           
+            Image.sprite = sprite;
+            Image.enabled = true;
         }
-
-        private IEnumerator LoadSprite()
-        {
-            var handle = Addressables.LoadAssetAsync<Sprite>("cut/" + _nodeType.ToString() + ".png");
-            yield return handle;
-
-            if (handle.Status == AsyncOperationStatus.Succeeded)
-            {
-                var sprite = handle.Result;
-                Image.sprite = sprite;
-                Image.enabled = true;
-            }
-            else
-            {
-                Debug.LogError("Failed to load Addressable: " + handle.DebugName);
-            }
-
-            Addressables.Release(handle);
-        }
-
+        
         public void SetNodeEmpty()
         {
             if (_nodeAbility != null)
             {
                 _nodeAbility.ActivateAbility(this);
-                _nodeAbility=null;
+                transform.localScale = Vector3.one;
+                ClearNodeAbylity();
             }
-                NodeType = NodeType.Empty;
+            NodeType = NodeType.Empty;
+            if (Image.enabled == true)
+                Image.enabled = false;
+        }
 
-                if (Image.enabled == true)
-                    Image.enabled = false;
-
-            
+        public void ClearNodeAbylity()
+        {
+            _nodeAbility = null;
         }
 
         public void SetNodeAbility(NodeAbility ability)
         {
+            transform.localScale = Vector3.one*2;
             _nodeAbility = ability;
         }
 
@@ -140,7 +143,7 @@ namespace Game.Gameplay.Nodes
 
         private void StartScaleAnimation()
         {
-            transform.DOScale(_initialScale+0.1f, _duration)
+            transform.DOScale(_initialScale+0.2f, _duration)
             .SetEase(Ease.InOutSine)
             .OnComplete(() =>
             {
@@ -159,6 +162,11 @@ namespace Game.Gameplay.Nodes
             _isActive=false;
             transform.DOScale(_initialScale, _duration); // Возвращаемся к начальному масштабу
            
+        }
+        private void Update()
+        {
+            if (addnodeabilityhorisontal == true) { SetNodeAbility(new NodeAbilityLightingHorisontall(_machTreeView.Nodes)); addnodeabilityhorisontal = false; }
+            if (addnodeabilityvertical == true) { SetNodeAbility(new NodeAbilityLightingVertical(_machTreeView.Nodes)); addnodeabilityvertical = false; }
         }
     }
 }

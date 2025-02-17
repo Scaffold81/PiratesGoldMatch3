@@ -5,7 +5,7 @@ namespace Game.UI
     [RequireComponent(typeof(Button))]
     public class UICustomButtonBase : EnumProvider
     {
-        private Button _btn;
+        protected private Button _btn;
 
         private void Awake()
         {

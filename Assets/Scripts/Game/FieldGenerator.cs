@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Game.Gameplay.Nodes.Generator
 {
@@ -19,7 +20,7 @@ namespace Game.Gameplay.Nodes.Generator
         [SerializeField]
         private Image _nodesBackgroundPrefabs;
 
-        private List<GameObject> _nodes = new List<GameObject>();
+        private List<Transform> _nodes = new List<Transform>();
         [SerializeField]
         private bool _generate = false;
 
@@ -38,11 +39,16 @@ namespace Game.Gameplay.Nodes.Generator
 
         public void GenerateField()
         {
+            _nodes.Clear();
+            _nodes.AddRange(_backGroundField.GetComponentsInChildren<Transform>());
+            _nodes.AddRange(transform.GetComponentsInChildren<Transform>());
+
             if (_nodes.Count > 0)
             {
                 foreach (var node in _nodes)
                 {
-                    DestroyImmediate(node.gameObject);
+                    if(node.gameObject!= _backGroundField.gameObject&& node.gameObject != transform.gameObject)
+                        DestroyImmediate(node.gameObject);
                 }
                 _nodes.Clear();
             }
@@ -75,8 +81,6 @@ namespace Game.Gameplay.Nodes.Generator
                     background.transform.position = rect.transform.position;
                     background.transform.SetParent(_backGroundField); // Убираем зависимость от GridLayoutGroup
                     background.transform.localScale = Vector3.one * cellSize / 100; // Пример масштабирования заднего фона
-                    _nodes.Add(background.gameObject);
-                    _nodes.Add(newElement.gameObject);
                 }
             }
             _generate = false;

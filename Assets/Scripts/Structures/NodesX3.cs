@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace Game.Gameplay.Nodes
+namespace Game.Structures
 {
     [System.Serializable]
     public class NodesX3
     {
-        public List<Nodes> nodesX3 = new();
+        public List<MatchetNodes> nodesX3 = new();
     }
 }
 
