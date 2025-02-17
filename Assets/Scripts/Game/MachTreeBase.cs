@@ -79,45 +79,15 @@ namespace Game.Gameplay.Nodes
             _defaultValues = (DefaultValuesSO)_sceneDataProvider.GetValue(EventNames.DefaultValues);
             _hint = new Hint(_defaultValues._timeToHint);
 
-            var nodes = SetFieldSyze();
-            SetField(nodes);
+            //_nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, Nodes, this);
 
-            _nodesGenerator.GenerateNodes(_nodeTypes, _excludedNodeTypes, Nodes, this);
-
-            Invoke(nameof(FindAvailableMatchesHorizontal), 0.1f);
+           // Invoke(nameof(FindAvailableMatchesHorizontal), 0.1f);
             Subscribes();
         }
 
-        private void SetField(List<NodeBase> nodes)
-        {
-            foreach (var node in nodes)
-            {
-                Nodes[(int)node.Position.x, (int)node.Position.y] = node;
-                node.Show();
-            }
-        }
+       
 
-        private List<NodeBase> SetFieldSyze()
-        {
-            var nodes = GetComponentsInChildren<NodeBase>().ToList();
-            var columns = float.MinValue;
-            var rows = float.MinValue;
-
-            // Пройти по всем элементам списка и найти максимальное значение координаты x
-            foreach (var node in nodes)
-            {
-                if (node.Position.x > columns)
-                {
-                    columns = node.Position.x;
-                }
-                if (node.Position.y > rows)
-                {
-                    rows = node.Position.y;
-                }
-            }
-            Nodes = new NodeBase[(int)columns + 1, (int)rows + 1];
-            return nodes;
-        }
+        
 
         public void SetSelectedNode(NodeBase nodeBase)
         {

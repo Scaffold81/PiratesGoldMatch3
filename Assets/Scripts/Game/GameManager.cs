@@ -9,6 +9,7 @@ using Game.ScriptableObjects;
 using System.Linq;
 using System.Collections.Generic;
 using Game.Structures;
+using Game.Gameplay.Nodes.Generator;
 namespace Game.Gameplay
 {
     public class GameManagerBase : MonoBehaviour
@@ -17,6 +18,7 @@ namespace Game.Gameplay
         private SceneDataProvider _sceneDataProvider;
         private CompositeDisposable _disposables = new();
         private MachTreeBase _machTree;
+        private FieldGenerator _fieldGenerator;
 
         private EventNames _gameState = EventNames.StartGame;
 
@@ -50,6 +52,7 @@ namespace Game.Gameplay
 
         private void Awake()
         {
+            _fieldGenerator = GetComponentInChildren<FieldGenerator>();
             _machTree = GetComponent<MachTreeBase>();
         }
 
@@ -104,12 +107,20 @@ namespace Game.Gameplay
             _levelTasks.AddRange(currentSubLevel.levelTasks);
 
             _sceneDataProvider.Publish(EventNames.LevelTasks, currentSubLevel.levelTasks);
+
+            CreateSublevel(currentSubLevel);
         }
 
         private Sublevel GetCurrentSublevel(LevelConfigSO currentLevel)
         {
             var currentSubLevel = currentLevel.subLevels[currentLevel.currentSublevelIndex];
             return currentSubLevel;
+        }
+
+        private void CreateSublevel(Sublevel sublevel)
+        {
+            print(sublevel.nodeField.GetLength(0));
+            _fieldGenerator.GenerateField(sublevel.nodeField);
         }
 
         private void OpenSubLevel()

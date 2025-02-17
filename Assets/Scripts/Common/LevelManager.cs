@@ -32,20 +32,13 @@ public class LevelManager : MonoBehaviour
 
     private void CreateLevel(LevelConfigSO newValue)
     {
-        var level = (LevelConfigSO)_sceneDataProvider.GetValue(SaveSlotNames.LevelConfig);
-        var currentLevel = level.subLevels[level.currentSublevelIndex];
-       
-        var path = "Prefabs/Levels/" + currentLevel.levelName; // Путь к префабу
+        var path = "Prefabs/Levels/Level"; // Путь к префабу
         GameObject levelPrefab = Resources.Load<GameObject>(path);
 
         if (levelPrefab != null)
         {
            var lvl= Instantiate(levelPrefab);// для создания экземпляра префаба
            lvl.transform.SetAsFirstSibling();
-        }
-        else
-        {
-            Debug.LogError("Failed to load level prefab: " + currentLevel.levelName);
         }
     }
     private void OnDestroy()

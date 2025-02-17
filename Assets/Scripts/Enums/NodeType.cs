@@ -1,4 +1,6 @@
-﻿namespace Game.Enums
+﻿using System;
+
+namespace Game.Enums
 {
     public enum NodeType
     {

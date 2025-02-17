@@ -2,16 +2,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using Game.Enums;
 
 namespace Game.Gameplay.Nodes.Generator
 {
     [ExecuteInEditMode]
     public class FieldGenerator : MonoBehaviour
     {
-        [SerializeField]
-        private int _rows = 10;
-        [SerializeField]
-        private int _columns = 7;
         [SerializeField]
         private RectTransform _backGroundField;
 
@@ -21,27 +18,15 @@ namespace Game.Gameplay.Nodes.Generator
         private Image _nodesBackgroundPrefabs;
 
         private List<Transform> _nodes = new List<Transform>();
-        [SerializeField]
-        private bool _generate = false;
 
-        private void Awake()
-        {
-            Destroy(this);
-        }
-
-        private void Update()
-        {
-            if (_generate)
-            {
-                GenerateField();
-            }
-        }
-
-        public void GenerateField()
+        public void GenerateField(NodeType[,] nodeField)
         {
             _nodes.Clear();
             _nodes.AddRange(_backGroundField.GetComponentsInChildren<Transform>());
             _nodes.AddRange(transform.GetComponentsInChildren<Transform>());
+            
+            var columns = nodeField.GetLength(1);
+            var rows = nodeField.GetLength(0);
 
             if (_nodes.Count > 0)
             {
@@ -52,22 +37,22 @@ namespace Game.Gameplay.Nodes.Generator
                 }
                 _nodes.Clear();
             }
-
-
             var panel = GetComponent<RectTransform>();
-            var cellSize = panel.rect.width / _columns; // Рассчитываем размер одной ячейки
+
+            var cellSize = panel.rect.width / columns; // Рассчитываем размер одной ячейки
 
             float startX = -(panel.rect.width / 2) + (cellSize / 2); // Начальная позиция по оси X
             float startY = panel.rect.height / 2 - (cellSize / 2); // Начальная позиция по оси Y
 
-            for (int y = 0; y < _rows; y++)
+           
+            for (int y = 0; y < rows; y++)
             {
-                for (int x = 0; x < _columns; x++)
+                for (int x = 0; x < columns; x++)
                 {
                     var newElement = Instantiate(_nodesPrefabs);
                     newElement.transform.SetParent(transform);
                     newElement.name = x.ToString() + "/" + y.ToString();
-
+                    newElement.NodeType = nodeField[y,x];
                     // Рассчитываем позицию для текущей ячейки
                     var posX = startX + x * cellSize;
                     var posY = startY - y * cellSize;
@@ -83,7 +68,6 @@ namespace Game.Gameplay.Nodes.Generator
                     background.transform.localScale = Vector3.one * cellSize / 100; // Пример масштабирования заднего фона
                 }
             }
-            _generate = false;
         }
     }
 }
