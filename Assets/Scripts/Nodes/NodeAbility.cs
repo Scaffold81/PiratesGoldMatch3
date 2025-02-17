@@ -1,4 +1,6 @@
-﻿namespace Game.Gameplay.Nodes
+﻿using System.Threading.Tasks;
+
+namespace Game.Gameplay.Nodes
 {
     public class NodeAbility
     {
@@ -18,7 +20,7 @@
         {
         }
 
-        public override void ActivateAbility(NodeBase node) 
+        public override async void ActivateAbility(NodeBase node) 
         { 
             for(int x=0;x< nodes.GetLength(0); x++)
             {
@@ -30,17 +32,18 @@
                 {
                     nodes[x, (int)node.Position.y].ClearNodeAbylity();
                 }
+                await Task.Delay(1);
             }
         }
     }
 
-    public class NodeAbilityLightingVertical : NodeAbility
+    public class  NodeAbilityLightingVertical : NodeAbility
     {
         public NodeAbilityLightingVertical(NodeBase[,] nodes) : base(nodes)
         {
         }
 
-        public override void ActivateAbility( NodeBase node)
+        public override async void ActivateAbility( NodeBase node)
         {
             for (int y = 0; y < nodes.GetLength(1); y++)
             {
@@ -52,6 +55,7 @@
                 {
                     nodes[(int)node.Position.x, y].ClearNodeAbylity();
                 }
+                await Task.Delay(1);
             }
         }
     }
@@ -61,7 +65,7 @@
         {
         }
 
-        public override void ActivateAbility(NodeBase node)
+        public override async void ActivateAbility(NodeBase node)
         {
             for (int x = 0; x < nodes.GetLength(0); x++)
             {
@@ -73,7 +77,9 @@
                             nodes[x, y].SetNodeEmpty();
                        // else nodes[x, y]._nodeAbility.ActivateAbility(nodes[x, y]);
                     }
+                    await Task.Delay(1);
                 }
+                await Task.Delay(1);
             }
         }
     }

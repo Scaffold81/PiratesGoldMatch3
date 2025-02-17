@@ -395,6 +395,7 @@ namespace Game.Gameplay.Nodes
 
             return foundMatch;
         }
+
         private bool ContainsMatchedNodes(MatchetNodes nodes)
         {
             foreach (MatchetNodes existingNodes in _matchesNodes)
@@ -503,12 +504,13 @@ namespace Game.Gameplay.Nodes
                     {
                         node.SetNodeReaward();
                         node.SetNodeEmpty();
-                        yield return new WaitForSeconds(_destroyNodeTime);
+
                     }
+                    yield return new WaitForSeconds(_destroyNodeTime);
                 }
             }
             
-            _matchesNodes.Clear(); // Очистка списка _matchesNodes после уничтожения узлов
+            _matchesNodes.Clear(); 
             FindEmptyNodes();
         }
 
