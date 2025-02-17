@@ -1,4 +1,5 @@
 ﻿using Game.Enums;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace Game.Structures
 {
     [CreateAssetMenu(fileName = "SubLevelConfig", menuName = "Configs/SubLevelConfig")]
     [System.Serializable]
-    public class Sublevel: ScriptableObject
+    public class Sublevel: SerializedScriptableObject
     {
         public string levelName;
         public int numberOfMoves = 30;
@@ -20,10 +21,10 @@ namespace Game.Structures
         public NodeType[] excludedNodeTypes = { NodeType.Hidden };
 
         public int rows = 3;
-        public int cols = 3;
-
-        public NodeType[,] nodeField;
-
+        public int cols = 3; 
+        [TableMatrix(HorizontalTitle = "Columns", VerticalTitle = "Rows")]
+        public NodeType[,] nodeField; 
+        [TableMatrix(HorizontalTitle = "Columns", VerticalTitle = "Rows")]
         public NodeType[,] targetField;
     }
 }

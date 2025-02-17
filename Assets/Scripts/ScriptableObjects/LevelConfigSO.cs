@@ -1,4 +1,6 @@
-﻿using Game.Structures;
+﻿using Game.Enums;
+using Game.Structures;
+using Sirenix.OdinInspector;
 using System.Collections.Generic;
 using UnityEngine;
 

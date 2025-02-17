@@ -17,4 +17,3 @@ MonoBehaviour:
   currentSublevelIndex: 0
   subLevels:
   - {fileID: 11400000, guid: d9c1f4450ab77ed4f8b0cc2b4729956d, type: 2}
-  - {fileID: 11400000, guid: bd4a16b51a468ae4088672700ef1715a, type: 2}
